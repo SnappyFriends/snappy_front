@@ -2,20 +2,20 @@ import Image from "next/image";
 
 export default function Login() {
   return (
-    <main className="flex justify-center w-full bg-red-400">
-      <div className="flex flex-col items-center bg-blue-700 w-96 gap-5 mt-16 mb-16">
+    <main className="flex justify-center w-full">
+      <div className="flex flex-col items-center w-96 gap-5">
         <h2 className="font-bold text-xl">Ingresa a tu cuenta</h2>
-        <form className="bg-yellow-400 flex flex-col gap-4 w-80">
+        <form className="flex flex-col gap-4 w-80">
           <div>
             <input
-              className="w-full h-12 border border-gray-400 rounded-sm p-2"
+              className="w-full h-12 border border-gray-400 rounded-md p-2"
               type="email"
               placeholder="Correo electrónico"
             />
           </div>
           <div>
             <input
-              className="w-full h-12 border border-gray-400 rounded-sm p-2"
+              className="w-full h-12 border border-gray-400 rounded-md p-2"
               type="password"
               placeholder="Contraseña"
             />

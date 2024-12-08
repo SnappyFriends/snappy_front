@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function HeaderLoginRegister() {
   return (
-    <header className="w-full bg-red-900">
+    <header className="w-full">
       <div className="flex flex-col items-center">
         <div>
           <Image
