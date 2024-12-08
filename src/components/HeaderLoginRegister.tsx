@@ -1,14 +1,21 @@
-import Image from 'next/image';
+import Image from "next/image";
 
 export default function HeaderLoginRegister() {
   return (
-    <header className='flex flex-col items-center bg-red-900'>
+    <header className="w-full bg-red-900">
+      <div className="flex flex-col items-center">
         <div>
-            <Image src="/favicon.ico" alt="Snappy logo" width={150} height={150} />
+          <Image
+            src="/favicon.ico"
+            alt="Snappy logo"
+            width={150}
+            height={150}
+          />
         </div>
         <div>
-            <h1 className='font-bold text-2xl'>SNAPPY FRIENDS</h1>
+          <h1 className="text-2xl font-bold">SNAPPY FRIENDS</h1>
         </div>
+      </div>
     </header>
-  )
+  );
 }
