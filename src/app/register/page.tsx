@@ -24,7 +24,7 @@ export default function Register() {
           <h2 className="font-bold text-xl">Crea una cuenta</h2>
 
           <form
-            className="flex flex-col gap-4 w-80"
+            className="flex flex-col gap-4"
             onSubmit={handleSubmit(onSubmit)}
           >
             <div>
@@ -67,34 +67,36 @@ export default function Register() {
             </div> */}
 
             <div className="flex gap-4">
-              <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                value="hombre"
-                {...register("genero", { required: true })}
-              />
-              Hombre
+              <div>
+                <label className="p-2 border border-gray-400 rounded-sm full flex items-center gap-2">
+                  <input
+                    type="radio"
+                    value="hombre"
+                    {...register("genero", { required: true })}
+                  />
+                  Hombre
+                </label>
+              </div>
+              <label className="p-2 border border-gray-400 rounded-sm full flex items-center gap-2">
+                <input
+                  type="radio"
+                  value="mujer"
+                  {...register("genero", { required: true })}
+                />
+                Mujer
               </label>
-              <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                value="mujer"
-                {...register("genero", { required: true })}
-              />
-              Mujer
-              </label>
-              <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                value="otro"
-                {...register("genero", { required: true })}
-              />
-              Personalizado
+              <label className="p-2 border border-gray-400 rounded-sm full flex items-center gap-2">
+                <input
+                  type="radio"
+                  value="otro"
+                  {...register("genero", { required: true })}
+                />
+                Personalizado
               </label>
               {errors.genero && (
-              <span className="text-red-600 text-sm">
-                El género es requerido
-              </span>
+                <span className="text-red-600 text-sm">
+                  El género es requerido
+                </span>
               )}
             </div>
 
