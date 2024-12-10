@@ -2,6 +2,7 @@ import Image from "next/image";
 
 export default function Login() {
   return (
+    // DECIDIR DONDE PONERLO
     <main className="flex justify-center w-full">
       <div className="flex flex-col items-center w-96 gap-5">
         <h2 className="font-bold text-xl">Ingresa a tu cuenta</h2>
