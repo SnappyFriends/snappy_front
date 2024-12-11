@@ -14,7 +14,7 @@ export default function Register() {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = (data) => console.log(data); 
 
   const validateAge = (value) => {
     const today = new Date();
