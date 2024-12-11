@@ -3,10 +3,10 @@ import HeaderLoginRegister from "@/components/HeaderLoginRegister";
 
 export default function UserNameView() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col mt-8">
       <HeaderLoginRegister />
 
-      <main className="h-screen flex flex-col items-center justify-start pt-48">
+      <main className="h-screen flex flex-col items-center justify-start pt-24">
         <div className="flex flex-col items-center w-96 gap-5">
           <h2 className="font-bold text-xl mt-5">Elige tu nombre de usuario</h2>
 
@@ -18,7 +18,6 @@ export default function UserNameView() {
               placeholder="Nombre de Usuario"
               required
             />
-            {/* <span className="text-red-500">Probando</span> */}
 
             <button
               className="w-80 h-12 bg-black border border-none rounded-md text-xl text-white"
