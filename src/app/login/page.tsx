@@ -19,7 +19,7 @@ export default function Login() {
 
   const onSubmit = (data: IFormDataLogin) => {
     // AQUI DEBERÍA IR LA LÓGICA DE INICIO DE SESIÓN
-    if (data.email === "usuario@gmail.com" && data.password === "Asdf#1") {
+    if (data.email === "snappy@gmail.com" && data.password === "Asdf#1") {
       // Guardar la sesión del usuario en localStorage, pero por ahora no porque falta el backend y usar Context o Redux
       // localStorage.setItem("user", JSON.stringify({ email: data.email, password: data.password }));
       alert("Inicio de sesión exitoso");
