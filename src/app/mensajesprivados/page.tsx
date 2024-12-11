@@ -5,10 +5,10 @@ export default function MensajesPrivados() {
   return (
     <>
       <nav className="h-16 flex justify-center items-center ">
-        <form className="w-96 flex justify-center items-center">
+        <form className="w-full px-4 flex justify-center items-center">
           <input
             type="text"
-            className="border border-gray-500 border-r-transparent rounded-full rounded-e-none h-10 w-full p-4"
+            className="border border-gray-500 border-r-transparent rounded-full rounded-e-none h-10 w-full px-4"
             placeholder="Buscar chat"
           />
           <button
@@ -27,7 +27,8 @@ export default function MensajesPrivados() {
       </nav>
       <main className="">
         <div>
-          <section className="h-20 flex justify-between items-center p-4">
+          <h2 className="text-center my-2">Mensajes</h2>
+          <section className="h-20 flex justify-between items-center px-4">
             <div className="flex space-x-4 items-center">
               <div>
                 <Image
@@ -50,6 +51,10 @@ export default function MensajesPrivados() {
           <hr className="border-[#EEEEEE]" />
         </div>
       </main>
+
+      <nav>
+        <div></div>
+      </nav>
     </>
   );
 }
