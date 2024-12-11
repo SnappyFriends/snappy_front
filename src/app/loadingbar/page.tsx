@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 
 export default function LoadingBar() {
@@ -11,7 +9,7 @@ export default function LoadingBar() {
       <div className="w-64 bg-gray-200 rounded-full h-2.5 overflow-hidden">
         <div
           className="bg-blue-500 h-2.5 animate-pulse"
-          style={{ width: "70%" }} 
+          style={{ width: "70%" }}
         ></div>
       </div>
     </div>

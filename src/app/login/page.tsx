@@ -13,7 +13,10 @@ export default function Login() {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = (data) => {
+    // AQUI VA EL CODIGO PARA INICIAR SESION
+    console.log(data);
+  };
 
   return (
     <div className="flex flex-col items-center justify-center gap-16 min-h-screen">
