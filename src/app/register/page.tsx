@@ -2,6 +2,7 @@
 
 import FooterLoginRegister from "@/components/FooterLoginRegister";
 import HeaderLoginRegister from "@/components/HeaderLoginRegister";
+import { IFormDataRegister, IValidateAge } from "@/interfaces/types";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -12,11 +13,11 @@ export default function Register() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<IFormDataRegister>();
 
-  const onSubmit = (data) => console.log(data); 
+  const onSubmit = (data: IFormDataRegister) => console.log(data);
 
-  const validateAge = (value) => {
+  const validateAge: IValidateAge = (value) => {
     const today = new Date();
     const birthDate = new Date(value);
     const age = today.getFullYear() - birthDate.getFullYear();

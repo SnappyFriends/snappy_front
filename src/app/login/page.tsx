@@ -5,15 +5,16 @@ import Image from "next/image";
 import FooterLoginRegister from "../../components/FooterLoginRegister";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
+import { IFormDataLogin } from "@/interfaces/types";
 
 export default function Login() {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<IFormDataLogin>();
 
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = (data: IFormDataLogin) => console.log(data);
 
   return (
     <div className="flex flex-col items-center justify-center gap-16 min-h-screen">
