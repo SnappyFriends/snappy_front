@@ -6,6 +6,7 @@ import FooterLoginRegister from "../../components/FooterLoginRegister";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { IFormDataLogin } from "@/interfaces/types";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   const {
@@ -14,7 +15,17 @@ export default function Login() {
     formState: { errors },
   } = useForm<IFormDataLogin>();
 
-  const onSubmit = (data: IFormDataLogin) => console.log(data);
+  const router = useRouter();
+
+  const onSubmit = (data: IFormDataLogin) => {
+    // AQUI DEBERÍA IR LA LÓGICA DE INICIO DE SESIÓN
+    if (data.email === "usuario@gmail.com" && data.password === "Asdf#1") {
+      alert("Inicio de sesión exitoso");
+      router.push("/loadingbar");
+    } else {
+      alert("Usuario o contraseña incorrectos");
+    }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center gap-16 min-h-screen">
