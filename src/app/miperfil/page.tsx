@@ -34,19 +34,19 @@ const ProfileView = () => {
 
         {/* Stats */}
         <div className="flex justify-between items-center mt-4">
-          <div className="text-center">
-            <p className="text-lg font-semibold">101</p>
-            <p className="text-sm text-gray-500">Amigos</p>
-          </div>
-          <div className="text-center">
-            <p className="text-lg font-semibold">20k</p>
-            <p className="text-sm text-gray-500">Seguidores</p>
-          </div>
-          <div className="text-center">
-            <p className="text-lg font-semibold">22</p>
-            <p className="text-sm text-gray-500">Post</p>
-          </div>
-        </div>
+  <div className="text-center">
+    <p className="text-sm text-gray-500">Amigos</p> {/* Coloca el texto encima */}
+    <p className="text-lg font-semibold">101</p>
+  </div>
+  <div className="text-center">
+    <p className="text-sm text-gray-500">Seguidores</p> {/* Coloca el texto encima */}
+    <p className="text-lg font-semibold">20k</p>
+  </div>
+  <div className="text-center">
+    <p className="text-sm text-gray-500">Post</p> {/* Coloca el texto encima */}
+    <p className="text-lg font-semibold">22</p>
+  </div>
+</div>
 
         {/* Verify Button */}
         <div className="mt-4 flex justify-center">
@@ -76,7 +76,7 @@ const ProfileView = () => {
           </div>
           <div className="relative w-6 h-6">
             <Image
-              src="/rueda.png" // Imagen "rueda.png" también aquí para consistencia
+              src="/puntos.png" // Imagen "rueda.png" también aquí para consistencia
               alt="Opciones del post"
               layout="fill"
               className="object-contain"
