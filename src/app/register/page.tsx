@@ -5,6 +5,7 @@ import HeaderLoginRegister from "@/components/HeaderLoginRegister";
 import { IFormDataRegister, IValidateAge } from "@/interfaces/types";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 
@@ -15,7 +16,15 @@ export default function Register() {
     formState: { errors },
   } = useForm<IFormDataRegister>();
 
-  const onSubmit = (data: IFormDataRegister) => console.log(data);
+  const router = useRouter();
+
+  const onSubmit = (data: IFormDataRegister) => {
+    // AQUI VA LA LOGICA DE REGISTRO
+    if (data) {
+      alert("Registrado correctamente");
+      router.push("/username");
+    }
+  };
 
   const validateAge: IValidateAge = (value) => {
     const today = new Date();
