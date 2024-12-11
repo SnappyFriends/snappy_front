@@ -16,6 +16,20 @@ export default function Register() {
 
   const onSubmit = (data) => console.log(data);
 
+  const validateAge = (value) => {
+    const today = new Date();
+    const birthDate = new Date(value);
+    const age = today.getFullYear() - birthDate.getFullYear();
+    const isBirthdayPassed =
+      today.getMonth() > birthDate.getMonth() ||
+      (today.getMonth() === birthDate.getMonth() &&
+        today.getDate() >= birthDate.getDate());
+
+    return (
+      (isBirthdayPassed ? age : age - 1) >= 13 || "Debes tener al menos 13 años"
+    );
+  };
+
   return (
     <div className="flex flex-col items-center justify-center gap-16 min-h-screen">
       <HeaderLoginRegister />
@@ -29,50 +43,62 @@ export default function Register() {
           >
             <div>
               <input
-                className="w-full h-12 border border-gray-400 rounded-md p-2"
+                className={`w-full h-12 border rounded-md p-2 ${
+                  errors.nombre ? "border-red-600" : "border-gray-400"
+                }`}
                 type="text"
                 placeholder="Nombre y apellido"
-                {...register("nombre", { required: true })}
+                {...register("nombre", {
+                  required: "El nombre y apellido es obligatorio",
+                  pattern: {
+                    value: /^[a-zA-ZÀ-ÿ\s]{2,}$/,
+                    message:
+                      "Debe contener solo letras y al menos dos palabras",
+                  },
+                })}
               />
               {errors.nombre && (
                 <span className="text-red-600 text-sm">
-                  El nombre y apellido es requerido
+                  {typeof errors.nombre?.message === "string" &&
+                    errors.nombre.message}
                 </span>
               )}
             </div>
 
             <div>
               <input
-                className="w-full h-12 border border-gray-400 rounded-md p-2"
+                className={`w-full h-12 border rounded-md p-2 ${
+                  errors.fechaDeNacimiento
+                    ? "border-red-600"
+                    : "border-gray-400"
+                }`}
                 type="date"
                 placeholder="Fecha de nacimiento"
-                {...register("fechaDeNacimiento", { required: true })}
+                {...register("fechaDeNacimiento", {
+                  required: "La fecha de nacimiento es obligatoria",
+                  validate: {
+                    validAge: (value) =>
+                      validateAge(value) || "Debes tener al menos 13 años",
+                  },
+                })}
               />
-              {errors.nombre && (
+              {errors.fechaDeNacimiento && (
                 <span className="text-red-600 text-sm">
-                  La fecha de nacimiento es requerida
+                  {typeof errors.fechaDeNacimiento?.message === "string" &&
+                    errors.fechaDeNacimiento.message}
                 </span>
               )}
             </div>
 
-            {/* <div>
-              <select
-                className="w-full h-12 border border-gray-400 rounded-md p-2"
-                {...register("genero", { required: true })}
-              >
-                <option value="">Selecciona tu género</option>
-                <option value="hombre">Hombre</option>
-                <option value="mujer">Mujer</option>
-              </select>
-            </div> */}
-
-            <div className="flex gap-4">
+            <div className="flex gap-1 flex-wrap">
               <div>
                 <label className="p-2 border border-gray-400 rounded-sm full flex items-center gap-2">
                   <input
                     type="radio"
                     value="hombre"
-                    {...register("genero", { required: true })}
+                    {...register("genero", {
+                      required: "El género es obligatorio",
+                    })}
                   />
                   Hombre
                 </label>
@@ -81,7 +107,9 @@ export default function Register() {
                 <input
                   type="radio"
                   value="mujer"
-                  {...register("genero", { required: true })}
+                  {...register("genero", {
+                    required: "El género es obligatorio",
+                  })}
                 />
                 Mujer
               </label>
@@ -89,41 +117,64 @@ export default function Register() {
                 <input
                   type="radio"
                   value="otro"
-                  {...register("genero", { required: true })}
+                  {...register("genero", {
+                    required: "El género es obligatorio",
+                  })}
                 />
                 Personalizado
               </label>
-              {errors.genero && (
+              {errors.genero && typeof errors.genero.message === "string" && (
                 <span className="text-red-600 text-sm">
-                  El género es requerido
+                  {errors.genero.message}
                 </span>
               )}
             </div>
 
             <div>
               <input
-                className="w-full h-12 border border-gray-400 rounded-md p-2"
+                className={`w-full h-12 border rounded-md p-2 ${
+                  errors.correoElectronico
+                    ? "border-red-600"
+                    : "border-gray-400"
+                }`}
                 type="email"
                 placeholder="Correo electrónico"
-                {...register("correoElectronico", { required: true })}
+                {...register("correoElectronico", {
+                  required: "El correo electrónico es obligatorio",
+                  pattern: {
+                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                    message: "Por favor, ingresa un correo electrónico válido",
+                  },
+                })}
               />
-              {errors.nombre && (
+              {errors.correoElectronico && (
                 <span className="text-red-600 text-sm">
-                  El correo electrónico es requerido
+                  {typeof errors.correoElectronico?.message === "string" &&
+                    errors.correoElectronico.message}
                 </span>
               )}
             </div>
 
             <div>
               <input
-                className="w-full h-12 border border-gray-400 rounded-md p-2"
+                className={`w-full h-12 border rounded-md p-2 ${
+                  errors.contrasena ? "border-red-600" : "border-gray-400"
+                }`}
                 type="password"
                 placeholder="Contraseña"
-                {...register("contrasena", { required: true })}
+                {...register("contrasena", {
+                  required: "La contraseña es obligatoria",
+                  pattern: {
+                    value: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{6,}$/,
+                    message:
+                      "La contraseña debe tener al menos 6 caracteres, una mayúscula, un número y un carácter especial",
+                  },
+                })}
               />
-              {errors.nombre && (
+              {errors.contrasena && (
                 <span className="text-red-600 text-sm">
-                  La contraseña es requerida
+                  {typeof errors.contrasena?.message === "string" &&
+                    errors.contrasena.message}
                 </span>
               )}
             </div>
@@ -140,7 +191,7 @@ export default function Register() {
             <div>
               <button
                 className="w-full h-12 bg-[#EEEEEE] border border-none rounded-md text-xl flex items-center justify-center gap-2"
-                type="submit"
+                type="button"
               >
                 <Image
                   src="/googlelogo.png"

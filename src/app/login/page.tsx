@@ -1,29 +1,74 @@
+"use client";
+
 import HeaderLoginRegister from "@/components/HeaderLoginRegister";
 import Image from "next/image";
 import FooterLoginRegister from "../../components/FooterLoginRegister";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
 
 export default function Login() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = (data) => console.log(data);
+
   return (
     <div className="flex flex-col items-center justify-center gap-16 min-h-screen">
       <HeaderLoginRegister />
       <main className="flex justify-center w-full">
         <div className="flex flex-col items-center w-96 gap-5">
           <h2 className="font-bold text-xl">Ingresa a tu cuenta</h2>
-          <form className="flex flex-col gap-4 w-80">
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col gap-4 w-80"
+          >
             <div>
               <input
-                className="w-full h-12 border border-gray-400 rounded-md p-2"
+                className={`w-full h-12 border rounded-md p-2 ${
+                  errors.email ? "border-red-600" : "border-gray-400"
+                }`}
                 type="email"
                 placeholder="Correo electrónico"
+                {...register("email", {
+                  required: "El correo electrónico es obligatorio",
+                  pattern: {
+                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                    message: "Por favor, ingresa un correo electrónico válido",
+                  },
+                })}
               />
+              {errors.email && (
+                <span className="text-red-600 text-sm">
+                  {typeof errors.email?.message === "string" &&
+                    errors.email.message}
+                </span>
+              )}
             </div>
             <div>
               <input
-                className="w-full h-12 border border-gray-400 rounded-md p-2"
+                className={`w-full h-12 border rounded-md p-2 ${
+                  errors.email ? "border-red-600" : "border-gray-400"
+                }`}
                 type="password"
                 placeholder="Contraseña"
+                {...register("password", {
+                  required: "La contraseña es obligatoria",
+                  pattern: {
+                    value: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{6,}$/,
+                    message:
+                      "La contraseña debe tener al menos 6 caracteres, una mayúscula, un número y un carácter especial",
+                  },
+                })}
               />
+              {errors.password && (
+                <span className="text-red-600 text-sm">
+                  {typeof errors.password?.message === "string" &&
+                    errors.password.message}
+                </span>
+              )}
             </div>
             <div>
               <button
@@ -36,7 +81,7 @@ export default function Login() {
             <div>
               <button
                 className="w-full h-12 bg-[#EEEEEE] border border-none rounded-md text-xl flex items-center justify-center gap-2"
-                type="submit"
+                type="button"
               >
                 <Image
                   src="/googlelogo.png"
