@@ -64,8 +64,10 @@ const ProfileView = () => {
 
                 <div className="flex justify-evenly flex-1 text-center">
                   <div className="space-y-0.5">
+                    <Link href="/listacontactos">
                     <p className="text-sm font-bold text-gray-800">Amigos</p>
                     <p className="text-lg font-bold">101</p>
+                    </Link>
                   </div>
                   <div className="space-y-0.5">
                     <p className="text-sm font-bold text-gray-800">Seguidores</p>
