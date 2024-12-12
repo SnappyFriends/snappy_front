@@ -1,9 +1,11 @@
 import React from "react";
 import Image from "next/image";
+import Navbar from "@/components/Navbar";
 
 export default function MensajesPrivados() {
   return (
     <>
+    <Navbar/>
       <nav className="h-16 flex justify-center items-center">
         <form className="w-full px-4 flex justify-center items-center">
           <input
@@ -13,15 +15,17 @@ export default function MensajesPrivados() {
           />
           <button
             type="submit"
-            className="border border-gray-500  h-10 w-11 border-l-transparent rounded-full rounded-s-none"
+            className="border border-gray-500 h-10 w-11 border-l-transparent rounded-full rounded-s-none"
+            aria-label="Buscar chat"
+            title="Buscar chat"
           >
             <Image
               src="/lupa.png"
               width={20}
               height={20}
-              alt="lupa"
+              alt="Buscar"
               className="cursor-pointer"
-            ></Image>
+            />
           </button>
         </form>
       </nav>
@@ -38,7 +42,7 @@ export default function MensajesPrivados() {
                   height={1000}
                   alt="fotodeperfil"
                   className="rounded-full w-16 h-16 object-cover"
-                ></Image>
+                />
               </div>
               <div className="font-bold">
                 <h2>Sofia Black</h2>
@@ -48,20 +52,98 @@ export default function MensajesPrivados() {
             <div className="font-bold">
               <p>12:00</p>
             </div>
+            
+          </section>
+          <section className="h-20 flex justify-between items-center px-4">
+            <div className="flex space-x-4 items-center">
+              <div>
+                <Image
+                  src="/taylorswift.jpg"
+                  width={1000}
+                  height={1000}
+                  alt="fotodeperfil"
+                  className="rounded-full w-16 h-16 object-cover"
+                />
+              </div>
+              <div className="font-bold">
+                <h2>Sofia Black</h2>
+                <p>Hola, ¿cómo estás?</p>
+              </div>
+            </div>
+            <div className="font-bold">
+              <p>12:00</p>
+            </div>
+            
+          </section>
+          <section className="h-20 flex justify-between items-center px-4">
+            <div className="flex space-x-4 items-center">
+              <div>
+                <Image
+                  src="/taylorswift.jpg"
+                  width={1000}
+                  height={1000}
+                  alt="fotodeperfil"
+                  className="rounded-full w-16 h-16 object-cover"
+                />
+              </div>
+              <div className="font-bold">
+                <h2>Sofia Black</h2>
+                <p>Hola, ¿cómo estás?</p>
+              </div>
+            </div>
+            <div className="font-bold">
+              <p>12:00</p>
+            </div>
+            
+          </section>
+          <section className="h-20 flex justify-between items-center px-4">
+            <div className="flex space-x-4 items-center">
+              <div>
+                <Image
+                  src="/taylorswift.jpg"
+                  width={1000}
+                  height={1000}
+                  alt="fotodeperfil"
+                  className="rounded-full w-16 h-16 object-cover"
+                />
+              </div>
+              <div className="font-bold">
+                <h2>Sofia Black</h2>
+                <p>Hola, ¿cómo estás?</p>
+              </div>
+            </div>
+            <div className="font-bold">
+              <p>12:00</p>
+            </div>
+            
+          </section>
+          <section className="h-20 flex justify-between items-center px-4">
+            <div className="flex space-x-4 items-center">
+              <div>
+                <Image
+                  src="/taylorswift.jpg"
+                  width={1000}
+                  height={1000}
+                  alt="fotodeperfil"
+                  className="rounded-full w-16 h-16 object-cover"
+                />
+              </div>
+              <div className="font-bold">
+                <h2>Sofia Black</h2>
+                <p>Hola, ¿cómo estás?</p>
+              </div>
+            </div>
+            <div className="font-bold">
+              <p>12:00</p>
+            </div>
+            
           </section>
           <hr className="border-[#EEEEEE]" />
         </div>
       </main>
 
-      <div className="fixed bottom-0 w-full h-20 bg-white">
-        <div className="flex justify-between items-center h-full px-4">
-          <Image src="/home.png" width={50} height={50} alt="home" className="self-center" />
-          <Image src="/chat.png" width={50} height={50} alt="chats" className="self-center" />
-          <Image src="/logochatsnuevos.png" width={50} height={50} alt="chats nuevos" className="self-center" />
-          <Image src="/bell.png" width={50} height={50} alt="notificaciones" className="self-center" />
-          <Image src="/user.png" width={50} height={50} alt="perfil" className="self-center" />
-        </div>
-      </div>
+      
+      
     </>
   );
 }
