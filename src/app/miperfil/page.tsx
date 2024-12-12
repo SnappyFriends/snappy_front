@@ -79,9 +79,11 @@ const ProfileView = () => {
               </div>
 
               <div className="mt-4 flex justify-center">
+                <Link href="/pasareladepago">
                 <button className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">
                   Verifica tu cuenta
                 </button>
+                </Link>
               </div>
             </div>
 
