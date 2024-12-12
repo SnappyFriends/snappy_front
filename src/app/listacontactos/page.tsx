@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
+import Navbar from '@/components/Navbar';
 
 interface Friend {
   id: number;
@@ -31,6 +32,8 @@ const FriendsList: React.FC = () => {
   };
 
   return (
+    <div>
+      <Navbar/>
     <div className="min-h-screen flex items-center justify-center">
       <div className="bg-white p-4 w-full max-w-md rounded-lg ">
         <div className="flex items-center justify-between mb-4">
@@ -77,6 +80,7 @@ const FriendsList: React.FC = () => {
           ))}
         </ul>
       </div>
+    </div>
     </div>
   );
 };
