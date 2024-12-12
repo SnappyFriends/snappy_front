@@ -5,9 +5,9 @@ import Image from "next/image";
 const ProfileView = () => {
   return (
     <div className="flex bg-gray-100 min-h-screen relative">
-      {/* Menú lateral para desktop */}
+      
       <div className="hidden md:flex flex-col w-64 bg-white p-6 space-y-10 absolute left-6 top-1/2 transform -translate-y-1/2">
-        {/* Opciones del menú */}
+        
         <div className="space-y-8">
           <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
             <Image src="/usuario.png" alt="Perfil" width={24} height={24} />
@@ -46,17 +46,17 @@ const ProfileView = () => {
             <p>Configuración</p>
           </div>
         </div>
-        {/* Ícono inferior */}
+        
         <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
           <Image src="/flecha.png" alt="No sabemos" width={24} height={24} />
           <p>NO SABEMOS</p>
         </div>
       </div>
 
-      {/* Contenido principal */}
+      
       <div className="flex-1 flex flex-col items-center p-6 bg-gray-100 min-h-screen">
         <div className="bg-white rounded-lg p-6 w-full max-w-md mt-10">
-          {/* Nombre centrado arriba */}
+         
           <div className="flex items-center justify-between">
             <h1 className="text-xl font-semibold text-center flex-1">Katy Swift</h1>
             <div className="relative w-6 h-6">
@@ -69,11 +69,11 @@ const ProfileView = () => {
             </div>
           </div>
 
-          {/* Header */}
+          
           <div className="flex flex-col items-center mt-4">
-            {/* Foto de perfil y estadísticas */}
+            
             <div className="flex items-center w-full">
-              {/* Foto de perfil */}
+              
               <div className="relative w-24 h-24 mr-6">
                 <Image
                   src="/agregarfoto.png"
@@ -83,7 +83,7 @@ const ProfileView = () => {
                 />
               </div>
 
-              {/* Stats centradas */}
+             
               <div className="flex justify-evenly flex-1 text-center">
                 <div className="space-y-0.5">
                   <p className="text-sm font-bold text-gray-800">Amigos</p>
@@ -100,7 +100,7 @@ const ProfileView = () => {
               </div>
             </div>
 
-            {/* Botón de verificación */}
+           
             <div className="mt-4 flex justify-center">
               <button className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">
                 Verifica tu cuenta
@@ -108,12 +108,12 @@ const ProfileView = () => {
             </div>
           </div>
 
-          {/* Divider */}
+          
           <div className="border-t my-6"></div>
 
-          {/* Post Section */}
+          
           <div>
-            {/* Post Header */}
+            
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <div className="relative w-10 h-10">
@@ -139,7 +139,7 @@ const ProfileView = () => {
               </div>
             </div>
 
-            {/* Post Image */}
+            
             <div className="relative mt-4 w-full h-80">
               <Image
                 src="/fotofeed.png"
@@ -149,10 +149,9 @@ const ProfileView = () => {
               />
             </div>
 
-            {/* Post Description */}
             <p className="mt-4 text-sm text-gray-700">Descripción del post</p>
 
-            {/* Post Stats */}
+           
             <div className="flex items-center mt-4 text-gray-500">
               <div className="flex items-center mr-6">
                 <div className="relative w-5 h-5 mr-1">
