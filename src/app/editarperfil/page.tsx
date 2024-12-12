@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import Navbar from "@/components/Navbar";
 
 export default function CategoryCheckboxes() {
   const categories = [
@@ -30,6 +31,8 @@ export default function CategoryCheckboxes() {
   };
 
   return (
+    <div>
+      <Navbar/>
     <div className="flex flex-col items-center justify-center h-screen">
       <h2 className="text-2xl font-bold mb-4">Nombre de usuario</h2>
 
@@ -86,6 +89,7 @@ export default function CategoryCheckboxes() {
           Guardar Cambios
         </button>
       </div>
+    </div>
     </div>
   );
 }
