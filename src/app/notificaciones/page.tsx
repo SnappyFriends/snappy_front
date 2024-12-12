@@ -53,7 +53,7 @@ const ActivityView = () => {
               alt="Configuración"
               width={24} height={24}
             />
-            <Link href="/editar-perfil"><p>Configuración</p></Link>
+            <Link href="/editarperfil"><p>Configuración</p></Link>
           </div>
           <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
             <Image src="/flecha.png" alt="No sabemos" width={24} height={24} />
