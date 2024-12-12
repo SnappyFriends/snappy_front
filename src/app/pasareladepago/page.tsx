@@ -11,7 +11,6 @@ export default function PaymentGateway() {
   return (
     <div>
       <Navbar/>
-
     <div className="min-h-screen flex justify-center items-center p-4">
       <div className="w-full max-w-5xl p-6 bg-white rounded-lg flex flex-col lg:flex-row gap-8"> 
         <div className="w-full lg:w-1/2">
