@@ -8,7 +8,7 @@ const ChatView = () => {
   return (
     <div>
     <Navbar/>
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen">
       <div className="bg-white rounded-lg shadow-md w-1/2 max-w-lg min-h-[50vh]">
         <div className="flex items-center justify-between px-4 py-3 border-b">
           <div className="flex items-center">
