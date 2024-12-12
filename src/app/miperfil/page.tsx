@@ -4,7 +4,7 @@ import Image from "next/image";
 
 const ProfileView = () => {
   return (
-    <div className="flex bg-gray-100 min-h-screen relative">
+    <div className="flex  min-h-screen relative">
       
       <div className="hidden md:flex flex-col w-64 bg-white p-6 space-y-10 absolute left-6 top-1/2 transform -translate-y-1/2">
         
@@ -54,7 +54,7 @@ const ProfileView = () => {
       </div>
 
       
-      <div className="flex-1 flex flex-col items-center p-6 bg-gray-100 min-h-screen">
+      <div className="flex-1 flex flex-col items-center p-6  min-h-screen">
         <div className="bg-white rounded-lg p-6 w-full max-w-md mt-10">
          
           <div className="flex items-center justify-between">
