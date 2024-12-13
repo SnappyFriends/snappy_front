@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
+
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -70,7 +71,7 @@ const Navbar: React.FC = () => {
             </Link>
             <Link href="/newchat">
               <Image
-                src="/flecha.png"
+                src="/logochatsnuevos.png"
                 alt="Arrow Icon"
                 width={32}
                 height={32}
@@ -121,7 +122,8 @@ const Navbar: React.FC = () => {
 
         {isOpen && (
           <div className="md:hidden mt-4 space-y-4">
-            <form className="w-full relative">
+            <SearchBar/>
+            {/* <form className="w-full relative">
               <input
                 type="text"
                 placeholder="Buscar..."
@@ -143,7 +145,7 @@ const Navbar: React.FC = () => {
                   />
                 </svg>
               </div>
-            </form>
+            </form> */}
             <Link href="/socialfeed" className="block">
               <Image
                 src="/home1.png"
@@ -162,7 +164,7 @@ const Navbar: React.FC = () => {
             </Link>
             <Link href="/newchat" className="block">
               <Image
-                src="/flecha.png"
+                src="/logochatsnuevos.png"
                 alt="Arrow Icon"
                 width={32}
                 height={32}
