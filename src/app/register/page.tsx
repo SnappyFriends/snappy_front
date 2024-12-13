@@ -31,7 +31,6 @@ export default function Register() {
   const onSubmit = async (data: IFormDataRegister) => {
     console.log(data);
     try {
-      // Enviar los datos al backend usando fetch
       const response = await fetch(
         "https://snappy-back-si83.onrender.com/auth/signup",
         {
@@ -39,7 +38,8 @@ export default function Register() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(data), // Convertimos los datos en formato JSON
+          body: JSON.stringify(data),
+          
         }
       );
 
