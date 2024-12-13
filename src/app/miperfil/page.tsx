@@ -36,7 +36,7 @@ const ProfileView = () => {
               <Link href="/editarperfil">Configuración</Link>
             </div>
             <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
-              <Image src="/flecha.png" alt="Snappear" width={24} height={24} />
+              <Image src="/logochatsnuevos.png" alt="Snappear" width={24} height={24} />
               <Link href="/newchat">SNAPPEAR</Link>
             </div>
           </div>
@@ -47,7 +47,9 @@ const ProfileView = () => {
             <div className="flex items-center justify-between">
               <h1 className="text-xl font-semibold text-center flex-1">Katy Swift</h1>
               <div className="relative w-6 h-6">
+              <Link href="/editarperfil">
                 <Image src="/rueda.png" alt="Configuración" fill className="object-contain" />
+                </Link>
               </div>
             </div>
 

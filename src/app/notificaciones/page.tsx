@@ -59,7 +59,7 @@ const ActivityView = () => {
             <Link href="/editarperfil"><p>Configuración</p></Link>
           </div>
           <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
-            <Image src="/flecha.png" alt="No sabemos" width={24} height={24} />
+            <Image src="/logochatsnuevos.png" alt="No sabemos" width={24} height={24} />
             <Link href="/newchat"><p>SNAPPEAR</p></Link>
           </div>
           
