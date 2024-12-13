@@ -70,7 +70,7 @@ const Navbar: React.FC = () => {
             </Link>
             <Link href="/newchat">
               <Image
-                src="/flecha.png"
+                src="/logochatsnuevos.png"
                 alt="Arrow Icon"
                 width={32}
                 height={32}
