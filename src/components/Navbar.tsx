@@ -122,7 +122,6 @@ const Navbar: React.FC = () => {
 
         {isOpen && (
           <div className="md:hidden mt-4 space-y-4">
-            <SearchBar/>
             {/* <form className="w-full relative">
               <input
                 type="text"
