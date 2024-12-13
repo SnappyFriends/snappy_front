@@ -7,7 +7,7 @@ import { IFormDataRegister } from "@/interfaces/types";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 
 export default function Register() {
@@ -25,6 +25,16 @@ export default function Register() {
     if (data) {
       // alert("Registrado correctamente");
       // router.push("/username");
+    }
+  };
+
+  const [showOtherGender, setShowOtherGender] = useState(false);
+
+  const handleGenderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value === "otro") {
+      setShowOtherGender(true);
+    } else {
+      setShowOtherGender(false);
     }
   };
 
@@ -104,6 +114,7 @@ export default function Register() {
                     {...register("genero", {
                       required: "El género es obligatorio",
                     })}
+                    onChange={handleGenderChange}
                   />
                   Hombre
                 </label>
@@ -115,6 +126,7 @@ export default function Register() {
                   {...register("genero", {
                     required: "El género es obligatorio",
                   })}
+                  onChange={handleGenderChange}
                 />
                 Mujer
               </label>
@@ -125,9 +137,21 @@ export default function Register() {
                   {...register("genero", {
                     required: "El género es obligatorio",
                   })}
+                  onChange={handleGenderChange}
                 />
                 Otro
               </label>
+
+              {showOtherGender && (
+                <div>
+                  <input
+                    type="text"
+                    placeholder="Especifica tu género"
+                    className="w-full h-12 border rounded-md p-2 border-gray-400"
+                  />
+                </div>
+              )}
+
               {errors.genero && typeof errors.genero.message === "string" && (
                 <span className="text-red-600 text-sm">
                   {errors.genero.message}
