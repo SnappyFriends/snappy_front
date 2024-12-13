@@ -2,6 +2,7 @@
 
 import FooterLoginRegister from "@/components/FooterLoginRegister";
 import HeaderLoginRegister from "@/components/HeaderLoginRegister";
+import { showCustomToast } from "@/components/Notificacion";
 import { validateAge } from "@/helpers/validacionEdad";
 import { IFormDataRegister } from "@/interfaces/types";
 import Image from "next/image";
@@ -45,10 +46,14 @@ export default function Register() {
         throw new Error("Hubo un error al registrar el usuario.");
       }
 
-      alert("Registrado correctamente");
+      showCustomToast("Snappy", "¡Registro exitoso!", "success");
       router.push("/loadingbar");
-    } catch (error) {
-      alert("Error al registrar el usuario: " + (error as Error).message);
+    } catch {
+      showCustomToast(
+        "Error",
+        "Hubo un problema al registrar tu cuenta",
+        "error"
+      );
     }
   };
 

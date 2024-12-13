@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { IFormDataLogin } from "@/interfaces/types";
 import { useRouter } from "next/navigation";
+import { showCustomToast } from "@/components/Notificacion";
 
 export default function Login() {
   const {
@@ -39,10 +40,14 @@ export default function Login() {
       // Guardar token o sesión según la respuesta del backend
       // localStorage.setItem("token", result.token);
 
-      alert("Inicio de sesión exitoso");
+      showCustomToast("Snappy", "¡Inicio de sesión exitoso!", "success");
       router.push("/loadingbar");
     } catch (error) {
-      alert(`Error al iniciar sesión: ${(error as Error).message}`);
+      showCustomToast(
+        "Error",
+        "Hubo un problema al iniciar sesión en tu cuenta",
+        "error"
+      );
     }
   };
 
