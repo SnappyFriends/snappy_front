@@ -48,10 +48,10 @@ export default function Register() {
 
       showCustomToast("Snappy", "¡Registro exitoso!", "success");
       router.push("/loadingbar");
-    } catch {
+    } catch (error) {
       showCustomToast(
         "Error",
-        "Hubo un problema al registrar tu cuenta",
+        `${(error as Error).message}`,
         "error"
       );
     }
