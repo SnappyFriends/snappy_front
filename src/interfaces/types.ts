@@ -4,9 +4,9 @@ export interface IFormDataLogin {
 }
 
 export interface IFormDataRegister {
-  nombre: string;
+  nombreCompleto: string;
   fechaDeNacimiento: string;
-  genero: "hombre" | "mujer" | "otro";
+  genero: "hombre" | "mujer" | "otro" | string;
   correoElectronico: string;
   contrasena: string;
 }

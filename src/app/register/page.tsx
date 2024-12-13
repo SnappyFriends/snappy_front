@@ -2,7 +2,8 @@
 
 import FooterLoginRegister from "@/components/FooterLoginRegister";
 import HeaderLoginRegister from "@/components/HeaderLoginRegister";
-import { IFormDataRegister, IValidateAge } from "@/interfaces/types";
+import { validateAge } from "@/helpers/validacionEdad";
+import { IFormDataRegister } from "@/interfaces/types";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -20,24 +21,11 @@ export default function Register() {
 
   const onSubmit = (data: IFormDataRegister) => {
     // AQUI VA LA LOGICA DE REGISTRO
+    console.log(data);
     if (data) {
-      alert("Registrado correctamente");
-      router.push("/username");
+      // alert("Registrado correctamente");
+      // router.push("/username");
     }
-  };
-
-  const validateAge: IValidateAge = (value) => {
-    const today = new Date();
-    const birthDate = new Date(value);
-    const age = today.getFullYear() - birthDate.getFullYear();
-    const isBirthdayPassed =
-      today.getMonth() > birthDate.getMonth() ||
-      (today.getMonth() === birthDate.getMonth() &&
-        today.getDate() >= birthDate.getDate());
-
-    return (
-      (isBirthdayPassed ? age : age - 1) >= 13 || "Debes tener al menos 13 años"
-    );
   };
 
   return (
@@ -52,46 +40,52 @@ export default function Register() {
             onSubmit={handleSubmit(onSubmit)}
           >
             <div>
-              <input
-                className={`w-full h-12 border rounded-md p-2 ${
-                  errors.nombre ? "border-red-600" : "border-gray-400"
-                }`}
-                type="text"
-                placeholder="Nombre y apellido"
-                {...register("nombre", {
-                  required: "El nombre y apellido es obligatorio",
-                  pattern: {
-                    value: /^[a-zA-ZÀ-ÿ\s]{2,}$/,
-                    message:
-                      "Debe contener solo letras y al menos dos palabras",
-                  },
-                })}
-              />
-              {errors.nombre && (
+              <label>
+                Nombre completo
+                <input
+                  className={`w-full h-12 border rounded-md p-2 ${
+                    errors.nombreCompleto ? "border-red-600" : "border-gray-400"
+                  }`}
+                  type="text"
+                  placeholder="Nombre y apellido"
+                  {...register("nombreCompleto", {
+                    required: "El nombre y apellido es obligatorio",
+                    pattern: {
+                      value: /^[a-zA-ZÀ-ÿ\s]{2,}$/,
+                      message:
+                        "Debe contener solo letras y al menos dos palabras",
+                    },
+                  })}
+                />
+              </label>
+              {errors.nombreCompleto && (
                 <span className="text-red-600 text-sm">
-                  {typeof errors.nombre?.message === "string" &&
-                    errors.nombre.message}
+                  {typeof errors.nombreCompleto?.message === "string" &&
+                    errors.nombreCompleto.message}
                 </span>
               )}
             </div>
 
             <div>
-              <input
-                className={`w-full h-12 border rounded-md p-2 ${
-                  errors.fechaDeNacimiento
-                    ? "border-red-600"
-                    : "border-gray-400"
-                }`}
-                type="date"
-                placeholder="Fecha de nacimiento"
-                {...register("fechaDeNacimiento", {
-                  required: "La fecha de nacimiento es obligatoria",
-                  validate: {
-                    validAge: (value) =>
-                      validateAge(value) || "Debes tener al menos 13 años",
-                  },
-                })}
-              />
+              <label>
+                Fecha de nacimiento
+                <input
+                  className={`w-full h-12 border rounded-md p-2 ${
+                    errors.fechaDeNacimiento
+                      ? "border-red-600"
+                      : "border-gray-400"
+                  }`}
+                  type="date"
+                  placeholder="Fecha de nacimiento"
+                  {...register("fechaDeNacimiento", {
+                    required: "La fecha de nacimiento es obligatoria",
+                    validate: {
+                      validAge: (value) =>
+                        validateAge(value) || "Debes tener al menos 13 años",
+                    },
+                  })}
+                />
+              </label>
               {errors.fechaDeNacimiento && (
                 <span className="text-red-600 text-sm">
                   {typeof errors.fechaDeNacimiento?.message === "string" &&
@@ -101,6 +95,7 @@ export default function Register() {
             </div>
 
             <div className="flex gap-1 flex-wrap">
+              <p className="w-full">Género</p>
               <div>
                 <label className="p-2 border border-gray-400 rounded-sm full flex items-center gap-2">
                   <input
@@ -131,7 +126,7 @@ export default function Register() {
                     required: "El género es obligatorio",
                   })}
                 />
-                Personalizado
+                Otro
               </label>
               {errors.genero && typeof errors.genero.message === "string" && (
                 <span className="text-red-600 text-sm">
@@ -141,22 +136,26 @@ export default function Register() {
             </div>
 
             <div>
-              <input
-                className={`w-full h-12 border rounded-md p-2 ${
-                  errors.correoElectronico
-                    ? "border-red-600"
-                    : "border-gray-400"
-                }`}
-                type="email"
-                placeholder="Correo electrónico"
-                {...register("correoElectronico", {
-                  required: "El correo electrónico es obligatorio",
-                  pattern: {
-                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                    message: "Por favor, ingresa un correo electrónico válido",
-                  },
-                })}
-              />
+              <label>
+                Correo electrónico
+                <input
+                  className={`w-full h-12 border rounded-md p-2 ${
+                    errors.correoElectronico
+                      ? "border-red-600"
+                      : "border-gray-400"
+                  }`}
+                  type="email"
+                  placeholder="Correo electrónico"
+                  {...register("correoElectronico", {
+                    required: "El correo electrónico es obligatorio",
+                    pattern: {
+                      value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                      message:
+                        "Por favor, ingresa un correo electrónico válido",
+                    },
+                  })}
+                />
+              </label>
               {errors.correoElectronico && (
                 <span className="text-red-600 text-sm">
                   {typeof errors.correoElectronico?.message === "string" &&
@@ -166,21 +165,24 @@ export default function Register() {
             </div>
 
             <div>
-              <input
-                className={`w-full h-12 border rounded-md p-2 ${
-                  errors.contrasena ? "border-red-600" : "border-gray-400"
-                }`}
-                type="password"
-                placeholder="Contraseña"
-                {...register("contrasena", {
-                  required: "La contraseña es obligatoria",
-                  pattern: {
-                    value: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{6,}$/,
-                    message:
-                      "La contraseña debe tener al menos 6 caracteres, una mayúscula, un número y un carácter especial",
-                  },
-                })}
-              />
+              <label>
+                Contraseña
+                <input
+                  className={`w-full h-12 border rounded-md p-2 ${
+                    errors.contrasena ? "border-red-600" : "border-gray-400"
+                  }`}
+                  type="password"
+                  placeholder="Contraseña"
+                  {...register("contrasena", {
+                    required: "La contraseña es obligatoria",
+                    pattern: {
+                      value: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{6,}$/,
+                      message:
+                        "La contraseña debe tener al menos 6 caracteres, una mayúscula, un número y un carácter especial",
+                    },
+                  })}
+                />
+              </label>
               {errors.contrasena && (
                 <span className="text-red-600 text-sm">
                   {typeof errors.contrasena?.message === "string" &&
