@@ -18,16 +18,6 @@ export default function Register() {
   } = useForm<IFormDataRegister>();
 
   const router = useRouter();
-
-  const onSubmit = (data: IFormDataRegister) => {
-    // AQUI VA LA LOGICA DE REGISTRO
-    console.log(data);
-    if (data) {
-      // alert("Registrado correctamente");
-      // router.push("/username");
-    }
-  };
-
   const [showOtherGender, setShowOtherGender] = useState(false);
 
   const handleGenderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,6 +25,35 @@ export default function Register() {
       setShowOtherGender(true);
     } else {
       setShowOtherGender(false);
+    }
+  };
+
+  const onSubmit = async (data: IFormDataRegister) => {
+    console.log(data);
+    try {
+      // Enviar los datos al backend usando fetch
+      const response = await fetch(
+        "https://snappy-back-si83.onrender.com/auth/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data), // Convertimos los datos en formato JSON
+        }
+      );
+
+      // Verificar si la solicitud fue exitosa
+      if (!response.ok) {
+        throw new Error("Hubo un error al registrar el usuario.");
+      }
+
+      // Aquí puedes redirigir al usuario si el registro es exitoso
+      alert("Registrado correctamente");
+      router.push("/loadingbar");
+    } catch (error) {
+      // Manejo de errores
+      alert("Error al registrar el usuario: " + (error as Error).message);
     }
   };
 
@@ -184,6 +203,33 @@ export default function Register() {
                 <span className="text-red-600 text-sm">
                   {typeof errors.correoElectronico?.message === "string" &&
                     errors.correoElectronico.message}
+                </span>
+              )}
+            </div>
+
+            <div>
+              <label>
+                Nombre de usuario
+                <input
+                  className={`w-full h-12 border rounded-md p-2 ${
+                    errors.nombreUsuario ? "border-red-600" : "border-gray-400"
+                  }`}
+                  type="text"
+                  placeholder="Nombre de usuario"
+                  {...register("nombreUsuario", {
+                    required: "El nombre de usuario es obligatorio",
+                    pattern: {
+                      value: /^[a-z0-9]{3,}$/,
+                      message:
+                        "El nombre de usuario debe tener al menos 3 caracteres, solo puede contener letras minúsculas y números, y no puede contener espacios ni caracteres especiales",
+                    },
+                  })}
+                />
+              </label>
+              {errors.nombreUsuario && (
+                <span className="text-red-600 text-sm">
+                  {typeof errors.nombreUsuario?.message === "string" &&
+                    errors.nombreUsuario.message}
                 </span>
               )}
             </div>

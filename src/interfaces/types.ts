@@ -8,6 +8,7 @@ export interface IFormDataRegister {
   fechaDeNacimiento: string;
   genero: "hombre" | "mujer" | "otro" | string;
   correoElectronico: string;
+  nombreUsuario: string;
   contrasena: string;
 }
 
