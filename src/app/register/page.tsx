@@ -42,8 +42,8 @@ export default function Register() {
           body: JSON.stringify(data), // Convertimos los datos en formato JSON
         }
       );
-      
-      console.log("🚀 ~ onSubmit ~ response:", response)
+
+      console.log("🚀 ~ onSubmit ~ response:", response);
 
       // Verificar si la solicitud fue exitosa
       if (!response.ok) {
@@ -75,11 +75,11 @@ export default function Register() {
                 Nombre completo
                 <input
                   className={`w-full h-12 border rounded-md p-2 ${
-                    errors.nombreCompleto ? "border-red-600" : "border-gray-400"
+                    errors.fullname ? "border-red-600" : "border-gray-400"
                   }`}
                   type="text"
                   placeholder="Nombre y apellido"
-                  {...register("nombreCompleto", {
+                  {...register("fullname", {
                     required: "El nombre y apellido es obligatorio",
                     pattern: {
                       value: /^[a-zA-ZÀ-ÿ\s]{2,}$/,
@@ -89,10 +89,10 @@ export default function Register() {
                   })}
                 />
               </label>
-              {errors.nombreCompleto && (
+              {errors.fullname && (
                 <span className="text-red-600 text-sm">
-                  {typeof errors.nombreCompleto?.message === "string" &&
-                    errors.nombreCompleto.message}
+                  {typeof errors.fullname?.message === "string" &&
+                    errors.fullname.message}
                 </span>
               )}
             </div>
@@ -102,13 +102,11 @@ export default function Register() {
                 Fecha de nacimiento
                 <input
                   className={`w-full h-12 border rounded-md p-2 ${
-                    errors.fechaDeNacimiento
-                      ? "border-red-600"
-                      : "border-gray-400"
+                    errors.birthdate ? "border-red-600" : "border-gray-400"
                   }`}
                   type="date"
                   placeholder="Fecha de nacimiento"
-                  {...register("fechaDeNacimiento", {
+                  {...register("birthdate", {
                     required: "La fecha de nacimiento es obligatoria",
                     validate: {
                       validAge: (value) =>
@@ -117,10 +115,10 @@ export default function Register() {
                   })}
                 />
               </label>
-              {errors.fechaDeNacimiento && (
+              {errors.birthdate && (
                 <span className="text-red-600 text-sm">
-                  {typeof errors.fechaDeNacimiento?.message === "string" &&
-                    errors.fechaDeNacimiento.message}
+                  {typeof errors.birthdate?.message === "string" &&
+                    errors.birthdate.message}
                 </span>
               )}
             </div>
@@ -132,7 +130,7 @@ export default function Register() {
                   <input
                     type="radio"
                     value="hombre"
-                    {...register("genero", {
+                    {...register("genre", {
                       required: "El género es obligatorio",
                     })}
                     onChange={handleGenderChange}
@@ -144,7 +142,7 @@ export default function Register() {
                 <input
                   type="radio"
                   value="mujer"
-                  {...register("genero", {
+                  {...register("genre", {
                     required: "El género es obligatorio",
                   })}
                   onChange={handleGenderChange}
@@ -155,7 +153,7 @@ export default function Register() {
                 <input
                   type="radio"
                   value="otro"
-                  {...register("genero", {
+                  {...register("genre", {
                     required: "El género es obligatorio",
                   })}
                   onChange={handleGenderChange}
@@ -173,9 +171,9 @@ export default function Register() {
                 </div>
               )}
 
-              {errors.genero && typeof errors.genero.message === "string" && (
+              {errors.genre && typeof errors.genre.message === "string" && (
                 <span className="text-red-600 text-sm">
-                  {errors.genero.message}
+                  {errors.genre.message}
                 </span>
               )}
             </div>
@@ -185,13 +183,11 @@ export default function Register() {
                 Correo electrónico
                 <input
                   className={`w-full h-12 border rounded-md p-2 ${
-                    errors.correoElectronico
-                      ? "border-red-600"
-                      : "border-gray-400"
+                    errors.email ? "border-red-600" : "border-gray-400"
                   }`}
                   type="email"
                   placeholder="Correo electrónico"
-                  {...register("correoElectronico", {
+                  {...register("email", {
                     required: "El correo electrónico es obligatorio",
                     pattern: {
                       value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
@@ -201,10 +197,10 @@ export default function Register() {
                   })}
                 />
               </label>
-              {errors.correoElectronico && (
+              {errors.email && (
                 <span className="text-red-600 text-sm">
-                  {typeof errors.correoElectronico?.message === "string" &&
-                    errors.correoElectronico.message}
+                  {typeof errors.email?.message === "string" &&
+                    errors.email.message}
                 </span>
               )}
             </div>
@@ -214,11 +210,11 @@ export default function Register() {
                 Nombre de usuario
                 <input
                   className={`w-full h-12 border rounded-md p-2 ${
-                    errors.nombreUsuario ? "border-red-600" : "border-gray-400"
+                    errors.username ? "border-red-600" : "border-gray-400"
                   }`}
                   type="text"
                   placeholder="Nombre de usuario"
-                  {...register("nombreUsuario", {
+                  {...register("username", {
                     required: "El nombre de usuario es obligatorio",
                     pattern: {
                       value: /^[a-z0-9]{3,}$/,
@@ -228,10 +224,10 @@ export default function Register() {
                   })}
                 />
               </label>
-              {errors.nombreUsuario && (
+              {errors.username && (
                 <span className="text-red-600 text-sm">
-                  {typeof errors.nombreUsuario?.message === "string" &&
-                    errors.nombreUsuario.message}
+                  {typeof errors.username?.message === "string" &&
+                    errors.username.message}
                 </span>
               )}
             </div>
@@ -241,11 +237,11 @@ export default function Register() {
                 Contraseña
                 <input
                   className={`w-full h-12 border rounded-md p-2 ${
-                    errors.contrasena ? "border-red-600" : "border-gray-400"
+                    errors.password ? "border-red-600" : "border-gray-400"
                   }`}
                   type="password"
                   placeholder="Contraseña"
-                  {...register("contrasena", {
+                  {...register("password", {
                     required: "La contraseña es obligatoria",
                     pattern: {
                       value: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/,
@@ -255,10 +251,10 @@ export default function Register() {
                   })}
                 />
               </label>
-              {errors.contrasena && (
+              {errors.password && (
                 <span className="text-red-600 text-sm">
-                  {typeof errors.contrasena?.message === "string" &&
-                    errors.contrasena.message}
+                  {typeof errors.password?.message === "string" &&
+                    errors.password.message}
                 </span>
               )}
             </div>
