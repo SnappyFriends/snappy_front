@@ -31,7 +31,7 @@ const InProgress = () => {
           </div>
           <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
             <Image src="/mensajes.png" alt="Mensajes" width={24} height={24} />
-            <Link href="/mensajesprivados"><p>Mensajes</p></Link>
+            <Link href="/mensajesprivados"><p>Mensajes </p></Link>
           </div>
           <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
             <Image
