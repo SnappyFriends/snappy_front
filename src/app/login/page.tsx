@@ -2,7 +2,6 @@
 
 import HeaderLoginRegister from "@/components/HeaderLoginRegister";
 import Image from "next/image";
-import FooterLoginRegister from "../../components/FooterLoginRegister";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { IFormDataLogin } from "@/interfaces/types";
@@ -35,7 +34,7 @@ export default function Login() {
       }
 
       const result = await response.json();
-      console.log("🚀 ~ onSubmit ~ result:", result)
+      console.log("🚀 ~ onSubmit ~ result:", result);
 
       // Guardar token o sesión según la respuesta del backend
       // localStorage.setItem("token", result.token);
@@ -58,20 +57,24 @@ export default function Login() {
             className="flex flex-col gap-4 w-80"
           >
             <div>
-              <input
-                className={`w-full h-12 border rounded-md p-2 ${
-                  errors.email ? "border-red-600" : "border-gray-400"
-                }`}
-                type="email"
-                placeholder="Correo electrónico"
-                {...register("email", {
-                  required: "El correo electrónico es obligatorio",
-                  pattern: {
-                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                    message: "Por favor, ingresa un correo electrónico válido",
-                  },
-                })}
-              />
+              <label>
+                Correo electrónico
+                <input
+                  className={`w-full h-12 border rounded-md p-2 ${
+                    errors.email ? "border-red-600" : "border-gray-400"
+                  }`}
+                  type="email"
+                  placeholder="Correo electrónico"
+                  {...register("email", {
+                    required: "El correo electrónico es obligatorio",
+                    pattern: {
+                      value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                      message:
+                        "Por favor, ingresa un correo electrónico válido",
+                    },
+                  })}
+                />
+              </label>
               {errors.email && (
                 <span className="text-red-600 text-sm">
                   {typeof errors.email?.message === "string" &&
@@ -80,21 +83,24 @@ export default function Login() {
               )}
             </div>
             <div>
-              <input
-                className={`w-full h-12 border rounded-md p-2 ${
-                  errors.email ? "border-red-600" : "border-gray-400"
-                }`}
-                type="password"
-                placeholder="Contraseña"
-                {...register("password", {
-                  required: "La contraseña es obligatoria",
-                  pattern: {
-                    value: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{6,}$/,
-                    message:
-                      "La contraseña debe tener al menos 6 caracteres, una mayúscula, un número y un carácter especial",
-                  },
-                })}
-              />
+              <label>
+                Contraseña
+                <input
+                  className={`w-full h-12 border rounded-md p-2 ${
+                    errors.email ? "border-red-600" : "border-gray-400"
+                  }`}
+                  type="password"
+                  placeholder="Contraseña"
+                  {...register("password", {
+                    required: "La contraseña es obligatoria",
+                    pattern: {
+                      value: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/,
+                      message:
+                        "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial",
+                    },
+                  })}
+                />
+              </label>
               {errors.password && (
                 <span className="text-red-600 text-sm">
                   {typeof errors.password?.message === "string" &&
@@ -136,7 +142,6 @@ export default function Login() {
           </form>
         </div>
       </main>
-      <FooterLoginRegister />
     </div>
   );
 }
