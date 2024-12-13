@@ -200,9 +200,9 @@ export default function Register() {
                   {...register("contrasena", {
                     required: "La contraseña es obligatoria",
                     pattern: {
-                      value: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{6,}$/,
+                      value: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/,
                       message:
-                        "La contraseña debe tener al menos 6 caracteres, una mayúscula, un número y un carácter especial",
+                        "La contraseña debe tener al menos 8 caracteres, una mayúscula, un número y un carácter especial",
                     },
                   })}
                 />
