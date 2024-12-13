@@ -42,7 +42,7 @@ export default function Login() {
 
       showCustomToast("Snappy", "¡Inicio de sesión exitoso!", "success");
       router.push("/loadingbar");
-    } catch (error) {
+    } catch {
       showCustomToast(
         "Error",
         "Hubo un problema al iniciar sesión en tu cuenta",
