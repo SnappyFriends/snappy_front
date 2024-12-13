@@ -17,15 +17,33 @@ export default function Login() {
 
   const router = useRouter();
 
-  const onSubmit = (data: IFormDataLogin) => {
-    // AQUI DEBERÍA IR LA LÓGICA DE INICIO DE SESIÓN
-    if (data.email === "snappy@gmail.com" && data.password === "Asdf#1") {
-      // Guardar la sesión del usuario en localStorage, pero por ahora no porque falta el backend y usar Context o Redux
-      // localStorage.setItem("user", JSON.stringify({ email: data.email, password: data.password }));
+  const onSubmit = async (data: IFormDataLogin) => {
+    try {
+      const response = await fetch(
+        "https://snappy-back-si83.onrender.com/auth/signin",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Credenciales inválidas. Inténtalo de nuevo.");
+      }
+
+      const result = await response.json();
+      console.log("🚀 ~ onSubmit ~ result:", result)
+
+      // Guardar token o sesión según la respuesta del backend
+      // localStorage.setItem("token", result.token);
+
       alert("Inicio de sesión exitoso");
       router.push("/loadingbar");
-    } else {
-      alert("Usuario o contraseña incorrectos");
+    } catch (error) {
+      alert(`Error al iniciar sesión: ${(error as Error).message}`);
     }
   };
 

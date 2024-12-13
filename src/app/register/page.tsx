@@ -29,8 +29,6 @@ export default function Register() {
   };
 
   const onSubmit = async (data: IFormDataRegister) => {
-    console.log("🚀 ~ onSubmit ~ data:", data)
-    
     try {
       const response = await fetch(
         "https://snappy-back-si83.onrender.com/auth/signup",
@@ -40,23 +38,16 @@ export default function Register() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(data),
-          
         }
       );
 
-      console.log("🚀 ~ onSubmit ~ response:", response);
-      //AGUS SE LA COME
-
-      // Verificar si la solicitud fue exitosa
       if (!response.ok) {
         throw new Error("Hubo un error al registrar el usuario.");
       }
 
-      // Aquí puedes redirigir al usuario si el registro es exitoso
       alert("Registrado correctamente");
       router.push("/loadingbar");
     } catch (error) {
-      // Manejo de errores
       alert("Error al registrar el usuario: " + (error as Error).message);
     }
   };
