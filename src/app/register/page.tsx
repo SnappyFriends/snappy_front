@@ -45,6 +45,7 @@ export default function Register() {
       );
 
       console.log("🚀 ~ onSubmit ~ response:", response);
+      //AGUS SE LA COME
 
       // Verificar si la solicitud fue exitosa
       if (!response.ok) {
