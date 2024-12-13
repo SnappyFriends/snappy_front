@@ -42,6 +42,8 @@ export default function Register() {
           body: JSON.stringify(data), // Convertimos los datos en formato JSON
         }
       );
+      
+      console.log("🚀 ~ onSubmit ~ response:", response)
 
       // Verificar si la solicitud fue exitosa
       if (!response.ok) {

@@ -4,12 +4,12 @@ export interface IFormDataLogin {
 }
 
 export interface IFormDataRegister {
-  nombreCompleto: string;
-  fechaDeNacimiento: string;
-  genero: "hombre" | "mujer" | "otro" | string;
-  correoElectronico: string;
-  nombreUsuario: string;
-  contrasena: string;
+  fullname: string;
+  birthdate: string;
+  genre: "hombre" | "mujer" | "otro" | string;
+  email: string;
+  username: string;
+  password: string;
 }
 
 export interface IValidateAge {
