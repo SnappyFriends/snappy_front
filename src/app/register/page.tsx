@@ -29,7 +29,8 @@ export default function Register() {
   };
 
   const onSubmit = async (data: IFormDataRegister) => {
-    console.log(data);
+    console.log("🚀 ~ onSubmit ~ data:", data)
+    
     try {
       const response = await fetch(
         "https://snappy-back-si83.onrender.com/auth/signup",
