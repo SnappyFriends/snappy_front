@@ -58,10 +58,9 @@
 
 // export default CustomToast;
 
-
 import React from "react";
 import Image from "next/image";
-import { toast, Toast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 
 interface CustomToastProps {
   sender: string;
@@ -111,10 +110,9 @@ export const showCustomToast = (
   message: string,
   type: "success" | "error"
 ) => {
-  toast.custom((t: Toast) => (
+  toast.custom(() => (
     <CustomToast sender={sender} message={message} type={type} />
   ));
 };
 
 export default CustomToast;
-
