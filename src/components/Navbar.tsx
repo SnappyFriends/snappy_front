@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -54,12 +53,7 @@ const Navbar: React.FC = () => {
 
           <div className="hidden md:flex space-x-6">
             <Link href="/socialfeed">
-              <Image
-                src="/home1.png"
-                alt="Home Icon"
-                width={32}
-                height={32}
-              />
+              <Image src="/home1.png" alt="Home Icon" width={32} height={32} />
             </Link>
             <Link href="/mensajesprivados">
               <Image
@@ -96,33 +90,33 @@ const Navbar: React.FC = () => {
           </div>
 
           <div className="md:hidden">
-  <button
-    onClick={() => setIsOpen(!isOpen)}
-    className="text-gray-800 focus:outline-none"
-    aria-label="Abrir menú" 
-    title="Abrir menú" 
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="h-8 w-8"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        d="M4 6h16M4 12h16m-7 6h7"
-      />
-    </svg>
-  </button>
-</div>
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="text-gray-800 focus:outline-none"
+              aria-label="Abrir menú"
+              title="Abrir menú"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-8 w-8"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4 6h16M4 12h16m-7 6h7"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
 
         {isOpen && (
           <div className="md:hidden mt-4 space-y-4">
-            {/* <form className="w-full relative">
+            <form className="w-full relative">
               <input
                 type="text"
                 placeholder="Buscar..."
@@ -144,14 +138,9 @@ const Navbar: React.FC = () => {
                   />
                 </svg>
               </div>
-            </form> */}
+            </form>
             <Link href="/socialfeed" className="block">
-              <Image
-                src="/home1.png"
-                alt="Home Icon"
-                width={32}
-                height={32}
-              />
+              <Image src="/home1.png" alt="Home Icon" width={32} height={32} />
             </Link>
             <Link href="/mensajesprivados" className="block">
               <Image
