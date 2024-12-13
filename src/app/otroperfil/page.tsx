@@ -7,87 +7,78 @@ import Link from "next/link";
 const OtherProfileView = () => {
   return (
     <div>
-      <Navbar/>
-    <div className="flex bg-white min-h-screen relative">
-      <div className="hidden md:flex flex-col w-64 bg-white p-6 space-y-10 absolute left-6 top-1/2 transform -translate-y-1/2">
-        <div className="space-y-8">
-        <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
-            <Image src="/usuario.png" alt="Perfil" width={24} height={24} />
-            <Link href="/miperfil"><p>Perfil</p></Link>
+      <Navbar />
+      <div className="flex min-h-screen relative">
+        <div className="hidden md:flex flex-col w-64 bg-white p-6 space-y-10 absolute left-6 top-1/2 transform -translate-y-1/2">
+          <div className="space-y-8">
+            <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
+              <Image src="/usuario.png" alt="Perfil" width={24} height={24} />
+              <Link href="/miperfil">Perfil</Link>
+            </div>
+            <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
+              <Image src="/home.png" alt="Inicio" width={24} height={24} />
+              <Link href="/socialfeed">Inicio</Link>
+            </div>
+            <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
+              <Image src="/mas.jpg" alt="Crear publicación" width={24} height={24} />
+              <Link href="#">Crear publicación</Link>
+            </div>
+            <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
+              <Image src="/mensajes.png" alt="Mensajes" width={24} height={24} />
+              <Link href="/mensajesprivados">Mensajes</Link>
+            </div>
+            <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
+              <Image src="/notificaciones.png" alt="Notificaciones" width={24} height={24} />
+              <Link href="/notificaciones">Notificaciones</Link>
+            </div>
+            <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
+              <Image src="/rueda.png" alt="Configuración" width={24} height={24} />
+              <Link href="/editarperfil">Configuración</Link>
+            </div>
+            <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
+              <Image src="/flecha.png" alt="Snappear" width={24} height={24} />
+              <Link href="/newchat">SNAPPEAR</Link>
+            </div>
           </div>
-          <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
-            <Image src="/home.png" alt="Inicio" width={24} height={24} />
-            <Link href="/socialfeed"><p>Inicio</p></Link>
-          </div>
-          <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
-            <Image
-              src="/mas.jpg"
-              alt="Crear publicación"
-              width={24} height={24}
-            />
-            <Link href=""><p>Crear publicación</p></Link>
-          </div>
-          <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
-            <Image src="/mensajes.png" alt="Mensajes" width={24} height={24} />
-            <Link href="/mensajesprivados"><p>Mensajes</p></Link>
-          </div>
-          <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
-            <Image
-              src="/notificaciones.png"
-              alt="Notificaciones"
-              width={24} height={24}
-            />
-            <Link href="/notificaciones"><p>Notificaciones</p></Link>
-          </div>
-          <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
-            <Image
-              src="/rueda.png"
-              alt="Configuración"
-              width={24} height={24}
-            />
-            <Link href="/editarperfil"><p>Configuración</p></Link>
-          </div>
-          <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
-            <Image src="/flecha.png" alt="No sabemos" width={24} height={24} />
-            <Link href="/newchat"><p>SNAPPEAR</p></Link>
-          </div>
-                    </div>
+        </div>
 
-      </div>
-
-      <div className="flex-1 flex flex-col items-center justify-center">
-        <div className="bg-white rounded-lg  p-6 w-full max-w-md">
-          <div className="flex flex-col items-center text-center mb-4">
-            <h1 className="text-xl font-semibold">Katy Swift</h1>
-          </div>
-
-          <div className="flex flex-col items-center mt-4">
-            <div className="flex flex-col md:flex-row items-center w-full">
-              <div className="relative w-20 h-20 md:w-24 md:h-24 mb-4 md:mb-0 md:mr-6">
-                <Image
-                  src="/agregarfoto.png"
-                  alt="Foto de perfil"
-                  fill
-                  sizes="96px"
-                  className="rounded-full object-cover"
-                />
-              </div>
-
-              <div className="flex justify-evenly w-full md:flex-1 text-center">
-                <div className="space-y-0.5">
-                  <p className="text-sm font-bold text-gray-800">Amigos</p>
-                  <p className="text-lg font-bold">101</p>
-                </div>
-                <div className="space-y-0.5">
-                  <p className="text-sm font-bold text-gray-800">Seguidores</p>
-                  <p className="text-lg font-bold">20k</p>
-                </div>
-                <div className="space-y-0.5">
-                  <p className="text-sm font-bold text-gray-800">Post</p>
-                  <p className="text-lg font-bold">22</p>
-                </div>
+        <div className="flex-1 flex flex-col items-center p-6 min-h-screen">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md mt-10">
+            <div className="flex items-center justify-between">
+              <h1 className="text-xl font-semibold text-center flex-1">Katy Swift</h1>
+              <div className="relative w-6 h-6">
+                <Image src="/rueda.png" alt="Configuración" fill className="object-contain" />
               </div>
             </div>
+
+            <div className="flex flex-col items-center mt-4">
+              <div className="flex items-center w-full">
+                <div className="relative w-24 h-24 mr-6">
+                  <Image
+                    src="/agregarfoto.png"
+                    alt="Foto de perfil"
+                    fill
+                    className="rounded-full object-cover"
+                  />
+                </div>
+
+                <div className="flex justify-evenly flex-1 text-center">
+                  <div className="space-y-0.5">
+                    <Link href="/listacontactos">
+                    <p className="text-sm font-bold text-gray-800">Amigos</p>
+                    <p className="text-lg font-bold">101</p>
+                    </Link>
+                  </div>
+                  <div className="space-y-0.5">
+                    <p className="text-sm font-bold text-gray-800">Seguidores</p>
+                    <p className="text-lg font-bold">20k</p>
+                  </div>
+                  <div className="space-y-0.5">
+                    <p className="text-sm font-bold text-gray-800">Post</p>
+                    <p className="text-lg font-bold">22</p>
+                  </div>
+                </div>
+              </div>
 
             <div className="mt-4 flex flex-col items-center space-y-2">
               <button className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">
