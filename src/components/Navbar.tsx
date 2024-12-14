@@ -3,15 +3,24 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import SearchBar from "./Searchbar";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const icons = [
+    { href: "/socialfeed", src: "/home1.png", alt: "Home Icon" },
+    { href: "/mensajesprivados", src: "/mensajes.png", alt: "Messages Icon" },
+    { href: "/newchat", src: "/logochatsnuevos.png", alt: "Arrow Icon" },
+    { href: "/notificaciones", src: "/notificaciones.png", alt: "Notifications Icon" },
+    { href: "/miperfil", src: "/usuario.png", alt: "Profile Icon" },
+  ];
 
   return (
     <nav className="bg-white text-gray-800 shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-4 flex-shrink-0">
             <Link href="/socialfeed">
               <Image
                 src="/favicon.ico"
@@ -20,73 +29,19 @@ const Navbar: React.FC = () => {
                 height={50}
               />
             </Link>
-            <span className="text-2xl font-bold text-gray-800">
-              SNAPPY FRIENDS
-            </span>
+            <span className="text-2xl font-bold text-gray-800">SNAPPY FRIENDS</span>
           </div>
 
-          <div className="hidden md:flex flex-grow justify-center">
-            <form className="w-2/4 relative">
-              <input
-                type="text"
-                placeholder="Buscar..."
-                className="w-full h-10 border border-gray-300 rounded-md px-10 placeholder-gray-500 bg-gray-200 focus:outline-none"
-              />
-              <div className="absolute left-3 top-2 flex items-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-gray-500"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M10 4a6 6 0 100 12 6 6 0 000-12zm14 14l-4.35-4.35"
-                  />
-                </svg>
-              </div>
-            </form>
+          <div className="flex-grow ml-48">
+            <SearchBar />
           </div>
 
           <div className="hidden md:flex space-x-6">
-            <Link href="/socialfeed">
-              <Image src="/home1.png" alt="Home Icon" width={32} height={32} />
-            </Link>
-            <Link href="/mensajesprivados">
-              <Image
-                src="/mensajes.png"
-                alt="Messages Icon"
-                width={32}
-                height={32}
-              />
-            </Link>
-            <Link href="/newchat">
-              <Image
-                src="/logochatsnuevos.png"
-                alt="Arrow Icon"
-                width={32}
-                height={32}
-              />
-            </Link>
-            <Link href="/notificaciones">
-              <Image
-                src="/notificaciones.png"
-                alt="Notifications Icon"
-                width={32}
-                height={32}
-              />
-            </Link>
-            <Link href="/miperfil">
-              <Image
-                src="/usuario.png"
-                alt="Profile Icon"
-                width={32}
-                height={32}
-              />
-            </Link>
+            {icons.map(({ href, src, alt }) => (
+              <Link href={href} key={href}>
+                <Image src={src} alt={alt} width={32} height={32} />
+              </Link>
+            ))}
           </div>
 
           <div className="md:hidden">
@@ -116,64 +71,11 @@ const Navbar: React.FC = () => {
 
         {isOpen && (
           <div className="md:hidden mt-4 space-y-4">
-            <form className="w-full relative">
-              <input
-                type="text"
-                placeholder="Buscar..."
-                className="w-full h-10 border border-gray-300 rounded-md px-10 placeholder-gray-500 bg-gray-200 focus:outline-none"
-              />
-              <div className="absolute left-3 top-2 flex items-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-6 w-6 text-gray-500"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M10 4a6 6 0 100 12 6 6 0 000-12zm14 14l-4.35-4.35"
-                  />
-                </svg>
-              </div>
-            </form>
-            <Link href="/socialfeed" className="block">
-              <Image src="/home1.png" alt="Home Icon" width={32} height={32} />
-            </Link>
-            <Link href="/mensajesprivados" className="block">
-              <Image
-                src="/mensajes.png"
-                alt="Messages Icon"
-                width={32}
-                height={32}
-              />
-            </Link>
-            <Link href="/newchat" className="block">
-              <Image
-                src="/logochatsnuevos.png"
-                alt="Arrow Icon"
-                width={32}
-                height={32}
-              />
-            </Link>
-            <Link href="/notificaciones" className="block">
-              <Image
-                src="/notificaciones.png"
-                alt="Notifications Icon"
-                width={32}
-                height={32}
-              />
-            </Link>
-            <Link href="/miperfil" className="block">
-              <Image
-                src="/usuario.png"
-                alt="Profile Icon"
-                width={32}
-                height={32}
-              />
-            </Link>
+            {icons.map(({ href, src, alt }) => (
+              <Link href={href} key={href} className="block">
+                <Image src={src} alt={alt} width={32} height={32} />
+              </Link>
+            ))}
           </div>
         )}
       </div>
