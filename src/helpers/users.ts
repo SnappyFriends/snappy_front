@@ -40,3 +40,16 @@ export interface User {
     }
   };
   
+  export const getUserById = async (id: string) => {
+    try {
+      const response = await fetch(`http://localhost:3000/users/${id}`); 
+      if (!response.ok) {
+        throw new Error('Error fetching user');
+      }
+      const userData = await response.json();
+      return userData;
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      throw error; 
+    }
+  };
