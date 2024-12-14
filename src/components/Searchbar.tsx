@@ -61,7 +61,7 @@ const SearchBar: React.FC = () => {
   className="w-full md:w-3/5 p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 transition duration-300"
 />
 
-      {loading && <p className="mt-3 text-gray-500">Loading...</p>}
+      {loading && <p className="mt-3 text-gray-500"></p>}
       {error && <p className="mt-3 text-red-500">{error}</p>}
 
       {!loading && filteredUsers.length > 0 && (
