@@ -40,7 +40,7 @@ export default function Login() {
       // Guardar token o sesión según la respuesta del backend
       // localStorage.setItem("token", result.token);
 
-      showCustomToast("Snappy", "¡Inicio de sesión exitoso!", "success");
+      showCustomToast("Snappy", "AGUS SE LA COME DOBLADA", "success");
       router.push("/loadingbar");
     } catch (error) {
       showCustomToast("Error", `${(error as Error).message}`, "error");
