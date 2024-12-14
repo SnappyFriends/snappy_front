@@ -58,7 +58,7 @@ const ProfileView = () => {
                 height={24}
               />
               <Link href="/notificaciones">
-                <p>Notificaciones </p>
+                <p>Notificaciones</p>
               </Link>
             </div>
             <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
