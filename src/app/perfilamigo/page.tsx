@@ -9,6 +9,7 @@ const ProfileView = () => {
     <div>
       <Navbar />
       <div className="flex min-h-screen relative">
+       
         <div className="hidden md:flex flex-col w-64 bg-white p-6 space-y-10 absolute left-6 top-1/2 transform -translate-y-1/2">
           <div className="space-y-8">
             <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
@@ -42,6 +43,7 @@ const ProfileView = () => {
           </div>
         </div>
 
+        
         <div className="flex-1 flex flex-col items-center p-6 min-h-screen">
           <div className="bg-white rounded-lg p-6 w-full max-w-md mt-10">
             <div className="flex items-center justify-between">
@@ -65,8 +67,8 @@ const ProfileView = () => {
                 <div className="flex justify-evenly flex-1 text-center">
                   <div className="space-y-0.5">
                     <Link href="/listacontactos">
-                    <p className="text-sm font-bold text-gray-800">Amigos</p>
-                    <p className="text-lg font-bold">101</p>
+                      <p className="text-sm font-bold text-gray-800">Amigos</p>
+                      <p className="text-lg font-bold">101</p>
                     </Link>
                   </div>
                   <div className="space-y-0.5">
@@ -80,12 +82,23 @@ const ProfileView = () => {
                 </div>
               </div>
 
-              <div className="mt-4 flex justify-center">
+              <div className="mt-4 flex items-center space-x-4">
                 <Link href="/inprogress">
-                <button className="bg-black text-white py-2 px-4 rounded-lg">
-                  Pregunta anónima
-                </button>
+                  <button className="bg-black text-white py-2 px-4 rounded-lg">
+                    Pregunta anónima
+                  </button>
                 </Link>
+                <Link href="/inprogress">
+  <div className="relative w-6 h-6">
+    <Image
+      src="/mensajes.png"
+      alt="Ícono de mensaje"
+      fill
+      className="object-contain cursor-pointer"
+    />
+  </div>
+</Link>
+
               </div>
             </div>
 
