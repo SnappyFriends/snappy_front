@@ -25,9 +25,11 @@ const ChatView = () => {
               <p className="text-sm text-gray-500">Activo(a) ahora</p>
             </div>
           </div>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-600 transition">
-            Enviar solicitud
-          </button>
+          <Link href="/inprogress">
+  <button className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-600 transition">
+    Enviar solicitud
+  </button>
+</Link>
         </div>
 
         <div className="flex-1 px-4 py-6 overflow-y-auto min-h-[60vh]">

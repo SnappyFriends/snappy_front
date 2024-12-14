@@ -27,7 +27,7 @@ const ProfileView = () => {
               alt="Crear publicación"
               width={24} height={24}
             />
-            <Link href=""><p>Crear publicación</p></Link>
+            <Link href="/inprogress"><p>Crear publicación</p></Link>
           </div>
           <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
             <Image src="/mensajes.png" alt="Mensajes" width={24} height={24} />

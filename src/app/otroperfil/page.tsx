@@ -30,7 +30,7 @@ const OtherProfileView = () => {
                 width={24}
                 height={24}
               />
-              <Link href="">
+              <Link href="/inprogress">
                 <p>Crear publicación</p>
               </Link>
             </div>
@@ -130,12 +130,16 @@ const OtherProfileView = () => {
                 </div>
 
                 <div className="mt-4 flex flex-col items-center space-y-2">
-                  <button className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">
-                    Enviar solicitud
-                  </button>
+                <Link href="/inprogress">
+  <button className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">
+    Enviar solicitud
+  </button>
+</Link>
+<Link href="/inprogress">
                   <button className="bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-800 transition">
                     Pregunta anónima
                   </button>
+                  </Link>
                 </div>
               </div>
 
