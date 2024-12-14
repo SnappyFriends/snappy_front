@@ -7,7 +7,7 @@ export interface User {
   
   export const getUsers = async (): Promise<User[]> => {
     try {
-      const response = await fetch('http://localhost:3000/users', {
+      const response = await fetch('https://snappy-back-si83.onrender.com/users', {
         method: 'GET',
         
       });
