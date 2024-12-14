@@ -29,7 +29,7 @@ const InProgress = () => {
                 width={24}
                 height={24}
               />
-              <Link href="">
+              <Link href="/inprogress">
                 <p>Crear publicación</p>
               </Link>
             </div>
