@@ -20,3 +20,8 @@ export interface ILoginResponse {
   token: string;
   message: string;
 }
+
+export interface IUserContextType {
+  token: string | null;
+  setToken: (token: string) => void;
+}
