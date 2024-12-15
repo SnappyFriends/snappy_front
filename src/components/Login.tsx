@@ -8,6 +8,9 @@ import { IFormDataLogin } from "@/interfaces/types";
 import { useRouter } from "next/navigation";
 import { showCustomToast } from "@/components/Notificacion";
 import { loginUser } from "@/services/loginService";
+import { useContext } from "react";
+import { UserContext } from "@/context/UserContext";
+import Cookies from "js-cookie";
 
 export default function Login() {
   const {
@@ -18,9 +21,24 @@ export default function Login() {
 
   const router = useRouter();
 
+  const useUserContext = useContext(UserContext);
+  if (!useUserContext) {
+    throw new Error(
+      "UserContext no está disponible. Asegúrate de envolver este componente en un UserProvider."
+    );
+  }
+  const { setToken } = useUserContext;
+
   const onSubmit = async (data: IFormDataLogin) => {
     try {
       const resultado = await loginUser(data);
+      const { token } = resultado;
+
+      if (token) {
+        Cookies.set("auth_token", token, { expires: 1 });
+        setToken(token);
+      }
+
       console.log("🚀 ~ onSubmit ~ resultado TRY LOGIN.TSX:", resultado);
 
       showCustomToast("Snappy", "Iniciaste sesión correctamente", "success");

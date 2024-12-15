@@ -1,11 +1,5 @@
 import { IFormDataLogin, ILoginResponse } from "@/interfaces/types";
 
-const setTokenInCookie = (token: string) => {
-  const expireDate = new Date();
-  expireDate.setHours(expireDate.getHours() + 1);
-  document.cookie = `auth_token=${token}; expires=${expireDate.toUTCString()}; path=/`;
-};
-
 export const loginUser = async (
   data: IFormDataLogin
 ): Promise<ILoginResponse> => {
@@ -26,10 +20,6 @@ export const loginUser = async (
     }
 
     const dataResponse: ILoginResponse = await response.json();
-
-    if (dataResponse.token) {
-      setTokenInCookie(dataResponse.token);
-    }
 
     return dataResponse;
   } catch (error) {

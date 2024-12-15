@@ -1,35 +1,20 @@
 "use client";
 
 import { IUserContextType } from "@/interfaces/types";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState } from "react";
 import { ReactNode } from "react";
+import Cookies from "js-cookie";
 
-export const UserContext = createContext<IUserContextType | null>(null);
+export const UserContext = createContext<IUserContextType>({
+  token: null,
+  setToken: () => {},
+});
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [token, setToken] = useState<string | null>(null);
-
-  useEffect(() => {
-    const storedToken = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("auth_token"))
-      ?.split("=")[1];
-
-    if (storedToken) {
-      setToken(storedToken);
-    }
-    console.log("🚀 ~ useEffect ~ storedToken:", storedToken);
-  }, []);
-
-  const handleSetToken = (newToken: string | null) => {
-    setToken(newToken);
-    const expireDate = new Date();
-    expireDate.setHours(expireDate.getHours() + 24);
-    document.cookie = `auth_token=${newToken}; expires=${expireDate.toUTCString()}; path=/`;
-  };
+  const [token, setToken] = useState<string | null>(Cookies.get("auth_token") || null);
 
   return (
-    <UserContext.Provider value={{ token, setToken: handleSetToken }}>
+    <UserContext.Provider value={{ token, setToken }}>
       {children}
     </UserContext.Provider>
   );
