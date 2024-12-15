@@ -54,13 +54,14 @@ const Navbar: React.FC = () => {
               <Image src={src} alt={alt} width={32} height={32} />
             </Link>
           ))}
-          {/* Botón de cerrar sesión colocado aquí */}
-          <button
-            onClick={handleLogout}
-            className="text-red-600 hover:text-red-800"
-          >
-            Cerrar sesión
-          </button>
+          <Image
+  src="/cerrarsesion.png" 
+  alt="Cerrar sesión"
+  width={38}
+  height={38}
+  onClick={handleLogout}
+  className="cursor-pointer hover:opacity-80"
+/>
         </div>
 
         <div className="md:hidden">
