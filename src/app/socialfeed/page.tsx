@@ -90,14 +90,16 @@ const ProfileView = () => {
         <div className="flex-1 flex flex-col items-center p-6 min-h-screen">
           <div className="bg-white rounded-lg p-6 w-full max-w-md mt-10">
             <div className="flex justify-center space-x-4 mb-6">
-              <div className="relative w-16 h-16">
-                <Image
-                  src="/agregarusuario.png"
-                  alt="Foto 1"
-                  layout="fill"
-                  className="rounded-full object-cover"
-                />
-              </div>
+            <Link href="/inprogress">
+  <div className="relative w-16 h-16">
+    <Image
+      src="/agregarusuario.png"
+      alt="Foto 1"
+      layout="fill"
+      className="rounded-full object-cover"
+    />
+  </div>
+</Link>
               <div className="relative w-16 h-16">
                 <Image
                   src="/agregarfoto.png"
