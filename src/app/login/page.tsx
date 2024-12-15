@@ -1,7 +1,7 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import HeaderLoginRegister from "@/components/HeaderLoginRegister";
+import Image from "next/image";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { IFormDataLogin } from "@/interfaces/types";
@@ -118,18 +118,18 @@ export default function Login() {
               </button>
             </div>
             <div>
-                <button
+              <button
                 className="w-full h-12 bg-[#EEEEEE] border border-none rounded-md text-xl flex items-center justify-center gap-2"
                 type="button"
-                >
-                <img
-                  src="/googlelogo.png"
+              >
+                <Image
+                  src="/google.png"
                   alt="Google logo"
                   width={24}
                   height={24}
                 />
                 Continuar con Google
-                </button>
+              </button>
             </div>
             <hr className="border-[#EEEEEE]" />
             <div>
