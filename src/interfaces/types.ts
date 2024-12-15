@@ -15,3 +15,8 @@ export interface IFormDataRegister {
 export interface IValidateAge {
   (value: string): boolean | string;
 }
+
+export interface ILoginResponse {
+  token: string;
+  message: string;
+}

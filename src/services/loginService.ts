@@ -1,6 +1,6 @@
-import { IFormDataLogin } from "@/interfaces/types";
+import { IFormDataLogin, ILoginResponse } from "@/interfaces/types";
 
-export const loginUser = async (data: IFormDataLogin): Promise<any> => {
+export const loginUser = async (data: IFormDataLogin): Promise<ILoginResponse> => {
   try {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
