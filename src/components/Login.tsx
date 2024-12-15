@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { IFormDataLogin } from "@/interfaces/types";
 import { useRouter } from "next/navigation";
 import { showCustomToast } from "@/components/Notificacion";
+import { login } from "@/services/loginService";
 
 export default function Login() {
   const {
@@ -19,31 +20,13 @@ export default function Login() {
 
   const onSubmit = async (data: IFormDataLogin) => {
     try {
-      const response = await fetch(
-        "https://snappy-back-si83.onrender.com/auth/signin",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
+      const resultado = await login(data);
 
-      if (!response.ok) {
-        throw new Error("Credenciales inválidas. Inténtalo de nuevo.");
-      }
-
-      const result = await response.json();
-      console.log("🚀 ~ onSubmit ~ result:", result);
-
-      // Guardar token o sesión según la respuesta del backend
-      // localStorage.setItem("token", result.token);
-
-      showCustomToast("Snappy", "AGUS SE LA COME DOBLADA", "success");
+      console.log("🚀 ~ onSubmit ~ data:", data);
+      showCustomToast("Snappy", resultado.message, "success");
       router.push("/loadingbar");
     } catch (error) {
-      showCustomToast("Error", `${(error as Error).message}`, "error");
+      showCustomToast("Snappy", (error as Error).message, "error");
     }
   };
 
