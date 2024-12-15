@@ -1,20 +1,26 @@
 import { IFormDataLogin } from "@/interfaces/types";
 
-export async function login(data: IFormDataLogin): Promise<any> {
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
+export const loginUser = async (data: IFormDataLogin): Promise<any> => {
+  try {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-  const response = await fetch(`${API_URL}/auth/signin`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
+    const response = await fetch(`${API_URL}/auth/signin`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
 
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || "Error al iniciar sesión. Inténtalo de nuevo.");
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Error en try loginService.ts");
+    }
+
+    return response.json();
+  } catch (error) {
+    throw new Error(
+      (error as Error).message || "Error desconocido en el servicio."
+    );
   }
-
-  return response.json();
-}
+};

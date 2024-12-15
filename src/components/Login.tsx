@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { IFormDataLogin } from "@/interfaces/types";
 import { useRouter } from "next/navigation";
 import { showCustomToast } from "@/components/Notificacion";
-import { login } from "@/services/loginService";
+import { loginUser } from "@/services/loginService";
 
 export default function Login() {
   const {
@@ -20,13 +20,14 @@ export default function Login() {
 
   const onSubmit = async (data: IFormDataLogin) => {
     try {
-      const resultado = await login(data);
+      const resultado = await loginUser(data);
+      console.log("🚀 ~ onSubmit ~ resultado TRY LOGIN.TSX:", resultado);
 
-      console.log("🚀 ~ onSubmit ~ data:", data);
       showCustomToast("Snappy", resultado.message, "success");
       router.push("/loadingbar");
     } catch (error) {
-      showCustomToast("Snappy", (error as Error).message, "error");
+      console.log("🚀 ~ onSubmit ~ error CATCH LOGIN.TSX:", error);
+      showCustomToast("Snappy", "Usuario o contraseña incorrectos", "error");
     }
   };
 

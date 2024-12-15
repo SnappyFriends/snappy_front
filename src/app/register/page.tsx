@@ -5,6 +5,7 @@ import HeaderLoginRegister from "@/components/HeaderLoginRegister";
 import { showCustomToast } from "@/components/Notificacion";
 import { validateAge } from "@/helpers/validacionEdad";
 import { IFormDataRegister } from "@/interfaces/types";
+import { registerUser } from "@/services/registerService";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -31,27 +32,16 @@ export default function Register() {
 
   const onSubmit = async (data: IFormDataRegister) => {
     try {
-      const response = await fetch(
-        "https://snappy-back-si83.onrender.com/auth/signup",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Hubo un error al registrar el usuario.");
-      }
+      const resultado = await registerUser(data);
+      console.log("🚀 ~ onSubmit ~ resultado TRY REGISTER.TSX:", resultado);
 
       showCustomToast("Snappy", "¡Registro exitoso!", "success");
-      router.push("/loadingbar");
+      router.push("/");
     } catch (error) {
+      console.log("🚀 ~ onSubmit ~ error CATCH REGISTER.TSX:", error);
       showCustomToast(
-        "Error",
-        `${(error as Error).message}`,
+        "Snappy",
+        `${(error as Error).message || "Hubo un error inesperado."}`,
         "error"
       );
     }
