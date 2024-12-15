@@ -124,7 +124,7 @@ export default function Login() {
               >
                 <Image
                   src="/google.png"
-                  alt="Google logo"
+                  alt="google"
                   width={24}
                   height={24}
                 />
