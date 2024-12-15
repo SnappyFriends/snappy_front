@@ -50,7 +50,6 @@ const ProfileView = ({ params }: { params: Promise<{ otroperfil: string }> }) =>
     return <p>Cargando...</p>;
   }
 
-  // Manejo de `last_login_date`
   const lastLoginDate = userData.last_login_date
     ? new Date(userData.last_login_date)
     : null;
