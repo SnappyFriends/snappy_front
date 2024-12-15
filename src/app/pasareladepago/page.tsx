@@ -2,7 +2,7 @@
 
 import Navbar from "@/components/Navbar";
 import React, { useState } from "react";
-
+import Link from "next/link";
 export default function PaymentGateway() {
   const [subscriptionDuration, setSubscriptionDuration] = useState("1");
 
@@ -99,12 +99,14 @@ export default function PaymentGateway() {
             <span>${(9.99 * duration).toFixed(2)}</span>
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-black text-white py-2 rounded font-bold hover:bg-gray-800 transition-colors"
-          >
-            Pagar con Stripe
-          </button>
+          <Link href="/inprogress">
+  <button
+    type="submit"
+    className="w-full bg-black text-white py-2 rounded font-bold hover:bg-gray-800 transition-colors"
+  >
+    Pagar con Stripe
+  </button>
+</Link>
         </div>
       </div>
     </div>
