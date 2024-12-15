@@ -15,14 +15,14 @@ interface UserData {
 }
 
 const ProfileView = ({ params }: { params: Promise<{ otroperfil: string }> }) => {
-  const [userData, setUserData] = useState<UserData | null>(null); 
+  const [userData, setUserData] = useState<UserData | null>(null);
   const [username, setUsername] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchParams = async () => {
       const resolvedParams = await params;
       if (resolvedParams.otroperfil) {
-        setUsername(resolvedParams.otroperfil); 
+        setUsername(resolvedParams.otroperfil);
       }
     };
     fetchParams();
@@ -34,7 +34,7 @@ const ProfileView = ({ params }: { params: Promise<{ otroperfil: string }> }) =>
         try {
           const user = await getUsersByUsername(username);
           if (user) {
-            setUserData(user[0]);  
+            setUserData(user[0]);
           } else {
             console.error("Usuario no encontrado");
           }
@@ -42,7 +42,6 @@ const ProfileView = ({ params }: { params: Promise<{ otroperfil: string }> }) =>
           console.error("Error al obtener los datos del usuario:", error);
         }
       };
-
       fetchUser();
     }
   }, [username]);
@@ -51,8 +50,15 @@ const ProfileView = ({ params }: { params: Promise<{ otroperfil: string }> }) =>
     return <p>Cargando...</p>;
   }
 
-  const lastLoginDate = new Date(userData.last_login_date);
-  const timeAgo = formatDistanceToNow(lastLoginDate, { addSuffix: true }); 
+  // Manejo de `last_login_date`
+  const lastLoginDate = userData.last_login_date
+    ? new Date(userData.last_login_date)
+    : null;
+
+  const timeAgo = lastLoginDate
+    ? formatDistanceToNow(lastLoginDate, { addSuffix: true })
+    : "Fecha no disponible";
+
   return (
     <div>
       <Navbar />
@@ -94,15 +100,13 @@ const ProfileView = ({ params }: { params: Promise<{ otroperfil: string }> }) =>
           <div className="bg-white rounded-lg p-6 w-full max-w-md mt-10">
             <div className="flex items-center justify-between">
               <h1 className="text-xl font-semibold text-center flex-1">{userData.username}</h1>
-
-        
             </div>
 
             <div className="flex flex-col items-center mt-4">
               <div className="flex items-center w-full">
                 <div className="relative w-24 h-24 mr-6">
                   <Image
-                    src= "/agregarfoto.png"
+                    src="/agregarfoto.png"
                     alt={`Foto de perfil de ${userData.username}`}
                     fill
                     className="rounded-full object-cover"
@@ -154,7 +158,7 @@ const ProfileView = ({ params }: { params: Promise<{ otroperfil: string }> }) =>
                   </div>
                   <div className="ml-3">
                     <h2 className="text-sm font-semibold">{userData.username}</h2>
-                    <p className="text-xs text-gray-500">{timeAgo}</p> 
+                    <p className="text-xs text-gray-500">{timeAgo}</p>
                   </div>
                 </div>
                 <div className="relative w-6 h-6">
