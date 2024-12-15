@@ -43,24 +43,50 @@ const ProfileView = () => {
           </div>
         </div>
 
-        <div className=" bg-white rounded-lg p-6 ml-40">
-          <h1 className="text-2xl font-bold text-center mb-4">Katy Swift</h1>
-          
-          <div className="flex justify-center space-x-4 mb-6">
-            <div className="relative w-16 h-16">
-              <Image src="/agregarusuario.png" alt="Foto 1" layout="fill" className="rounded-full object-cover" />
-            </div>
-            <div className="relative w-16 h-16">
-              <Image src="/agregarfoto.png" alt="Foto 2" layout="fill" className="rounded-full object-cover" />
-            </div>
-            <div className="relative w-16 h-16">
-              <Image src="/agregarfoto.png" alt="Foto 3" layout="fill" className="rounded-full object-cover" />
-            </div>
-            <div className="relative w-16 h-16">
-              <Image src="/agregarfoto.png" alt="Foto 4" layout="fill" className="rounded-full object-cover" />
-            </div>
-            <div className="relative w-16 h-16">
-              <Image src="/agregarfoto.png" alt="Foto 5" layout="fill" className="rounded-full object-cover" />
+        {/* Contenido Principal */}
+        <div className="flex-1 flex flex-col items-center p-6 min-h-screen">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md mt-10">
+            <div className="flex justify-center space-x-4 mb-6">
+              <div className="relative w-16 h-16">
+                <Image
+                  src="/agregarusuario.png"
+                  alt="Foto 1"
+                  layout="fill"
+                  className="rounded-full object-cover"
+                />
+              </div>
+              <div className="relative w-16 h-16">
+                <Image
+                  src="/agregarfoto.png"
+                  alt="Foto 2"
+                  layout="fill"
+                  className="rounded-full object-cover"
+                />
+              </div>
+              <div className="relative w-16 h-16">
+                <Image
+                  src="/agregarfoto.png"
+                  alt="Foto 3"
+                  layout="fill"
+                  className="rounded-full object-cover"
+                />
+              </div>
+              <div className="relative w-16 h-16">
+                <Image
+                  src="/agregarfoto.png"
+                  alt="Foto 4"
+                  layout="fill"
+                  className="rounded-full object-cover"
+                />
+              </div>
+              <div className="relative w-16 h-16">
+                <Image
+                  src="/agregarfoto.png"
+                  alt="Foto 5"
+                  layout="fill"
+                  className="rounded-full object-cover"
+                />
+              </div>
             </div>
           </div>
 
