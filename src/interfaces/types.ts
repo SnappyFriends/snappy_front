@@ -23,5 +23,5 @@ export interface ILoginResponse {
 
 export interface IUserContextType {
   token: string | null;
-  setToken: (token: string) => void;
+  setToken: (token: string | null) => void;
 }

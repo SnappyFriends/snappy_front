@@ -12,15 +12,16 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const storedToken = document.cookie
       .split("; ")
-      .find((row) => row.startsWith("auth_token="))
+      .find((row) => row.startsWith("auth_token"))
       ?.split("=")[1];
 
     if (storedToken) {
       setToken(storedToken);
     }
+    console.log("🚀 ~ useEffect ~ storedToken:", storedToken);
   }, []);
 
-  const handleSetToken = (newToken: string) => {
+  const handleSetToken = (newToken: string | null) => {
     setToken(newToken);
     const expireDate = new Date();
     expireDate.setHours(expireDate.getHours() + 24);
