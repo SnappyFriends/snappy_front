@@ -66,13 +66,13 @@ const ProfileView = () => {
 
           <div className="flex justify-between mt-6 border-b">
             <button className="flex-1 py-2 text-center text-gray-500 hover:text-black">
-              Following
+              Siguiendo
             </button>
             <button className="flex-1 py-2 text-center text-black font-bold border-b-2 border-black">
-              For you
+              Para ti 
             </button>
             <button className="flex-1 py-2 text-center text-gray-500 hover:text-black">
-              Favorites
+              Favoritos
             </button>
           </div>
 
