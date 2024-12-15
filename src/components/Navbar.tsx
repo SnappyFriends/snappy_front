@@ -20,17 +20,19 @@ const Navbar: React.FC = () => {
     <nav className="bg-white text-gray-800 shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
+        <Link href="/socialfeed">
           <div className="flex items-center space-x-4 flex-shrink-0">
-            <Link href="/socialfeed">
               <Image
                 src="/favicon.ico"
                 alt="Left Icon"
                 width={50}
                 height={50}
               />
-            </Link>
+            
             <span className="text-2xl font-bold text-gray-800">SNAPPY FRIENDS</span>
+            
           </div>
+          </Link>
 
           <div className="flex-grow ml-48">
             <SearchBar />
