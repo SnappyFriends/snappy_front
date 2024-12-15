@@ -2,7 +2,6 @@
 "use client";
 
 import HeaderLoginRegister from "@/components/HeaderLoginRegister";
-import Image from "next/image";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { IFormDataLogin } from "@/interfaces/types";
