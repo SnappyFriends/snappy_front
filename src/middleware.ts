@@ -1,21 +1,31 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
-    const { pathname } = req.nextUrl;
-    const isLoggedIn = req.cookies.get('auth_token');
+  const { pathname } = req.nextUrl;
+  const isLoggedIn = req.cookies.get("auth_token");
 
-    if (!isLoggedIn && pathname !== '/' && pathname !== '/register' && pathname !== '/terminos') {
-        return NextResponse.redirect(new URL('/', req.url));
-    }
+  if (
+    !isLoggedIn &&
+    pathname !== "/" &&
+    pathname !== "/register" &&
+    pathname !== "/terminos"
+  ) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
 
-    if (isLoggedIn && (pathname === '/' || pathname === '/register')) {
-        return NextResponse.redirect(new URL('/socialfeed', req.url));
-    }
+  if (isLoggedIn && (pathname === "/" || pathname === "/register")) {
+    return NextResponse.redirect(new URL("/socialfeed", req.url));
+  }
 
-    return NextResponse.next();
+  return NextResponse.next();
 }
 
 export const config = {
-    matcher: ['/', '/register', '/terminos', '/((?!api|_next/static|_next/image|favicon.ico).*)'],
+  matcher: [
+    "/",
+    "/register",
+    "/terminos",
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+  ],
 };
