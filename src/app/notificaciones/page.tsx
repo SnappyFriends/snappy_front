@@ -12,7 +12,7 @@ const ActivityView = () => {
     <div>
     <Navbar/>
     <div className="flex min-h-screen relative items-center">
-      <div className="hidden md:block w-full max-w-sm bg-white rounded-lg p-6 ml-auto">
+      <div className="hidden md:block w-full max-w-sm bg-white rounded-lg p-6 ml-5">
         <div className="space-y-8">
         <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
             <Image src="/usuario.png" alt="Perfil" width={24} height={24} />
@@ -170,12 +170,12 @@ const ActivityView = () => {
         </div>
       </div>
 
-      <div className="hidden md:block w-full max-w-sm bg-white rounded-lg p-6 mr-auto space-y-4">
+      <div className="hidden md:block max-w-sm bg-white rounded-lg  ml-40">
         <Conectados/>
       </div>
             
     </div>
-    </div>
+     </div>
   );
 };
 
