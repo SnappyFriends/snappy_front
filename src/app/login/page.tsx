@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import HeaderLoginRegister from "@/components/HeaderLoginRegister";
@@ -118,18 +119,18 @@ export default function Login() {
               </button>
             </div>
             <div>
-              <button
+                <button
                 className="w-full h-12 bg-[#EEEEEE] border border-none rounded-md text-xl flex items-center justify-center gap-2"
                 type="button"
-              >
-                <Image
+                >
+                <img
                   src="/googlelogo.png"
                   alt="Google logo"
                   width={24}
                   height={24}
                 />
                 Continuar con Google
-              </button>
+                </button>
             </div>
             <hr className="border-[#EEEEEE]" />
             <div>
