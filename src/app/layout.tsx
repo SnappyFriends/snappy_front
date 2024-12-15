@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
+import { UserProvider } from "../context/UserContext";
 
 const interRegular = localFont({
   src: "./fonts/Inter28pt-Regular.woff",
@@ -22,8 +23,10 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={`${interRegular.variable} antialiased`}>
-        <Toaster />
-        {children}
+        <UserProvider>
+          <Toaster />
+          {children}
+        </UserProvider>
       </body>
     </html>
   );
