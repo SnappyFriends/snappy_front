@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import Link from "next/link";
 import { getUsersByUsername } from "@/helpers/users";
 import { formatDistanceToNow } from "date-fns";
+import Conectados from "@/components/Conectados";
 
 interface UserData {
   fullname: string;
@@ -95,7 +96,7 @@ const ProfileView = ({ params }: { params: Promise<{ otroperfil: string }> }) =>
           </div>
         </div>
 
-        <div className="flex-1 flex flex-col items-center p-6 min-h-screen">
+        <div className="flex-1 flex flex-col items-end p-6 min-h-screen">
           <div className="bg-white rounded-lg p-6 w-full max-w-md mt-10">
             <div className="flex items-center justify-between">
               <h1 className="text-xl font-semibold text-center flex-1">{userData.username}</h1>
@@ -208,6 +209,10 @@ const ProfileView = ({ params }: { params: Promise<{ otroperfil: string }> }) =>
             </div>
           </div>
         </div>
+        <div className="ml-0 mt-40 h-70 pt-20 pl-20 mr-60">
+        <Conectados/>
+      </div>
+            
       </div>
     </div>
   );
