@@ -3,23 +3,15 @@ import React from "react";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
+import Conectados from "@/components/Conectados";
 
 export default function MensajesPrivados() {
-  // Array de usuarios conectados
-  const connectedUsers = [
-    { id: 1, name: "Sofia Black", imgSrc: "/agregarfoto.png", status: "online" },
-    { id: 2, name: "Alex Green", imgSrc: "/agregarfoto.png", status: "online" },
-    { id: 3, name: "Luna Blue", imgSrc: "/agregarfoto.png", status: "online" },
-    { id: 4, name: "Sofia Black", imgSrc: "/agregarfoto.png", status: "online" },
-    { id: 5, name: "Alex Green", imgSrc: "/agregarfoto.png", status: "online" },
-    { id: 6, name: "Luna Blue", imgSrc: "/agregarfoto.png", status: "online" },
-  ];
+
 
   return (
     <>
       <Navbar />
       <div className="flex min-h-screen">
-        {/* Sidebar Izquierda */}
         <div className="hidden md:flex flex-col w-64 bg-white p-6 space-y-10 justify-center items-center">
           <div className="space-y-8">
             <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
@@ -53,7 +45,6 @@ export default function MensajesPrivados() {
           </div>
         </div>
 
-        {/* Contenido Principal */}
         <div className="flex-1 flex justify-center items-center">
           <div className="w-full md:w-1/3 p-4">
             <nav className="h-16 flex justify-center items-center">
@@ -114,27 +105,8 @@ export default function MensajesPrivados() {
           </div>
         </div>
 
-        {/* Sidebar Derecho */}
-        <div className="hidden md:flex flex-col w-64 bg-white p-4 space-y-4 justify-center items-center">
-          {connectedUsers.map((user) => (
-            <div
-              key={user.id}
-              className="flex items-center space-x-3 p-1 hover:bg-gray-100 rounded-lg cursor-pointer"
-            >
-              <div className="relative w-10 h-10">
-                <Image
-                  src={user.imgSrc}
-                  alt={user.name}
-                  fill
-                  className="rounded-full object-cover"
-                />
-              </div>
-              <div className="flex-1">
-                <h3 className="text-sm font-semibold">{user.name}</h3>
-              </div>
-              <span className="w-3 h-3 bg-green-500 rounded-full"></span>
-            </div>
-          ))}
+        <div className="hidden md:flex flex-col w-64 bg-white p-4 space-y-4 justify-center items-center mr-40 mt-20">
+          <Conectados/>
         </div>
       </div>
     </>

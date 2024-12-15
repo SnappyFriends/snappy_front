@@ -4,17 +4,9 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
+import Conectados from "@/components/Conectados";
 
 const ActivityView = () => {
-
-    const connectedUsers = [
-        { id: 1, name: "Sofia Black", imgSrc: "/agregarfoto.png", status: "online" },
-        { id: 2, name: "Alex Green", imgSrc: "/agregarfoto.png", status: "online" },
-        { id: 3, name: "Luna Blue", imgSrc: "/agregarfoto.png", status: "online" },
-        { id: 4, name: "Sofia Black", imgSrc: "/agregarfoto.png", status: "online" },
-        { id: 5, name: "Alex Green", imgSrc: "/agregarfoto.png", status: "online" },
-        { id: 6, name: "Luna Blue", imgSrc: "/agregarfoto.png", status: "online" },
-    ];
 
   return (
     <div>
@@ -179,20 +171,7 @@ const ActivityView = () => {
       </div>
 
       <div className="hidden md:block w-full max-w-sm bg-white rounded-lg p-6 mr-auto space-y-4">
-        {connectedUsers.map((user) => (
-          <Link href="/newchat" key={user.id} className="flex items-center space-x-4 ml-40">
-            <div className="relative w-12 h-12">
-              <Image
-                src={user.imgSrc}
-                alt={user.name}
-                layout="fill"
-                className="rounded-full object-cover"
-              />
-            </div>
-            <h3 className="text-sm font-semibold">{user.name}</h3>
-            <span className="w-3 h-3 bg-green-500 rounded-full"></span>
-          </Link>
-        ))}
+        <Conectados/>
       </div>
             
     </div>
