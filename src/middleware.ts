@@ -5,7 +5,7 @@ export function middleware(req: NextRequest) {
     const { pathname } = req.nextUrl;
     const isLoggedIn = req.cookies.get('auth_token');
 
-    if (!isLoggedIn && pathname !== '/' && pathname !== '/register') {
+    if (!isLoggedIn && pathname !== '/' && pathname !== '/register' && pathname !== '/terminos') {
         return NextResponse.redirect(new URL('/', req.url));
     }
 
@@ -17,5 +17,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-    matcher: ['/', '/register', '/((?!api|_next/static|_next/image|favicon.ico).*)'],
+    matcher: ['/', '/register', '/terminos', '/((?!api|_next/static|_next/image|favicon.ico).*)'],
 };
