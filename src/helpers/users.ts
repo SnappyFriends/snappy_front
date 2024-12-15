@@ -4,10 +4,13 @@ export interface User {
   fullname: string;
   profile_image: string; 
 }
-  
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
   export const getUsers = async (): Promise<User[]> => {
+
     try {
-      const response = await fetch('http://localhost:3000/users', {
+      const response = await fetch(`${API_URL}/users`, {
         method: 'GET',
         
       });
@@ -42,7 +45,7 @@ export interface User {
   
   export const getUserById = async (id: string) => {
     try {
-      const response = await fetch(`http://localhost:3000/users/${id}`); 
+      const response = await fetch(`${API_URL}/users/${id}`); 
       if (!response.ok) {
         throw new Error('Error fetching user');
       }
