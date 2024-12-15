@@ -23,7 +23,7 @@ export default function Login() {
       const resultado = await loginUser(data);
       console.log("🚀 ~ onSubmit ~ resultado TRY LOGIN.TSX:", resultado);
 
-      showCustomToast("Snappy", resultado.message, "success");
+      showCustomToast("Snappy", "Iniciaste sesión correctamente", "success");
       router.push("/loadingbar");
     } catch (error) {
       console.log("🚀 ~ onSubmit ~ error CATCH LOGIN.TSX:", error);

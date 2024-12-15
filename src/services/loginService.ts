@@ -16,7 +16,7 @@ export const loginUser = async (data: IFormDataLogin): Promise<any> => {
       const error = await response.json();
       throw new Error(error.message || "Error en try loginService.ts");
     }
-
+    
     return response.json();
   } catch (error) {
     throw new Error(
