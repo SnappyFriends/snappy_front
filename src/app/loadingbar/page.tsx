@@ -11,7 +11,7 @@ export default function LoadingBar() {
     const interval = setInterval(() => {
       setProgress((prev) => {
         if (prev < 100) {
-          return prev + 1;
+          return prev + 3;
         } else {
           clearInterval(interval);
           return 100;
@@ -21,7 +21,7 @@ export default function LoadingBar() {
 
     const timer = setTimeout(() => {
       router.push("/newchat");
-    }, 5000);
+    }, 2000);
 
     return () => {
       clearInterval(interval);
