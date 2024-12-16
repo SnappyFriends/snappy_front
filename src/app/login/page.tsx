@@ -124,7 +124,7 @@ export default function Login() {
               >
                 <Image
                   src="/logochatsnuevos.png"
-                  alt="Google logo"
+                  alt="Google"
                   width={24}
                   height={24}
                 />
