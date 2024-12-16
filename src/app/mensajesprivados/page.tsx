@@ -16,8 +16,8 @@ export default function MensajesPrivados() {
           <Sidebar />
         </div>
 
-        <div className="flex-1 flex justify-center items-center">
-          <div className="w-full md:w-2/3 p-6">
+        <div className="flex-1 flex justify-center mt-20">
+          <div className="w-full md:w-2/4 p-6">
             
             <nav className="h-16 flex justify-center items-center">
               <form className="w-full flex">
@@ -76,7 +76,7 @@ export default function MensajesPrivados() {
           </div>
         </div>
 
-        <div className="hidden md:flex flex-col w-64 bg-white p-4 space-y-4 fixed right-6 top-1/2 transform -translate-y-1/2">
+        <div className="hidden md:flex flex-col w-80 space-y-6 absolute right-20 top-40">
           <Conectados />
         </div>
       </div>
