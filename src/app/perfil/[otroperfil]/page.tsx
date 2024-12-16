@@ -38,7 +38,7 @@ const ProfileView = ({ params }: { params: Promise<{ otroperfil: string }> }) =>
           if (user) {
             setUserData(user[0]);
           } else {
-            console.error("Usuario no encontrado");
+            return <NotFound/>;
           }
         } catch (error) {
           console.error("Error al obtener los datos del usuario:", error);
@@ -49,7 +49,7 @@ const ProfileView = ({ params }: { params: Promise<{ otroperfil: string }> }) =>
   }, [username]);
 
   if (!userData) {
-    return <NotFound/>;
+    return "Cargando..."
   }
 
   const lastLoginDate = userData.last_login_date
