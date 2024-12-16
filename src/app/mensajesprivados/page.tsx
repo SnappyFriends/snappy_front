@@ -2,51 +2,23 @@
 import React from "react";
 import Image from "next/image";
 import Navbar from "@/components/Navbar";
-import Link from "next/link";
 import Conectados from "@/components/Conectados";
+import Sidebar from "@/components/Sidebar";
 
 export default function MensajesPrivados() {
-
-
   return (
     <>
       <Navbar />
-      <div className="flex min-h-screen">
-        <div className="hidden md:flex flex-col w-64 bg-white p-6 space-y-10 justify-center items-center">
-          <div className="space-y-8">
-            <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
-              <Image src="/usuario.png" alt="Perfil" width={24} height={24} />
-              <Link href="/miperfil">Perfil</Link>
-            </div>
-            <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
-              <Image src="/home.png" alt="Inicio" width={24} height={24} />
-              <Link href="/socialfeed">Inicio</Link>
-            </div>
-            <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
-              <Image src="/mas.jpg" alt="Crear publicación" width={24} height={24} />
-              <Link href="/inprogress">Crear publicación</Link>
-            </div>
-            <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
-              <Image src="/mensajes.png" alt="Mensajes" width={24} height={24} />
-              <Link href="/mensajesprivados">Mensajes</Link>
-            </div>
-            <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
-              <Image src="/notificaciones.png" alt="Notificaciones" width={24} height={24} />
-              <Link href="/notificaciones">Notificaciones</Link>
-            </div>
-            <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
-              <Image src="/rueda.png" alt="Configuración" width={24} height={24} />
-              <Link href="/editarperfil">Configuración</Link>
-            </div>
-            <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
-              <Image src="/logochatsnuevos.png" alt="Snappear" width={24} height={24} />
-              <Link href="/newchat">SNAPPEAR</Link>
-            </div>
-          </div>
+      
+      <div className="flex min-h-screen relative">
+        
+        <div className="hidden md:flex flex-col w-64 bg-white p-6 space-y-10 fixed left-6 top-1/2 transform -translate-y-1/2">
+          <Sidebar />
         </div>
 
         <div className="flex-1 flex justify-center items-center">
-          <div className="w-full md:w-1/3 p-4">
+          <div className="w-full md:w-2/3 p-6">
+            
             <nav className="h-16 flex justify-center items-center">
               <form className="w-full flex">
                 <input
@@ -70,14 +42,16 @@ export default function MensajesPrivados() {
                 </button>
               </form>
             </nav>
-
+            
             <main>
               <div>
-                <h2 className="text-center my-2">Mensajes</h2>
+                <h2 className="text-center my-2 text-lg font-semibold text-gray-800">
+                  Mensajes
+                </h2>
                 {Array.from({ length: 5 }).map((_, index) => (
                   <section
                     key={index}
-                    className="h-20 flex justify-between items-center px-4"
+                    className="h-20 flex justify-between items-center px-4 border-b border-[#EEEEEE]"
                   >
                     <div className="flex space-x-4 items-center">
                       <div>
@@ -89,24 +63,21 @@ export default function MensajesPrivados() {
                           className="rounded-full w-16 h-16 object-cover"
                         />
                       </div>
-                      <div className="font-bold">
-                        <h2>Sofia Black</h2>
-                        <p>Hola, ¿cómo estás?</p>
+                      <div>
+                        <h2 className="font-bold text-sm text-gray-900">Sofia Black</h2>
+                        <p className="text-xs text-gray-500">Hola, ¿cómo estás?</p>
                       </div>
                     </div>
-                    <div className="font-bold">
-                      <p>12:00</p>
-                    </div>
+                    <div className="text-sm text-gray-500">12:00</div>
                   </section>
                 ))}
-                <hr className="border-[#EEEEEE]" />
               </div>
             </main>
           </div>
         </div>
 
-        <div className="hidden md:flex flex-col w-64 bg-white p-4 space-y-4 justify-center items-center mr-40 mt-20">
-          <Conectados/>
+        <div className="hidden md:flex flex-col w-64 bg-white p-4 space-y-4 fixed right-6 top-1/2 transform -translate-y-1/2">
+          <Conectados />
         </div>
       </div>
     </>
