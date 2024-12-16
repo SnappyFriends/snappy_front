@@ -50,14 +50,14 @@ export default function Login() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-16 min-h-screen">
+    <div className="flex flex-col items-center justify-center gap-8 min-h-screen px-4 sm:px-6 lg:px-8">
       <HeaderLoginRegister />
       <main className="flex justify-center w-full">
-        <div className="flex flex-col items-center w-96 gap-5">
+        <div className="flex flex-col items-center w-full max-w-md gap-5">
           <h2 className="font-bold text-xl">Ingresa a tu cuenta</h2>
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col gap-4 w-80"
+            className="flex flex-col gap-4 w-full"
           >
             <div>
               <label>
@@ -90,7 +90,7 @@ export default function Login() {
                 Contraseña
                 <input
                   className={`w-full h-12 border rounded-md p-2 ${
-                    errors.email ? "border-red-600" : "border-gray-400"
+                    errors.password ? "border-red-600" : "border-gray-400"
                   }`}
                   type="password"
                   placeholder="Contraseña"

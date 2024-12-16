@@ -103,7 +103,7 @@ export default function PaymentGateway() {
             type="submit"
             className="w-full bg-black text-white py-2 rounded font-bold hover:bg-gray-800 transition-colors"
           >
-            Pagar con Stripe
+            Pagar
           </button>
         </div>
       </div>
