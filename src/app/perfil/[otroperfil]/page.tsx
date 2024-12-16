@@ -37,7 +37,7 @@ const ProfileView = ({ params }: { params: Promise<{ otroperfil: string }> }) =>
           const user = await getUsersByUsername(username);
           if (user) {
             setUserData(user[0]);
-            console.error(userData);
+            console.log(`Esto es user: ${user}`);
           } else {
             return <NotFound/>;
           }
