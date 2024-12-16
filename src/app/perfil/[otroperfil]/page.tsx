@@ -49,7 +49,7 @@ const ProfileView = ({ params }: { params: Promise<{ otroperfil: string }> }) =>
   }, [username]);
 
   if (!userData) {
-    return "Cargando..."
+    console.error(userData);
   }
 
   const lastLoginDate = userData.last_login_date
