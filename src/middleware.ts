@@ -5,14 +5,14 @@ export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const isLoggedIn = req.cookies.get("auth_token");
 
-  if (
-    !isLoggedIn &&
-    pathname !== "/" &&
-    pathname !== "/register" &&
-    pathname !== "/terminos"
-  ) {
-    return NextResponse.redirect(new URL("/", req.url));
-  }
+  // if (
+  //   !isLoggedIn &&
+  //   pathname !== "/" &&
+  //   pathname !== "/register" &&
+  //   pathname !== "/terminos"
+  // ) {
+  //   return NextResponse.redirect(new URL("/", req.url));
+  // }
 
   if (isLoggedIn && (pathname === "/" || pathname === "/register")) {
     return NextResponse.redirect(new URL("/socialfeed", req.url));
