@@ -102,7 +102,7 @@ const ActivityView = () => {
           </div>
         </div>
 
-        <div className="hidden lg:flex flex-col w-64 bg-white p-6 fixed right-0 top-28 h-[calc(100%-112px)]">
+        <div className="hidden md:flex flex-col w-80 space-y-6 absolute right-20 mt-40 ">
           <Conectados />
         </div>
       </div>

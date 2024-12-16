@@ -16,13 +16,21 @@ const Conectados: React.FC = () => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      try {
-        const fetchedUsers: User[] = await getUsers();
-        setUsers(fetchedUsers);
-      } catch (error) {
-        console.error("Error fetching users:", error);
+      const storedUsers = localStorage.getItem("users");
+      if (storedUsers) {
+        setUsers(JSON.parse(storedUsers));
+      } else {
+        try {
+          const fetchedUsers: User[] = await getUsers();
+          setUsers(fetchedUsers);
+
+          localStorage.setItem("users", JSON.stringify(fetchedUsers));
+        } catch (error) {
+          console.error("Error fetching users:", error);
+        }
       }
     };
+
     fetchUsers();
   }, []);
 
@@ -35,17 +43,21 @@ const Conectados: React.FC = () => {
       ) : (
         firstSixUsers.map(user => (
           <Link key={user.id} href={`/mensajesprivados`}>
-            <div className="flex items-center space-x-4 p-2 rounded-lg hover:bg-gray-100 transition cursor-pointer ml-auto">
-              <div className="relative w-12 h-12">
-                <Image
-                  src="/agregarfoto.png" 
-                  alt={user.username}
-                  layout="fill"
-                  className="rounded-full object-cover"
-                />
+            <div className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-100 transition cursor-pointer">
+              <div className="flex items-center space-x-4">
+                <div className="relative w-12 h-12">
+                  <Image
+                    src={ "/agregarfoto.png"} 
+                    alt={user.username}
+                    layout="fill"
+                    className="rounded-full object-cover"
+                  />
+                </div>
+                <h3 className="text-sm font-semibold">{user.username}</h3>
               </div>
-              <h3 className="text-sm font-semibold">{user.username}</h3>
-              <span className="w-3 h-3 bg-green-500 rounded-full self-center"></span> 
+              <div>
+                <span className="w-3 h-3 bg-green-500 rounded-full block"></span>
+              </div>
             </div>
           </Link>
         ))
@@ -55,5 +67,3 @@ const Conectados: React.FC = () => {
 };
 
 export default Conectados;
-
-

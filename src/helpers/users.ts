@@ -7,10 +7,12 @@ export interface User {
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+
   export const getUsers = async (): Promise<User[]> => {
 
     try {
       const response = await fetch(`${API_URL}/users`, {
+        next: { revalidate: 1200 },
         method: 'GET',
         
       });

@@ -6,16 +6,17 @@ import Navbar from "@/components/Navbar";
 import Conectados from "@/components/Conectados";
 import Sidebar from "@/components/Sidebar";
 
-const ProfileView = () => {
+const SocialFeedView = () => {
   return (
-    <div className=" min-h-screen">
+    <div className="min-h-screen">
       <Navbar />
+      
       <div className="flex flex-row">
         
         <div className="hidden md:flex flex-col w-64 bg-white p-6 space-y-10 fixed left-6 top-1/2 transform -translate-y-1/2">
           <Sidebar />
         </div>
-        
+
         <div className="flex-1 flex flex-col items-center max-w-5xl p-4 md:ml-72 lg:ml-80 mt-10">
           
           <div className="flex justify-center space-x-6 mb-6">
@@ -85,13 +86,14 @@ const ProfileView = () => {
             </div>
           </div>
         </div>
-        
-        <div className="hidden lg:flex flex-col w-64 bg-white p-6 space-y-10 fixed right-6 top-1/2 transform -translate-y-1/2">
+
+        <div className="hidden md:flex flex-col w-80 space-y-6 absolute right-20 top-1/2 transform -translate-y-1/2">
           <Conectados />
         </div>
+
       </div>
     </div>
   );
 };
 
-export default ProfileView;
+export default SocialFeedView;
