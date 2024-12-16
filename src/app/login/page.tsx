@@ -123,8 +123,8 @@ export default function Login() {
                 type="button"
               >
                 <Image
-                  src="https://rotulosmatesanz.com/wp-content/uploads/2017/09/2000px-Google_G_Logo.svg_.png"
-                  alt="google"
+                  src="/google.png"
+                  alt="Google logo"
                   width={24}
                   height={24}
                 />
