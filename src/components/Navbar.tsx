@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // Controla el menú desplegable de usuario
+  const [isMenuOpen, setIsMenuOpen] = useState(false); 
   const { setToken } = useContext(UserContext);
   const router = useRouter();
 
@@ -31,7 +31,7 @@ const Navbar: React.FC = () => {
     <nav className="bg-white text-gray-800 shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          {/* Logo */}
+     
           <Link href="/socialfeed">
             <div className="flex items-center space-x-4 flex-shrink-0">
               <Image src="/favicon.ico" alt="Left Icon" width={50} height={50} />
@@ -41,12 +41,12 @@ const Navbar: React.FC = () => {
             </div>
           </Link>
 
-          {/* Search Bar */}
+          
           <div className="flex-grow ml-48">
             <SearchBar />
           </div>
 
-          {/* Desktop Icons */}
+         
           <div className="hidden md:flex items-center space-x-6 relative">
             {icons.map(({ href, src, alt }) => (
               <Link href={href} key={href}>
@@ -54,27 +54,57 @@ const Navbar: React.FC = () => {
               </Link>
             ))}
 
-            {/* Menú desplegable de usuario */}
+            
             <div className="relative">
               <Image
                 src="/usuario.png"
                 alt="Usuario"
                 width={32}
                 height={32}
-                onClick={() => setIsMenuOpen(!isMenuOpen)} // Toggle del menú
+                onClick={() => setIsMenuOpen(!isMenuOpen)} 
                 className="cursor-pointer hover:opacity-80"
               />
 
-              {/* Opciones desplegables */}
+              
               {isMenuOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-lg z-50">
-                  {/* Configuración */}
+                  
+                  <Link
+                    href="/miperfil"
+                    className="flex items-center px-4 py-2 hover:bg-gray-200"
+                  >
+                    <Image
+                      src="/usuario.png"
+                      alt="Mi Perfil"
+                      width={20}
+                      height={20}
+                      className="mr-2"
+                    />
+                    <span>Mi perfil</span>
+                  </Link>
+
+                
+                  <Link
+                    href="/inprogress"
+                    className="flex items-center px-4 py-2 hover:bg-gray-200"
+                  >
+                    <Image
+                      src="/mas.jpg" 
+                      alt="Crear Publicación"
+                      width={20}
+                      height={20}
+                      className="mr-2"
+                    />
+                    <span>Crear publicación</span>
+                  </Link>
+
+                  
                   <Link
                     href="/editarperfil"
                     className="flex items-center px-4 py-2 hover:bg-gray-200"
                   >
                     <Image
-                      src="/rueda.png" // Ícono de configuración
+                      src="/rueda.png" 
                       alt="Configuración"
                       width={20}
                       height={20}
@@ -83,13 +113,13 @@ const Navbar: React.FC = () => {
                     <span>Configuración</span>
                   </Link>
 
-                  {/* Cerrar sesión */}
+                 
                   <button
                     onClick={handleLogout}
                     className="flex items-center w-full text-left px-4 py-2 hover:bg-gray-200"
                   >
                     <Image
-                      src="/cerrarsesion.png" // Ícono de cerrar sesión
+                      src="/cerrarsesion.png" 
                       alt="Cerrar sesión"
                       width={20}
                       height={20}
@@ -102,7 +132,7 @@ const Navbar: React.FC = () => {
             </div>
           </div>
 
-          {/* Mobile Menu Button */}
+          
           <div className="md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
@@ -127,56 +157,6 @@ const Navbar: React.FC = () => {
             </button>
           </div>
         </div>
-
-        {/* Mobile Menu */}
-        {isOpen && (
-          <div className="md:hidden mt-4 space-y-4">
-            {icons.map(({ href, src, alt }) => (
-              <Link href={href} key={href} className="block">
-                <Image src={src} alt={alt} width={32} height={32} />
-              </Link>
-            ))}
-            {/* Menú de usuario en mobile */}
-            <div
-              className="flex items-center cursor-pointer hover:opacity-80"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              <Image src="/usuario.png" alt="Usuario" width={32} height={32} />
-              <span className="ml-2"></span>
-            </div>
-
-            {isMenuOpen && (
-              <div className="mt-2 bg-white border rounded-lg shadow-lg">
-                <Link
-                  href="/editarperfil"
-                  className="flex items-center px-4 py-2 hover:bg-gray-200"
-                >
-                  <Image
-                    src="/rueda.png"
-                    alt="Configuración"
-                    width={20}
-                    height={20}
-                    className="mr-2"
-                  />
-                  Configuración
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center w-full text-left px-4 py-2 hover:bg-gray-200"
-                >
-                  <Image
-                    src="/cerrarsesion.png"
-                    alt="Cerrar sesión"
-                    width={20}
-                    height={20}
-                    className="mr-2"
-                  />
-                  Cerrar sesión
-                </button>
-              </div>
-            )}
-          </div>
-        )}
       </div>
     </nav>
   );
