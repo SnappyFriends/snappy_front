@@ -12,7 +12,7 @@ import { useContext } from "react";
 import { UserContext } from "@/context/UserContext";
 import Cookies from "js-cookie";
 
-export default function PruebaLogin() {
+export default function LoginComponent() {
   const {
     register,
     handleSubmit,
@@ -54,7 +54,7 @@ export default function PruebaLogin() {
       <div className="hidden sm:block">
         <Image src="/banner.png" width={400} height={400} alt="banner" />
       </div>
-      <div className="w-full sm:w-[400px]">
+      <div className="w-full sm:w-[400px] my-4">
         <header className="w-full mb-10">
           <div className="flex flex-col items-center">
             <div>

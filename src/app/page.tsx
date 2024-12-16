@@ -1,12 +1,5 @@
-"use client";
-
-import Login from "@/components/Login";
+import LoginComponent from "@/components/Login";
 
 export default function Home() {
-
-  return (
-    <>
-      <Login />
-    </>
-  );
+  return <LoginComponent />;
 }
