@@ -291,7 +291,7 @@ export default function Register() {
                   type="button"
                 >
                   <Image
-                    src="/googlelogo.png"
+                    src="/google.png"
                     alt="Google logo"
                     width={24}
                     height={24}
