@@ -8,6 +8,7 @@ export interface User {
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 
+
   export const getUsers = async (): Promise<User[]> => {
 
     try {
@@ -22,10 +23,8 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
       }
   
       const users: User[] = await response.json();
-      console.log(users)
       return users;
     } catch (error) {
-      console.error('Error fetching users:', error);
       throw error;
     }
   };
@@ -37,10 +36,8 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
         user.username.toLowerCase().includes(username.toLowerCase()) || 
         user.fullname.toLowerCase().includes(username.toLowerCase()) 
       );
-      console.log(filteredUsers);
       return filteredUsers;
     } catch (error) {
-      console.error('Error filtering users by username or fullname:', error);
       throw error;
     }
   };
@@ -54,7 +51,6 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
       const userData = await response.json();
       return userData;
     } catch (error) {
-      console.error('Error fetching user data:', error);
       throw error; 
     }
   };
