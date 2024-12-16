@@ -2,51 +2,21 @@
 
 import React from "react";
 import Image from "next/image";
-import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Conectados from "@/components/Conectados";
+import Sidebar from "@/components/Sidebar";
 
 const ProfileView = () => {
   return (
-    <div>
+    <div className=" min-h-screen">
       <Navbar />
-      <div className="flex min-h-screen relative items-center">
+      <div className="flex flex-row">
         
-        <div className="hidden md:block w-full max-w-sm bg-white rounded-lg ml-12 space-y-6">
-          <div className="space-y-6">
-            <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
-              <Image src="/usuario.png" alt="Perfil" width={24} height={24} />
-              <Link href="/miperfil"><p>Perfil</p></Link>
-            </div>
-            <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
-              <Image src="/home.png" alt="Inicio" width={24} height={24} />
-              <Link href="/socialfeed"><p>Inicio</p></Link>
-            </div>
-            <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
-              <Image src="/mas.jpg" alt="Crear publicación" width={24} height={24} />
-              <Link href="/inprogress"><p>Crear publicación</p></Link>
-            </div>
-            <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
-              <Image src="/mensajes.png" alt="Mensajes" width={24} height={24} />
-              <Link href="/mensajesprivados"><p>Mensajes</p></Link>
-            </div>
-            <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
-              <Image src="/notificaciones.png" alt="Notificaciones" width={24} height={24} />
-              <Link href="/notificaciones"><p>Notificaciones</p></Link>
-            </div>
-            <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
-              <Image src="/rueda.png" alt="Configuración" width={24} height={24} />
-              <Link href="/editarperfil"><p>Configuración</p></Link>
-            </div>
-            <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
-              <Image src="/logochatsnuevos.png" alt="Snappear" width={24} height={24} />
-              <Link href="/newchat"><p>SNAPPEAR</p></Link>
-            </div>
-          </div>
+        <div className="hidden md:flex flex-col w-64 bg-white p-6 space-y-10 fixed left-6 top-1/2 transform -translate-y-1/2">
+          <Sidebar />
         </div>
-
-       
-        <div className="flex-1 flex flex-col items-center p-6 min-h-screen">
+        
+        <div className="flex-1 flex flex-col items-center max-w-5xl p-4 md:ml-72 lg:ml-80 mt-10">
           
           <div className="flex justify-center space-x-6 mb-6">
             {[...Array(5)].map((_, index) => (
@@ -61,7 +31,6 @@ const ProfileView = () => {
             ))}
           </div>
 
-        
           <div className="flex justify-between w-full max-w-md mb-6 border-b">
             <button className="flex-1 py-2 text-center text-gray-500 hover:text-black">
               Siguiendo
@@ -74,9 +43,7 @@ const ProfileView = () => {
             </button>
           </div>
 
-          
           <div className="w-full max-w-md space-y-4">
-            
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <div className="relative w-10 h-10">
@@ -97,7 +64,6 @@ const ProfileView = () => {
               </button>
             </div>
 
-            
             <div className="relative w-full h-80">
               <Image
                 src="/fotofeed.png"
@@ -107,21 +73,10 @@ const ProfileView = () => {
               />
             </div>
 
-            <div className="relative w-6 h-6 self-end">
-              <Image
-                src="/puntos.png"
-                alt="Opciones del post"
-                layout="fill"
-                className="object-contain"
-              />
-            </div>
-
-            
             <p className="text-sm text-gray-700">
               Hermoso viaje a Japón en el verano!
             </p>
 
-            
             <div className="flex items-center justify-between">
               <p className="text-xs text-gray-500">2 Comentarios</p>
               <button className="bg-blue-500 text-white px-4 py-1 rounded-full text-xs">
@@ -130,9 +85,8 @@ const ProfileView = () => {
             </div>
           </div>
         </div>
-
         
-        <div className="hidden md:block w-full max-w-sm bg-white rounded-lg p-6 ml-20 space-y-4">
+        <div className="hidden lg:flex flex-col w-64 bg-white p-6 space-y-10 fixed right-6 top-1/2 transform -translate-y-1/2">
           <Conectados />
         </div>
       </div>
