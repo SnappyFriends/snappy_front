@@ -1,6 +1,6 @@
 "use client";
 
-import HeaderLoginRegister from "@/components/HeaderLoginRegister";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
@@ -12,7 +12,7 @@ import { useContext } from "react";
 import { UserContext } from "@/context/UserContext";
 import Cookies from "js-cookie";
 
-export default function Login() {
+export default function PruebaLogin() {
   const {
     register,
     handleSubmit,
@@ -50,101 +50,122 @@ export default function Login() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-8 min-h-screen px-4 sm:px-6 lg:px-8">
-      <HeaderLoginRegister />
-      <main className="flex justify-center w-full">
-        <div className="flex flex-col items-center w-full max-w-md gap-5">
-          <h2 className="font-bold text-xl">Ingresa a tu cuenta</h2>
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col gap-4 w-full"
-          >
+    <div className="flex flex-col sm:flex-row justify-center items-center gap-10 min-h-screen px-4 sm:px-6 lg:px-8">
+      <div className="hidden sm:block">
+        <Image src="/banner.png" width={400} height={400} alt="banner" />
+      </div>
+      <div className="w-full sm:w-[400px]">
+        <header className="w-full mb-10">
+          <div className="flex flex-col items-center">
             <div>
-              <label>
-                Correo electrónico
-                <input
-                  className={`w-full h-12 border rounded-md p-2 ${
-                    errors.email ? "border-red-600" : "border-gray-400"
-                  }`}
-                  type="email"
-                  placeholder="Correo electrónico"
-                  {...register("email", {
-                    required: "El correo electrónico es obligatorio",
-                    pattern: {
-                      value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                      message:
-                        "Por favor, ingresa un correo electrónico válido",
-                    },
-                  })}
-                />
-              </label>
-              {errors.email && (
-                <span className="text-red-600 text-sm">
-                  {typeof errors.email?.message === "string" &&
-                    errors.email.message}
-                </span>
-              )}
+              <Image
+                src="/favicon.ico"
+                alt="Snappy logo"
+                width={150}
+                height={150}
+              />
             </div>
             <div>
-              <label>
-                Contraseña
-                <input
-                  className={`w-full h-12 border rounded-md p-2 ${
-                    errors.password ? "border-red-600" : "border-gray-400"
-                  }`}
-                  type="password"
-                  placeholder="Contraseña"
-                  {...register("password", {
-                    required: "La contraseña es obligatoria",
-                    pattern: {
-                      value: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/,
-                      message:
-                        "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial",
-                    },
-                  })}
-                />
-              </label>
-              {errors.password && (
-                <span className="text-red-600 text-sm">
-                  {typeof errors.password?.message === "string" &&
-                    errors.password.message}
-                </span>
-              )}
+              <h1 className="text-3xl font-bold">SNAPPY FRIENDS</h1>
             </div>
-            <div>
-              <button
-                className="w-full h-12 bg-black border border-none rounded-md text-xl text-white"
-                type="submit"
-              >
-                Iniciar sesión
-              </button>
-            </div>
-            <div>
-              <button
-                className="w-full h-12 bg-[#EEEEEE] border border-none rounded-md text-xl flex items-center justify-center gap-2"
-                type="button"
-              >
-                <Image
-                  src="/google.png"
-                  alt="Google logo"
-                  width={24}
-                  height={24}
-                />
-                Continuar con Google
-              </button>
-            </div>
-            <hr className="border-[#EEEEEE]" />
-            <div>
-              <Link
-                href="/register"
-                className="w-full h-12 border border-[#0866ff] rounded-md text-xl text-[#0866ff] flex items-center justify-center"
-              >
-                Crear cuenta nueva
-              </Link>
-            </div>
-          </form>
-        </div>
-      </main>
+          </div>
+        </header>
+
+        <main className="flex justify-center w-full">
+          <div className="flex flex-col items-center w-full gap-5">
+            <h2 className="font-bold text-xl">Ingresa a tu cuenta</h2>
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="flex flex-col gap-4 w-full"
+            >
+              <div>
+                <label>
+                  Correo electrónico
+                  <input
+                    className={`w-full h-12 border rounded-md p-2 ${
+                      errors.email ? "border-red-600" : "border-gray-400"
+                    }`}
+                    type="email"
+                    placeholder="Correo electrónico"
+                    {...register("email", {
+                      required: "El correo electrónico es obligatorio",
+                      pattern: {
+                        value:
+                          /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                        message:
+                          "Por favor, ingresa un correo electrónico válido",
+                      },
+                    })}
+                  />
+                </label>
+                {errors.email && (
+                  <span className="text-red-600 text-sm">
+                    {typeof errors.email?.message === "string" &&
+                      errors.email.message}
+                  </span>
+                )}
+              </div>
+              <div>
+                <label>
+                  Contraseña
+                  <input
+                    className={`w-full h-12 border rounded-md p-2 ${
+                      errors.password ? "border-red-600" : "border-gray-400"
+                    }`}
+                    type="password"
+                    placeholder="Contraseña"
+                    {...register("password", {
+                      required: "La contraseña es obligatoria",
+                      pattern: {
+                        value: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/,
+                        message:
+                          "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial",
+                      },
+                    })}
+                  />
+                </label>
+                {errors.password && (
+                  <span className="text-red-600 text-sm">
+                    {typeof errors.password?.message === "string" &&
+                      errors.password.message}
+                  </span>
+                )}
+              </div>
+              <div>
+                <button
+                  className="w-full h-12 bg-black border border-none rounded-md text-xl text-white"
+                  type="submit"
+                >
+                  Iniciar sesión
+                </button>
+              </div>
+              <div>
+                <button
+                  className="w-full h-12 bg-[#EEEEEE] border border-none rounded-md text-xl flex items-center justify-center gap-2"
+                  type="button"
+                >
+                  <Image
+                    src="/google.png"
+                    alt="Google logo"
+                    width={24}
+                    height={24}
+                  />
+                  Continuar con Google
+                </button>
+              </div>
+              <hr className="border-[#EEEEEE]" />
+              <div>
+                <Link
+                  href="/register"
+                  className="w-full h-12 border border-[#0866ff] rounded-md text-xl text-[#0866ff] flex items-center justify-center"
+                >
+                  Crear cuenta nueva
+                </Link>
+              </div>
+            </form>
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
