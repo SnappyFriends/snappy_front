@@ -127,6 +127,7 @@ export default function Login() {
                   alt="Google logo"
                   width={24}
                   height={24}
+                  unoptimized={true} // Desactiva la optimización solo para esta imagen
                 />
                 Continuar con Google
               </button>
