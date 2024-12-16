@@ -37,6 +37,7 @@ const ProfileView = ({ params }: { params: Promise<{ otroperfil: string }> }) =>
           const user = await getUsersByUsername(username);
           if (user) {
             setUserData(user[0]);
+            console.error(userData);
           } else {
             return <NotFound/>;
           }
@@ -47,9 +48,9 @@ const ProfileView = ({ params }: { params: Promise<{ otroperfil: string }> }) =>
       fetchUser();
     }
   }, [username]);
-
+  
   if (!userData) {
-    console.error(userData);
+    return 'Cargando...'
   }
 
   const lastLoginDate = userData.last_login_date
