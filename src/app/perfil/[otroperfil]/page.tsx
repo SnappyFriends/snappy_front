@@ -7,6 +7,7 @@ import Link from "next/link";
 import { getUsersByUsername } from "@/helpers/users";
 import { formatDistanceToNow } from "date-fns";
 import Conectados from "@/components/Conectados";
+import NotFound from "@/app/not-found";
 
 interface UserData {
   fullname: string;
@@ -48,7 +49,7 @@ const ProfileView = ({ params }: { params: Promise<{ otroperfil: string }> }) =>
   }, [username]);
 
   if (!userData) {
-    return <p>Cargando...</p>;
+    return <NotFound/>;
   }
 
   const lastLoginDate = userData.last_login_date

@@ -68,7 +68,7 @@ const SearchBar: React.FC = () => {
         <div className="absolute top-full left-0 w-full bg-white shadow-lg rounded-lg mt-2 max-h-60 overflow-y-auto z-10">
           {filteredUsers.map((user) => (
             <Link
-              href={`/${user.username}`}
+              href={`perfil/${user.username}`}
               key={user.id}
               className="flex items-center space-x-4 p-4 hover:bg-gray-100 rounded-lg transition duration-300"
             >
