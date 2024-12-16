@@ -123,11 +123,10 @@ export default function Login() {
                 type="button"
               >
                 <Image
-                  src="/google.png"
+                  src="/logochatsnuevos.png"
                   alt="Google logo"
                   width={24}
                   height={24}
-                  unoptimized={true} // Desactiva la optimización solo para esta imagen
                 />
                 Continuar con Google
               </button>

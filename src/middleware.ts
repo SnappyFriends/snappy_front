@@ -27,6 +27,6 @@ export const config = {
     "/register",
     "/terminos",
     "/socialfeed",
-    "/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)", // Excluir archivos estáticos (.*\\..*)
+    "/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)",
   ],
 };
