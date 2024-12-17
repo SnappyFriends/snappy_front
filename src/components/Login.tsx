@@ -17,12 +17,12 @@ export default function LoginComponent() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<IFormDataLogin>();
 
   const router = useRouter();
-
   const useUserContext = useContext(UserContext);
+  
   if (!useUserContext) {
     throw new Error(
       "UserContext no está disponible. Asegúrate de envolver este componente en un UserProvider."
@@ -116,11 +116,14 @@ export default function LoginComponent() {
                 )}
               </div>
               <div>
-                <button
-                  className="w-full h-12 bg-black border border-none rounded-md text-xl text-white"
+              <button
+                  className={`w-full h-12 bg-black border border-none rounded-md text-xl text-white ${
+                    isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                   type="submit"
+                  disabled={isSubmitting}
                 >
-                  Iniciar sesión
+                  {isSubmitting ? "Iniciando sesión..." : "Iniciar sesión"}
                 </button>
               </div>
               <div>
