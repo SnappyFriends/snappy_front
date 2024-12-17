@@ -21,8 +21,8 @@ export default function LoginComponent() {
   } = useForm<IFormDataLogin>();
 
   const router = useRouter();
-
   const useUserContext = useContext(UserContext);
+  
   if (!useUserContext) {
     throw new Error(
       "UserContext no está disponible. Asegúrate de envolver este componente en un UserProvider."
