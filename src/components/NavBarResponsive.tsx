@@ -1,33 +1,49 @@
-'use client';
+"use client";
 
+import { UserContext } from "@/context/UserContext";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useContext, useState } from "react";
+import Cookies from "js-cookie";
+import { showCustomToast } from "./Notificacion";
 
 export default function NavBarResponsive() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { setToken } = useContext(UserContext);
+  const router = useRouter();
 
+  const handleLogout = () => {
+    Cookies.remove("auth_token");
+    setToken(null);
+    showCustomToast("Snappy", "Cerraste sesión correctamente", "success");
+    router.push("/");
+  };
   const toggleDropdown = () => {
     setIsDropdownOpen((prevState) => !prevState);
   };
 
   return (
-    <header>
-      <nav className="flex items-center px-10 shadow-md h-20 justify-between">
-        {/* Logo y nombre */}
-        <div id="logoynombre" className="flex items-center">
+    <header className="shadow-md">
+      <nav className="px-4 sm:px-10 py-4 grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
+        <div
+          id="logoynombre"
+          className="flex items-center justify-center sm:justify-start sm:col-span-1 hidden sm:flex"
+        >
           <Image src="/favicon.ico" width={60} height={60} alt="snappy logo" />
-          <h1 className="font-bold text-2xl">SNAPPY</h1>
+          <h1 className="font-bold text-2xl ml-2">SNAPPY FRIENDS</h1>
         </div>
 
-        {/* Barra de búsqueda */}
-        <div id="barradebusqueda">
-          <form className="flex items-center">
-            <div className="relative">
+        <div
+          id="barradebusqueda"
+          className="flex justify-center sm:justify-center sm:col-span-1"
+        >
+          <form className="flex items-center w-full sm:w-auto">
+            <div className="relative w-full sm:w-96">
               <input
                 type="text"
                 placeholder="Buscar..."
-                className="w-64 sm:w-80 pl-4 pr-10 py-2 text-sm text-gray-700 bg-white border border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
+                className="w-full pl-4 pr-10 py-2 text-sm text-gray-700 bg-white border border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
               />
               <button
                 type="submit"
@@ -49,15 +65,17 @@ export default function NavBarResponsive() {
           </form>
         </div>
 
-        {/* Barra de navegación */}
-        <div id="barradenavegacion" className="relative">
-          <ul className="flex justify-center items-center">
-            <li className="mr-5">
+        <div
+          id="barradenavegacion"
+          className="flex justify-center sm:justify-end sm:col-span-1"
+        >
+          <ul className="flex space-x-4 sm:space-x-5 items-center">
+            <li>
               <Link href="/">
                 <Image src="/home.png" width={40} height={40} alt="home" />
               </Link>
             </li>
-            <li className="mr-5">
+            <li>
               <Link href="/mensajesprivados">
                 <Image
                   src="/chatsprivados.png"
@@ -67,7 +85,7 @@ export default function NavBarResponsive() {
                 />
               </Link>
             </li>
-            <li className="mr-5">
+            <li>
               <Link href="/newchat">
                 <Image
                   src="/logochatsnuevos.png"
@@ -77,7 +95,7 @@ export default function NavBarResponsive() {
                 />
               </Link>
             </li>
-            <li className="mr-5">
+            <li>
               <Link href="/notificaciones">
                 <Image
                   src="/bell.png"
@@ -87,7 +105,6 @@ export default function NavBarResponsive() {
                 />
               </Link>
             </li>
-            {/* Botón del usuario */}
             <li className="relative">
               <button
                 onClick={toggleDropdown}
@@ -101,13 +118,12 @@ export default function NavBarResponsive() {
                   alt="foto de perfil"
                 />
               </button>
-              {/* Dropdown */}
               {isDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg">
                   <ul className="py-1">
                     <li>
                       <Link
-                        href="/profile"
+                        href="/miperfil"
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
                         <Image
@@ -137,7 +153,7 @@ export default function NavBarResponsive() {
                     </li>
                     <li>
                       <Link
-                        href="/settings"
+                        href="/editarperfil"
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
                         <Image
@@ -152,7 +168,7 @@ export default function NavBarResponsive() {
                     </li>
                     <li>
                       <button
-                        onClick={() => alert("Cerrar sesión")}
+                        onClick={handleLogout}
                         className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
                         <Image
