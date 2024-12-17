@@ -11,6 +11,7 @@ import { loginUser } from "@/services/loginService";
 import { useContext } from "react";
 import { UserContext } from "@/context/UserContext";
 import Cookies from "js-cookie";
+import { validacionInputs } from "@/helpers/validacionInputs";
 
 export default function LoginComponent() {
   const {
@@ -87,21 +88,12 @@ export default function LoginComponent() {
                     }`}
                     type="email"
                     placeholder="Correo electrónico"
-                    {...register("email", {
-                      required: "El correo electrónico es obligatorio",
-                      pattern: {
-                        value:
-                          /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                        message:
-                          "Por favor, ingresa un correo electrónico válido",
-                      },
-                    })}
+                    {...register("email", validacionInputs.email)}
                   />
                 </label>
                 {errors.email && (
                   <span className="text-red-600 text-sm">
-                    {typeof errors.email?.message === "string" &&
-                      errors.email.message}
+                    {errors.email.message}
                   </span>
                 )}
               </div>
@@ -114,20 +106,12 @@ export default function LoginComponent() {
                     }`}
                     type="password"
                     placeholder="Contraseña"
-                    {...register("password", {
-                      required: "La contraseña es obligatoria",
-                      pattern: {
-                        value: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/,
-                        message:
-                          "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial",
-                      },
-                    })}
+                    {...register("password", validacionInputs.password)}
                   />
                 </label>
                 {errors.password && (
                   <span className="text-red-600 text-sm">
-                    {typeof errors.password?.message === "string" &&
-                      errors.password.message}
+                    {errors.password.message}
                   </span>
                 )}
               </div>
