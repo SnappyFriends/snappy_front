@@ -14,7 +14,7 @@ export default function RegisterComponent() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<IFormDataRegister>();
 
   const router = useRouter();
@@ -220,10 +220,13 @@ export default function RegisterComponent() {
 
               <div>
                 <button
-                  className="w-full h-12 bg-black border border-none rounded-md text-xl text-white"
+                  className={`w-full h-12 bg-black border border-none rounded-md text-xl text-white ${
+                    isSubmitting ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                   type="submit"
+                  disabled={isSubmitting}
                 >
-                  Registrarte
+                  {isSubmitting ? "Registrando..." : "Registrarte"}
                 </button>
               </div>
 
