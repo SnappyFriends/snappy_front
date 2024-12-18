@@ -9,14 +9,16 @@ import Cookies from "js-cookie";
 import { showCustomToast } from "./Notificacion";
 import SearchBar from "./Searchbar";
 
-export default function NavBarResponsive() {
+export default function NavBar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { setToken } = useContext(UserContext);
+  const { setToken, setUserId } = useContext(UserContext);
   const router = useRouter();
 
   const handleLogout = () => {
     Cookies.remove("auth_token");
+    localStorage.removeItem("userId");
     setToken(null);
+    setUserId(null);
     showCustomToast("Snappy", "Cerraste sesión correctamente", "success");
     router.push("/");
   };
@@ -73,7 +75,7 @@ export default function NavBarResponsive() {
           </form>
         </div> */}
 
-        <SearchBar/>
+        <SearchBar />
 
         <div
           id="barradenavegacion"

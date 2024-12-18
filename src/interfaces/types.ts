@@ -18,10 +18,22 @@ export interface IValidateAge {
 
 export interface ILoginResponse {
   token: string;
+  userId: string;
   message: string;
 }
 
 export interface IUserContextType {
   token: string | null;
   setToken: (token: string | null) => void;
+  userId: string | null;
+  setUserId: (id: string | null) => void;
+}
+
+export interface IUserData {
+  fullname: string;
+  username: string;
+  email: string;
+  password: string;
+  birthdate: string;
+  genre: string;
 }
