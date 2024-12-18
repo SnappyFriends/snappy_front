@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import React, { useContext, useState } from "react";
 import Cookies from "js-cookie";
 import { showCustomToast } from "./Notificacion";
+import SearchBar from "./Searchbar";
 
 export default function NavBarResponsive() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -28,13 +29,20 @@ export default function NavBarResponsive() {
       <nav className="px-4 sm:px-10 py-4 grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
         <div
           id="logoynombre"
-          className="flex items-center justify-center sm:justify-start sm:col-span-1 hidden sm:flex"
+          className="hidden sm:flex items-center justify-center sm:justify-start sm:col-span-1"
         >
-          <Image src="/favicon.ico" width={60} height={60} alt="snappy logo" />
-          <h1 className="font-bold text-2xl ml-2">SNAPPY FRIENDS</h1>
+          <Link href="/socialfeed" className="flex items-center">
+            <Image
+              src="/favicon.ico"
+              width={60}
+              height={60}
+              alt="snappy logo"
+            />
+            <h1 className="font-bold text-2xl ml-2">SNAPPY FRIENDS</h1>
+          </Link>
         </div>
 
-        <div
+        {/* <div
           id="barradebusqueda"
           className="flex justify-center sm:justify-center sm:col-span-1"
         >
@@ -63,7 +71,9 @@ export default function NavBarResponsive() {
               </button>
             </div>
           </form>
-        </div>
+        </div> */}
+
+        <SearchBar/>
 
         <div
           id="barradenavegacion"
@@ -197,7 +207,7 @@ export default function NavBarResponsive() {
 // import React, { useContext, useState } from "react";
 // import Image from "next/image";
 // import Link from "next/link";
-// import SearchBar from "./Searchbar";
+// import SearchBar from './Searchbar';
 // import Cookies from "js-cookie";
 // import { UserContext } from "@/context/UserContext";
 // import { useRouter } from "next/navigation";
