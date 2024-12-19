@@ -10,8 +10,8 @@ const Publicacion = () => {
   const [contenido, setContenido] = useState("");
   const [archivo, setArchivo] = useState<File | null>(null);
   const [mensaje, setMensaje] = useState("");
-  const {userId} = useContext(UserContext)
- 
+  const { userId } = useContext(UserContext);
+
   const determinarTipoArchivo = (archivo: File | null) => {
     if (!archivo) return "asdsd"; // Si no hay archivo, es texto puro
     const mimeType = archivo.type;
@@ -29,20 +29,19 @@ const Publicacion = () => {
     const body = {
       userId: Id,
       content: contenido,
-      fileUrl: file
+      fileUrl: file,
     };
 
     try {
-      let response;
-      
-        // Envío en formato JSON si no hay archivo
-        console.log(JSON.stringify(body))
-        response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        });
-      
+    
+
+      // Envío en formato JSON si no hay archivo
+      console.log(JSON.stringify(body));
+       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
 
       if (response.ok) {
         setMensaje("Publicación creada con éxito.");
@@ -59,40 +58,40 @@ const Publicacion = () => {
 
   return (
     <>
-    <Navbar/>
-    <Sidebar/>
-    
-    <div className="max-w-md mx-auto mt-10 p-4 border rounded shadow-lg">
-      <h2 className="text-2xl font-bold mb-4">Crear Publicación</h2>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        {/* Textarea para el contenido */}
-        <textarea
-          className="p-2 border rounded"
-          placeholder="Escribe tu publicación aquí..."
-          value={contenido}
-          onChange={(e) => setContenido(e.target.value)}
-          required
-        ></textarea>
+      <Navbar />
+      <Sidebar />
 
-        {/* Input para adjuntar archivo */}
-        <input
-          type="file"
-          onChange={(e) => setArchivo(e.target.files?.[0] || null)}
-          className="p-2 border rounded"
-        />
+      <div className="max-w-md mx-auto mt-10 p-4 border rounded shadow-lg">
+        <h2 className="text-2xl font-bold mb-4">Crear Publicación</h2>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          {/* Textarea para el contenido */}
+          <textarea
+            className="p-2 border rounded"
+            placeholder="Escribe tu publicación aquí..."
+            value={contenido}
+            onChange={(e) => setContenido(e.target.value)}
+            required
+          ></textarea>
 
-        {/* Botón de enviar */}
-        <button
-          type="submit"
-          className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition"
-        >
-          Publicar
-        </button>
-      </form>
+          {/* Input para adjuntar archivo */}
+          <input
+            type="file"
+            onChange={(e) => setArchivo(e.target.files?.[0] || null)}
+            className="p-2 border rounded"
+          />
 
-      {/* Mensajes */}
-      {mensaje && <p className="mt-4 text-center text-sm">{mensaje}</p>}
-    </div>
+          {/* Botón de enviar */}
+          <button
+            type="submit"
+            className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition"
+          >
+            Publicar
+          </button>
+        </form>
+
+        {/* Mensajes */}
+        {mensaje && <p className="mt-4 text-center text-sm">{mensaje}</p>}
+      </div>
     </>
   );
 };
