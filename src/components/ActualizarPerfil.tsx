@@ -7,12 +7,16 @@ import { IUserData } from "@/interfaces/types";
 import { getUserById } from "@/helpers/users";
 import { validacionInputs } from "@/helpers/validacionInputs";
 import { showCustomToast } from "./Notificacion";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
 
 export default function ActualizarPerfil() {
   const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  const { userId } = useContext(UserContext);
+  const { userId, setUserId, setToken } = useContext(UserContext);
   const [loading, setLoading] = useState(true);
   const [showOtherGender, setShowOtherGender] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -45,18 +49,19 @@ export default function ActualizarPerfil() {
   };
 
   const onSubmit = async (data: IUserData) => {
-    console.log("🚀 ~ onSubmit ~ data:", data)
+    console.log("🚀 ~ onSubmit ~ data:", data);
     if (!userId) {
       console.error("No se encontró el ID del usuario.");
       return;
     }
 
-    // Excluir campos con valores vacíos, especialmente "password"
-  const filteredData = Object.fromEntries(
-    Object.entries(data).filter(([key, value]) => key !== "password" || value !== "")
-  );
-    console.log("🚀 ~ onSubmit ~ filteredData:", filteredData)
-    console.log("🚀 ~ onSubmit ~ data:", data)
+    const filteredData = Object.fromEntries(
+      Object.entries(data).filter(
+        ([key, value]) => key !== "password" || value !== ""
+      )
+    );
+    console.log("🚀 ~ onSubmit ~ filteredData:", filteredData);
+    console.log("🚀 ~ onSubmit ~ data:", data);
     try {
       const response = await fetch(`${API_URL}/users/${userId}`, {
         method: "PUT",
@@ -65,7 +70,7 @@ export default function ActualizarPerfil() {
         },
         body: JSON.stringify(filteredData),
       });
-      
+
       if (!response.ok) {
         throw new Error(
           `Error al guardar los cambios: ${response.statusText} (${response.status})`
@@ -81,6 +86,37 @@ export default function ActualizarPerfil() {
       showCustomToast(
         "Snappy",
         "Ocurrio un error al guardar los cambios",
+        "error"
+      );
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    try {
+      const response = await fetch(`${API_URL}/users/${userId}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error(
+          `Error al eliminar la cuenta: ${response.statusText} (${response.status})`
+        );
+      }
+
+      console.log("🚀 ~ handleDeleteAccount ~ userId:", userId);
+      console.log("🚀 ~ handleDeleteAccount ~ response:", response);
+
+      Cookies.remove("auth_token");
+      localStorage.removeItem("userId");
+      setToken(null);
+      setUserId(null);
+      showCustomToast("Snappy", "Cuenta eliminada correctamente", "success");
+      router.push("/");
+    } catch (error) {
+      console.error("Error al eliminar la cuenta:", error);
+      showCustomToast(
+        "Snappy",
+        "Ocurrió un error al intentar eliminar la cuenta",
         "error"
       );
     }
@@ -247,7 +283,39 @@ export default function ActualizarPerfil() {
           >
             {isSubmitting ? "Guardando..." : "Guardar cambios"}
           </button>
+
+          <button
+            className="w-full h-12 bg-red-600 text-white font-semibold rounded-md mt-4"
+            type="button"
+            onClick={() => setShowDeleteConfirmation(true)}
+          >
+            Eliminar cuenta
+          </button>
         </form>
+
+        {showDeleteConfirmation && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="bg-white p-6 rounded-lg shadow-lg w-80 text-center">
+              <p className="mb-4">
+                ¿Estás seguro de que quieres eliminar tu cuenta?
+              </p>
+              <div className="flex justify-center gap-4">
+                <button
+                  className="bg-red-600 text-white px-4 py-2 rounded-md"
+                  onClick={handleDeleteAccount}
+                >
+                  Sí, eliminar
+                </button>
+                <button
+                  className="bg-gray-300 px-4 py-2 rounded-md"
+                  onClick={() => setShowDeleteConfirmation(false)}
+                >
+                  Cancelar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );
