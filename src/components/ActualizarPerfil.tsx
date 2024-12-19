@@ -31,6 +31,7 @@ export default function ActualizarPerfil() {
           setValue("email", user.email);
           setValue("username", user.username);
           setLoading(false);
+          console.log(user);
         } catch (error) {
           console.error("Error al cargar los datos del usuario", error);
         }
@@ -44,20 +45,27 @@ export default function ActualizarPerfil() {
   };
 
   const onSubmit = async (data: IUserData) => {
+    console.log("🚀 ~ onSubmit ~ data:", data)
     if (!userId) {
       console.error("No se encontró el ID del usuario.");
       return;
     }
 
+    // Excluir campos con valores vacíos, especialmente "password"
+  const filteredData = Object.fromEntries(
+    Object.entries(data).filter(([key, value]) => key !== "password" || value !== "")
+  );
+    console.log("🚀 ~ onSubmit ~ filteredData:", filteredData)
+    console.log("🚀 ~ onSubmit ~ data:", data)
     try {
       const response = await fetch(`${API_URL}/users/${userId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(filteredData),
       });
-
+      
       if (!response.ok) {
         throw new Error(
           `Error al guardar los cambios: ${response.statusText} (${response.status})`
@@ -207,6 +215,25 @@ export default function ActualizarPerfil() {
             {errors.username && (
               <span className="text-red-600 text-sm">
                 {errors.username.message}
+              </span>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Nueva contraseña
+            </label>
+            <input
+              className={`w-full h-12 border rounded-md p-2 ${
+                errors.password ? "border-red-600" : "border-gray-400"
+              }`}
+              type="password"
+              placeholder="Dejar en blanco para no cambiar"
+              {...register("password", validacionInputs.passwordOptional)}
+            />
+            {errors.password && (
+              <span className="text-red-600 text-sm">
+                {errors.password.message}
               </span>
             )}
           </div>
