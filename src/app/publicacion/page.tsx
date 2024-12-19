@@ -1,57 +1,48 @@
 "use client";
 
-import Conectados from "@/components/Conectados";
 import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 import React, { useState } from "react";
+import { UserContext } from "@/context/UserContext";
+import { useContext } from "react";
 
 const Publicacion = () => {
   const [contenido, setContenido] = useState("");
   const [archivo, setArchivo] = useState<File | null>(null);
   const [mensaje, setMensaje] = useState("");
-
+  const {userId} = useContext(UserContext)
+ 
   const determinarTipoArchivo = (archivo: File | null) => {
-    if (!archivo) return "text"; // Si no hay archivo, es texto puro
+    if (!archivo) return "asdsd"; // Si no hay archivo, es texto puro
     const mimeType = archivo.type;
     if (mimeType.startsWith("image/")) return "image";
     if (mimeType.startsWith("video/")) return "video";
-    return "text"; // Otro tipo no definido
+    return "asdsd"; // Otro tipo no definido
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const userId = "08968922-f677-45b4-b0ef-28cdea5c963d";
-    const type = determinarTipoArchivo(archivo);
+    const Id = userId;
+    const file = determinarTipoArchivo(archivo);
 
     const body = {
-      userId,
+      userId: Id,
       content: contenido,
-      type: "text",
+      fileUrl: file
     };
 
     try {
       let response;
-      if (archivo) {
-        // Envío con FormData si hay archivo
-        const formData = new FormData();
-        formData.append("userId", userId);
-        formData.append("content", contenido);
-        formData.append("type", type);
-        formData.append("archivo", archivo);
-
-        response = await fetch("https://snappy-back-si83.onrender.com/posts", {
-          method: "POST",
-          body: formData,
-        });
-      } else {
+      
         // Envío en formato JSON si no hay archivo
-        response = await fetch("https://snappy-back-si83.onrender.com/posts", {
+        console.log(JSON.stringify(body))
+        response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body),
         });
-      }
+      
 
       if (response.ok) {
         setMensaje("Publicación creada con éxito.");
@@ -70,7 +61,7 @@ const Publicacion = () => {
     <>
     <Navbar/>
     <Sidebar/>
-    <Conectados/>
+    
     <div className="max-w-md mx-auto mt-10 p-4 border rounded shadow-lg">
       <h2 className="text-2xl font-bold mb-4">Crear Publicación</h2>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
