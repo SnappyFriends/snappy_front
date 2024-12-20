@@ -7,12 +7,22 @@ export interface User {
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-export const getUsers = async (): Promise<User[]> => {
+export const getUsers = async (interest?: string): Promise<User[]> => {
+
   try {
-    const response = await fetch(`${API_URL}/users`, {
-      next: { revalidate: 1200 },
-      method: "GET",
-    });
+    let response;
+    if (interest) {
+      response = await fetch(`${API_URL}/users?${interest}`, {
+        next: { revalidate: 1200 },
+        method: "GET",
+      });
+    } else {
+      response = await fetch(`${API_URL}/users`, {
+        next: { revalidate: 1200 },
+        method: "GET",
+      });
+    }
+
 
     if (!response.ok) {
       throw new Error("Error fetching users");
@@ -25,9 +35,17 @@ export const getUsers = async (): Promise<User[]> => {
   }
 };
 
-export const getUsersByUsername = async (username: string): Promise<User[]> => {
+export const getUsersByUsername = async (username: string, interest?: string): Promise<User[]> => {
+
   try {
-    const users = await getUsers();
+    let users;
+    if (interest) {
+      users = await getUsers(interest);
+
+    } else {
+      users = await getUsers();
+
+    }
     const filteredUsers = users.filter(
       (user) =>
         user.username.toLowerCase().includes(username.toLowerCase()) ||
