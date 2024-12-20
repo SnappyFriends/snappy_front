@@ -8,11 +8,11 @@ const Publicacion = () => {
   const [mensaje, setMensaje] = useState("");
 
   const determinarTipoArchivo = (archivo: File | null) => {
-    if (!archivo) return "text"; // Si no hay archivo, es texto puro
+    if (!archivo) return "text"; 
     const mimeType = archivo.type;
     if (mimeType.startsWith("image/")) return "image";
     if (mimeType.startsWith("video/")) return "video";
-    return "text"; // Otro tipo no definido
+    return "text"; 
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -30,7 +30,6 @@ const Publicacion = () => {
     try {
       let response;
       if (archivo) {
-        // Envío con FormData si hay archivo
         const formData = new FormData();
         formData.append("userId", userId);
         formData.append("content", contenido);
@@ -42,7 +41,6 @@ const Publicacion = () => {
           body: formData,
         });
       } else {
-        // Envío en formato JSON si no hay archivo
         response = await fetch("https://snappy-back-si83.onrender.com/posts", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -67,8 +65,11 @@ const Publicacion = () => {
     <div className="max-w-md mx-auto mt-10 p-4 border rounded shadow-lg">
       <h2 className="text-2xl font-bold mb-4">Crear Publicación</h2>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-        {/* Textarea para el contenido */}
+        <label htmlFor="contenido" className="text-sm font-medium text-gray-700">
+          Escribe tu publicación aquí
+        </label>
         <textarea
+          id="contenido"
           className="p-2 border rounded"
           placeholder="Escribe tu publicación aquí..."
           value={contenido}
@@ -76,14 +77,16 @@ const Publicacion = () => {
           required
         ></textarea>
 
-        {/* Input para adjuntar archivo */}
+        <label htmlFor="archivo" className="text-sm font-medium text-gray-700">
+          Adjuntar archivo (opcional)
+        </label>
         <input
+          id="archivo"
           type="file"
           onChange={(e) => setArchivo(e.target.files?.[0] || null)}
           className="p-2 border rounded"
         />
 
-        {/* Botón de enviar */}
         <button
           type="submit"
           className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition"
@@ -92,7 +95,6 @@ const Publicacion = () => {
         </button>
       </form>
 
-      {/* Mensajes */}
       {mensaje && <p className="mt-4 text-center text-sm">{mensaje}</p>}
     </div>
   );
