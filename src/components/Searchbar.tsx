@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState, useEffect } from "react";
 import { getUsersByUsername } from "@/helpers/users";
 import Image from "next/image";
@@ -16,6 +14,8 @@ const SearchBar: React.FC = () => {
   const [filteredUsers, setFilteredUsers] = useState<SearchUser[]>([]); 
   const [loading, setLoading] = useState<boolean>(false); 
   const [error, setError] = useState<string | null>(null); 
+  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+  const [showDropdown, setShowDropdown] = useState<boolean>(false); 
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -53,6 +53,46 @@ const SearchBar: React.FC = () => {
     return () => clearTimeout(delayDebounce); 
   }, [searchQuery]);
 
+  const toggleInterest = (interest: string) => {
+    setSelectedInterests((prevSelected) =>
+      prevSelected.includes(interest)
+        ? prevSelected.filter((item) => item !== interest)
+        : [...prevSelected, interest]
+    );
+  };
+
+  const handleSearchClick = async () => {
+    const queryParams = new URLSearchParams();
+
+    // if (searchQuery) queryParams.append("username", searchQuery);
+
+    if (selectedInterests.length > 0) {
+      selectedInterests.forEach((interest) => {
+        queryParams.append("interests", interest);
+      });
+    }
+
+    try {
+      const users = await getUsersByUsername(searchQuery, queryParams.toString());
+      setFilteredUsers(
+        users.map((user) => ({
+          id: user.id,
+          username: user.username,
+          profile_image: "/agregarfoto.png", 
+        }))
+      ); 
+    } catch (err) {
+      console.error(err);
+      setError("Error fetching users");
+    } finally {
+      setLoading(false);
+    }
+    // const baseUrl = "http://localhost:3000/users";
+    // const finalUrl = `${baseUrl}?${queryParams.toString()}`;
+    
+    // window.location.href = finalUrl; 
+  };
+
   return (
     <div className="relative container mx-auto px-4 md:px-6 py-4 md:py-6">
       <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
@@ -65,31 +105,55 @@ const SearchBar: React.FC = () => {
           aria-label="Buscar usuarios"
         />
 
-        <div className="w-full md:w-1/3">
-          <select
-            id="interests"
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 transition duration-300"
-            defaultValue=""
-            aria-label="Seleccionar interés"
+        <div className="relative w-full md:w-1/3">
+          <button
+            type="button"
+            onClick={() => setShowDropdown(!showDropdown)}
+            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-white flex justify-between items-center"
           >
-            <option value="" disabled>
-              Interés
-            </option>
-            <option value="Interest 1">Programación</option>
-            <option value="Interest 2">Tecnología</option>
-            <option value="Interest 3">Música</option>
-            <option value="Interest 4">Literatura</option>
-            <option value="Interest 5">Cultura</option>
-            <option value="Interest 6">Filosofía</option>
-            <option value="Interest 7">Viajes</option>
-            <option value="Interest 8">Deportes</option>
-            <option value="Interest 9">Naturaleza</option>
-          </select>
+            <span className="text-gray-500">
+              {selectedInterests.length > 0
+                ? `${selectedInterests.length} Intereses`
+                : "Intereses"}
+            </span>
+            <span className="text-gray-400">▼</span>
+          </button>
+
+          {showDropdown && (
+            <div className="absolute top-full left-0 w-full max-h-60 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg z-10 overflow-y-auto">
+              <ul className="space-y-2 p-2">
+                {[
+                  "Programación",
+                  "Tecnología",
+                  "Música",
+                  "Literatura",
+                  "Cultura",
+                  "Filosofía",
+                  "Viajes",
+                  "Deportes",
+                  "Naturaleza",
+                  "Videojuegos"
+                ].map((interest) => (
+                  <li key={interest}>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={selectedInterests.includes(interest)}
+                        onChange={() => toggleInterest(interest)}
+                        className="form-checkbox h-4 w-4 text-blue-500"
+                      />
+                      <span className="text-gray-700">{interest}</span>
+                    </label>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
 
         <button
           className="w-full md:w-auto p-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition duration-300"
-          onClick={() => console.log("Botón de buscar presionado")}
+          onClick={handleSearchClick} 
         >
           Buscar
         </button>
@@ -123,7 +187,7 @@ const SearchBar: React.FC = () => {
               </div>
             ))
           ) : (
-            <p className="text-gray-500 text-center"></p> 
+            <p className="text-gray-500 text-center"></p>
           )}
         </div>
       </div>
