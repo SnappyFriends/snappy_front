@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState, useEffect } from "react";
 import { getUsersByUsername } from "@/helpers/users";
 import Image from "next/image";
@@ -63,6 +61,38 @@ const SearchBar: React.FC = () => {
     );
   };
 
+  const handleSearchClick = async () => {
+    const queryParams = new URLSearchParams();
+
+    // if (searchQuery) queryParams.append("username", searchQuery);
+
+    if (selectedInterests.length > 0) {
+      selectedInterests.forEach((interest) => {
+        queryParams.append("interests", interest);
+      });
+    }
+
+    try {
+      const users = await getUsersByUsername(searchQuery, queryParams.toString());
+      setFilteredUsers(
+        users.map((user) => ({
+          id: user.id,
+          username: user.username,
+          profile_image: "/agregarfoto.png", 
+        }))
+      ); 
+    } catch (err) {
+      console.error(err);
+      setError("Error fetching users");
+    } finally {
+      setLoading(false);
+    }
+    // const baseUrl = "http://localhost:3000/users";
+    // const finalUrl = `${baseUrl}?${queryParams.toString()}`;
+    
+    // window.location.href = finalUrl; 
+  };
+
   return (
     <div className="relative container mx-auto px-4 md:px-6 py-4 md:py-6">
       <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
@@ -86,7 +116,7 @@ const SearchBar: React.FC = () => {
                 ? `${selectedInterests.length} Intereses`
                 : "Intereses"}
             </span>
-            <span className="text-gray-400">▼</span> 
+            <span className="text-gray-400">▼</span>
           </button>
 
           {showDropdown && (
@@ -102,6 +132,7 @@ const SearchBar: React.FC = () => {
                   "Viajes",
                   "Deportes",
                   "Naturaleza",
+                  "Videojuegos"
                 ].map((interest) => (
                   <li key={interest}>
                     <label className="flex items-center gap-2 cursor-pointer">
@@ -122,9 +153,7 @@ const SearchBar: React.FC = () => {
 
         <button
           className="w-full md:w-auto p-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition duration-300"
-          onClick={() =>
-            console.log("Búsqueda con intereses seleccionados:", selectedInterests)
-          }
+          onClick={handleSearchClick} 
         >
           Buscar
         </button>
@@ -158,7 +187,7 @@ const SearchBar: React.FC = () => {
               </div>
             ))
           ) : (
-            <p className="text-gray-500 text-center"></p> 
+            <p className="text-gray-500 text-center"></p>
           )}
         </div>
       </div>
