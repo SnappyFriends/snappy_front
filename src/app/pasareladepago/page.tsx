@@ -1,7 +1,8 @@
 "use client";
 
 import Navbar from "@/components/Navbar";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
+import { UserContext } from "@/context/UserContext"; 
 
 export default function PaymentGateway() {
   const [subscriptionDuration, setSubscriptionDuration] = useState("1");
@@ -10,6 +11,42 @@ export default function PaymentGateway() {
   const pricePerMonth = 9.99;
   const subtotal = pricePerMonth * duration;
 
+  const { userId } = useContext(UserContext);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+  
+    if (userId) {
+      try {
+        const response = await fetch(`http://localhost:3000/purchases/subscribe/${userId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ subscriptionDuration: duration }),
+        });
+  
+        if (!response.ok) {
+          throw new Error('Hubo un problema con la solicitud');
+        }
+  
+        const result = await response.json();
+        console.log('Suscripción exitosa', result);
+  
+        if (result.url) {
+          window.location.href = result.url;
+        } else {
+          console.error("No se encontró una URL para redirigir.");
+        }
+      } catch (error) {
+        console.error("Error en la solicitud", error);
+      }
+    } else {
+      console.log("No se ha encontrado el ID de usuario.");
+    }
+  };
+  
+
   return (
     <div>
       <Navbar />
@@ -17,7 +54,7 @@ export default function PaymentGateway() {
         <div className="w-full max-w-lg p-6 bg-white rounded-lg flex flex-col gap-8 shadow-lg">
           <h2 className="text-2xl font-bold text-center mb-6">Activa tu membresía premium con Snappy Friends</h2>
 
-          <form className="flex flex-col gap-6">
+          <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
             <div>
               <label
                 htmlFor="subscription-duration"
