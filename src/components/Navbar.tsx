@@ -83,7 +83,7 @@ export default function NavBar() {
         >
           <ul className="flex space-x-4 sm:space-x-5 items-center">
             <li>
-              <Link href="/">
+              <Link href="/socialfeed">
                 <Image src="/home.png" width={40} height={40} alt="home" />
               </Link>
             </li>
