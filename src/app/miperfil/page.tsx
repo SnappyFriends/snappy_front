@@ -59,7 +59,9 @@ const ProfileView = () => {
           </div>
 
           <div className="flex flex-col items-center mt-4">
-            <div className="flex items-center w-full">
+            <p className="font-bold">@{userData.username}</p>
+
+            <div className="flex items-center w-full mt-6">
               <div className="relative w-24 h-24 mr-6">
                 <Image
                   src="/agregarfoto.png"
@@ -87,13 +89,21 @@ const ProfileView = () => {
               </div>
             </div>
 
-            <div className="mt-4 flex justify-center">
+            <div className="mt-4 flex justify-between w-full px-14">
               <Link href="/pasareladepago">
                 <button className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition">
                   Verifica tu cuenta
                 </button>
               </Link>
+              <Link href="/editarperfil">
+                <button className="bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition">
+                  Editar perfil
+                </button>
+              </Link>
             </div>
+            <p className="mt-6 text-center">
+              {"Sin descripción disponible."}
+            </p>
           </div>
 
           <div className="border-t my-6"></div>
@@ -110,7 +120,7 @@ const ProfileView = () => {
                   />
                 </div>
                 <div className="ml-3">
-                  <h2 className="text-sm font-semibold">Katy</h2>
+                  <h2 className="text-sm font-semibold">{userData.fullname}</h2>
                   <p className="text-xs text-gray-500">3 min ago</p>
                 </div>
               </div>
