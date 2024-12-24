@@ -10,6 +10,8 @@ export const UserContext = createContext<IUserContextType>({
   setToken: () => {},
   userId: null,
   setUserId: () => {},
+  user_type: null,
+  setUserType: () => {},
 });
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
@@ -17,11 +19,16 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     Cookies.get("auth_token") || null
   );
   const [userId, setUserId] = useState<string | null>(null);
+  const [user_type,setUserType] = useState<string | null>(null)
 
   useEffect(() => {
     const savedUserId = localStorage.getItem("userId");
     if (savedUserId) {
       setUserId(savedUserId);
+    }
+    const savedUser_type = localStorage.getItem("user_type");
+    if(savedUser_type){
+      setUserType(savedUser_type)
     }
   }, []);
 
@@ -29,10 +36,14 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     if (userId) {
       localStorage.setItem("userId", userId);
     }
-  }, [userId]);
+    if (user_type) {
+      localStorage.setItem("user_type", user_type);
+    }
+    
+  }, [userId, user_type]);
 
   return (
-    <UserContext.Provider value={{ token, setToken, userId, setUserId }}>
+    <UserContext.Provider value={{ token, setToken, userId, setUserId, user_type, setUserType }}>
       {children}
     </UserContext.Provider>
   );

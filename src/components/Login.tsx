@@ -28,17 +28,18 @@ export default function LoginComponent() {
       "UserContext no está disponible. Asegúrate de envolver este componente en un UserProvider."
     );
   }
-  const { setToken, setUserId } = useUserContext;
+  const { setToken, setUserId, setUserType } = useUserContext;
 
   const onSubmit = async (data: IFormDataLogin) => {
     try {
       const resultado = await loginUser(data);
-      const { token, userId } = resultado;
+      const { token, userId, user_type } = resultado;
 
       if (token) {
         Cookies.set("auth_token", token, { expires: 1 });
         setToken(token);
         setUserId(userId);
+        setUserType(user_type)
       }
 
       console.log("🚀 ~ onSubmit ~ resultado TRY LOGIN.TSX:", resultado);

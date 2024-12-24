@@ -20,6 +20,7 @@ export interface ILoginResponse {
   token: string;
   userId: string;
   message: string;
+  user_type: string;
 }
 
 export interface IUserContextType {
@@ -27,6 +28,8 @@ export interface IUserContextType {
   setToken: (token: string | null) => void;
   userId: string | null;
   setUserId: (id: string | null) => void;
+  user_type: string | null;
+  setUserType: (id: string | null) => void;
 }
 
 export interface IUserData {
