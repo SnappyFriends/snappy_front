@@ -17,6 +17,7 @@ export const UserContext = createContext<IUserContextType>({
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(
     Cookies.get("auth_token") || null
+    
   );
   const [userId, setUserId] = useState<string | null>(null);
   const [user_type,setUserType] = useState<string | null>(null)
