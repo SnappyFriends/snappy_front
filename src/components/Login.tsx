@@ -22,24 +22,23 @@ export default function LoginComponent() {
 
   const router = useRouter();
   const useUserContext = useContext(UserContext);
-  
+
   if (!useUserContext) {
     throw new Error(
       "UserContext no está disponible. Asegúrate de envolver este componente en un UserProvider."
     );
   }
-  const { setToken, setUserId, setUserType } = useUserContext;
+  const { setToken, setUserId } = useUserContext;
 
   const onSubmit = async (data: IFormDataLogin) => {
     try {
       const resultado = await loginUser(data);
-      const { token, userId, user_type } = resultado;
+      const { token, userId } = resultado;
 
       if (token) {
         Cookies.set("auth_token", token, { expires: 1 });
         setToken(token);
         setUserId(userId);
-        setUserType(user_type)
       }
 
       console.log("🚀 ~ onSubmit ~ resultado TRY LOGIN.TSX:", resultado);
@@ -118,7 +117,7 @@ export default function LoginComponent() {
                 )}
               </div>
               <div>
-              <button
+                <button
                   className={`w-full h-12 bg-black border border-none rounded-md text-xl text-white ${
                     isSubmitting ? "opacity-50 cursor-not-allowed" : ""
                   }`}
