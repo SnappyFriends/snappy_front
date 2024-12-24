@@ -42,7 +42,10 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
           const user = await getUserById(userId);
           setUserData(user);
         } catch (error) {
-          console.error("Error al cargar los datos del usuario en context", error);
+          console.error(
+            "Error al cargar los datos del usuario en context",
+            error
+          );
         }
       };
       fetchUserData();
