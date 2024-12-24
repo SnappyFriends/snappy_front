@@ -23,6 +23,10 @@ const Sidebar = () =>{
             <Link href="/mensajesprivados">Mensajes</Link>
           </div>
           <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
+            <Image src="/chat-grupal.png" alt="Snappear" width={24} height={24} />
+            <Link href="/chatgrupal">Chat Grupal</Link>
+          </div>
+          <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
             <Image src="/notificaciones.png" alt="Notificaciones" width={24} height={24} />
             <Link href="/notificaciones">Notificaciones</Link>
           </div>
@@ -38,6 +42,7 @@ const Sidebar = () =>{
             <Image src="/logochatsnuevos.png" alt="Snappear" width={24} height={24} />
             <Link href="/newchat">SNAPPEAR</Link>
           </div>
+        
           
         </div>
       </div>

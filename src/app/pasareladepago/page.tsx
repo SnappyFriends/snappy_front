@@ -6,12 +6,11 @@ import NavBar from "@/components/NavBar";
 
 export default function PaymentGateway() {
   const [subscriptionDuration, setSubscriptionDuration] = useState("1");
+  const { user_type, userId } = useContext(UserContext);
 
-  const duration = parseInt(subscriptionDuration, 10);
   const pricePerMonth = 9.99;
+  const duration = parseInt(subscriptionDuration, 10);
   const subtotal = pricePerMonth * duration;
-
-  const { userId } = useContext(UserContext);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,14 +24,14 @@ export default function PaymentGateway() {
           },
           body: JSON.stringify({ subscriptionDuration: duration }),
         });
-  
+
         if (!response.ok) {
           throw new Error('Hubo un problema con la solicitud');
         }
-  
+
         const result = await response.json();
         console.log('Suscripción exitosa', result);
-  
+
         if (result.url) {
           window.location.href = result.url;
         } else {
@@ -45,7 +44,26 @@ export default function PaymentGateway() {
       console.log("No se ha encontrado el ID de usuario.");
     }
   };
-  
+
+  if (user_type === "premium") {
+    return (
+      <div>
+        <Navbar />
+        <div className="min-h-screen flex justify-center items-center p-4">
+          <div className="w-full max-w-lg p-6 bg-white rounded-lg flex flex-col gap-8 shadow-lg">
+            <h2 className="text-2xl font-bold text-center mb-6">Tus detalles de suscripción premium</h2>
+            <p className="mb-4">Fecha de próximo pago: 01/01/2025</p>
+            <button
+              className="w-full bg-red-500 text-white py-2 rounded font-bold hover:bg-red-400 transition-colors"
+              onClick={() => alert("Cancelación de suscripción exitosa. Veras impactados los cambios a partir del primer dia del proximo mes")}
+            >
+              Cancelar suscripción
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>

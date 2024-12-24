@@ -20,6 +20,7 @@ export interface ILoginResponse {
   token: string;
   userId: string;
   message: string;
+  user_type: string;
 }
 
 export interface IUserContextType {

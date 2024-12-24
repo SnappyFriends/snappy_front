@@ -18,6 +18,7 @@ export const UserContext = createContext<IUserContextType>({
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(
     Cookies.get("auth_token") || null
+    
   );
   const [userId, setUserId] = useState<string | null>(null);
   const [userData, setUserData] = useState<IUserData | null>(null);
@@ -26,6 +27,10 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     const savedUserId = localStorage.getItem("userId");
     if (savedUserId) {
       setUserId(savedUserId);
+    }
+    const savedUser_type = localStorage.getItem("user_type");
+    if(savedUser_type){
+      setUserType(savedUser_type)
     }
   }, []);
 
