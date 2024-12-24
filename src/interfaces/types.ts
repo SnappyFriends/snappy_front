@@ -37,3 +37,8 @@ export interface IUserData {
   birthdate: string;
   genre: string;
 }
+
+export interface IStory {
+  userId: string;
+  fileUrl: string;
+}
