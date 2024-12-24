@@ -26,6 +26,7 @@ const ChatRoomView = () => {
   const fetchUsers = async () => {
     try {
       const users = await getUsers();
+      console.log(users)
       setUsersList(users); 
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -68,16 +69,19 @@ const ChatRoomView = () => {
       <Navbar />
 
       <div className="flex flex-col lg:flex-row">
+        {/* Sidebar */}
         <div className="hidden lg:flex flex-col w-64 bg-white p-6 space-y-10 fixed left-6 top-1/2 transform -translate-y-1/2">
           <Sidebar />
         </div>
 
-        <div className="lg:w-3/5 md:w-full ml-0 lg:ml-80 mt-4 lg:mt-0">
-          <div className="flex items-center justify-center min-h-screen relative">
+        {/* Chat content */}
+        <div className="lg:w-3/5 md:w-full ml-0 lg:ml-80 mt-12 lg:mt-32">
+        <div className="flex items-center justify-center h-auto relative">
             <div className="flex w-full max-w-6xl rounded-lg bg-white shadow-md">
 
-              <div className="lg:w-1/4 sm:w-full md:w-full min-h-[400px] max-h-[600px] border-r px-4 py-6 bg-gray-100 overflow-y-auto">
-                <h3 className="text-xl font-semibold mb-4">Miembros de la Sala</h3>
+              {/* Members section */}
+              <div className="lg:w-1/4 sm:w-full md:w-full h-[calc(100vh-200px)] border-r px-4 py-6 bg-gray-100 overflow-y-auto">
+              <h3 className="text-xl font-semibold mb-4">Miembros de la Sala</h3>
                 <div className="space-y-4">
                   {members.map((member) => (
                     <div key={member.id} className="flex items-center space-x-2">
@@ -134,8 +138,9 @@ const ChatRoomView = () => {
                 )}
               </div>
 
-              <div className="lg:w-3/4 sm:w-full px-4 py-6 flex flex-col bg-gray-50 overflow-y-auto">
-                <div className="flex items-center justify-between border-b pb-4">
+              {/* Chat section */}
+              <div className="lg:w-3/4 sm:w-full px-4 py-6 flex flex-col bg-gray-50 h-[calc(100vh-200px)] overflow-y-auto">
+              <div className="flex items-center justify-between border-b pb-4">
                   <div className="flex items-center">
                     <div className="relative w-12 h-12">
                       <Image
@@ -152,7 +157,7 @@ const ChatRoomView = () => {
                   </div>
                 </div>
 
-                <div className="flex-1 overflow-y-auto mt-6 px-4 py-3 bg-white rounded-lg">
+                <div className="flex-1 overflow-y-auto mt-4 px-4 py-3 bg-white rounded-lg">
                   <p className="text-center text-gray-400">Inicia tu conversación en el chat</p>
                 </div>
 
@@ -195,6 +200,7 @@ const ChatRoomView = () => {
           </div>
         </div>
 
+        {/* Conectados */}
         <div className="hidden lg:flex flex-col w-80 space-y-6 absolute right-20 top-1/2 transform -translate-y-1/2">
           <Conectados />
         </div>
