@@ -2,15 +2,14 @@
 
 import React from "react";
 import Image from "next/image";
-import Navbar from "@/components/Navbar";
 import Conectados from "@/components/Conectados";
 import Sidebar from "@/components/Sidebar";
+import SearchBar from "@/components/SearchBar";
 
 const SocialFeedView = () => {
   return (
-    <div className="min-h-screen">
-      <Navbar />
-      
+    <>
+      <SearchBar/>
       <div className="flex flex-row">
         
         <div className="hidden md:flex flex-col w-64 bg-white p-6 space-y-10 fixed left-6 top-1/2 transform -translate-y-1/2">
@@ -92,7 +91,7 @@ const SocialFeedView = () => {
         </div>
 
       </div>
-    </div>
+    </>
   );
 };
 

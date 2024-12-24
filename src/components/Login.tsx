@@ -44,7 +44,7 @@ export default function LoginComponent() {
       console.log("🚀 ~ onSubmit ~ resultado TRY LOGIN.TSX:", resultado);
 
       showCustomToast("Snappy", "Iniciaste sesión correctamente", "success");
-      router.push("/loadingbar");
+      router.push("/loading");
     } catch (error) {
       console.log("🚀 ~ onSubmit ~ error CATCH LOGIN.TSX:", error);
       showCustomToast("Snappy", "Usuario o contraseña incorrectos", "error");

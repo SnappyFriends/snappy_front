@@ -1,8 +1,8 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
 import React, { useState, useContext } from "react";
 import { UserContext } from "@/context/UserContext"; 
+import NavBar from "@/components/NavBar";
 
 export default function PaymentGateway() {
   const [subscriptionDuration, setSubscriptionDuration] = useState("1");
@@ -49,7 +49,7 @@ export default function PaymentGateway() {
 
   return (
     <div>
-      <Navbar />
+      <NavBar />
       <div className="min-h-screen flex justify-center items-center p-4">
         <div className="w-full max-w-lg p-6 bg-white rounded-lg flex flex-col gap-8 shadow-lg">
           <h2 className="text-2xl font-bold text-center mb-6">Activa tu membresía premium con Snappy Friends</h2>

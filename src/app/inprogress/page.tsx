@@ -1,11 +1,11 @@
 import React from "react";
-import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
+import NavBar from "@/components/NavBar";
 
 const InProgress = () => {
   return (
     <div>
-      <Navbar />
+      <NavBar />
 
       <div className="flex flex-row min-h-screen relative">
         <div className="hidden md:flex flex-col w-64 bg-white p-6 space-y-10 fixed left-6 top-1/2 transform -translate-y-1/2">

@@ -1,12 +1,13 @@
+import FotoDePerfil from "@/components/FotoDePerfil";
 import NavBar from "@/components/NavBar";
-import PerfilComponent from "@/components/Perfil";
 import SearchBar from "@/components/SearchBar";
+import React from "react";
 
-export default function MiPerfil() {
+export default function Prueba() {
   return (
     <>
       <SearchBar />
-      <PerfilComponent />
+      <FotoDePerfil />
       <NavBar />
     </>
   );

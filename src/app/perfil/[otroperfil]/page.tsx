@@ -2,13 +2,13 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import Navbar from "@/components/Navbar";
 import Link from "next/link";
 import { getUsersByUsername } from "@/helpers/users";
 import { formatDistanceToNow } from "date-fns";
 import Conectados from "@/components/Conectados";
 import NotFound from "@/app/not-found";
 import Sidebar from "@/components/Sidebar";
+import NavBar from "@/components/NavBar";
 
 interface UserData {
   fullname: string;
@@ -64,7 +64,7 @@ const ProfileView = ({ params }: { params: Promise<{ otroperfil: string }> }) =>
 
   return (
     <div>
-      <Navbar />
+      <NavBar />
       <div className="flex min-h-screen relative">
         <div className="hidden md:flex flex-col w-64 bg-white p-6 space-y-10 absolute left-6 top-1/2 transform -translate-y-1/2">
        <Sidebar/>

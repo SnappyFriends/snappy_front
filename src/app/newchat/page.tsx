@@ -2,12 +2,12 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import Navbar from "@/components/Navbar";
+import NavBar from "@/components/NavBar";
 
 const ChatView = () => {
   return (
     <div>
-      <Navbar />
+      <NavBar />
       <div className="flex items-center justify-center min-h-screen relative">
         <div className="bg-white rounded-lg shadow-md w-1/2 max-w-lg min-h-[50vh] relative">
           <div className="flex items-center justify-between px-4 py-3 border-b">

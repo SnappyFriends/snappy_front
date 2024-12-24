@@ -8,14 +8,15 @@ import { getUserById } from "@/helpers/users";
 import { validacionInputs } from "@/helpers/validacionInputs";
 import { showCustomToast } from "./Notificacion";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
+import FotoDePerfil from "./FotoDePerfil";
+import Intereses from "./Intereses";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function ActualizarPerfil() {
-  const API_URL = process.env.NEXT_PUBLIC_API_URL;
-  const { userId, setUserId, setToken } = useContext(UserContext);
+  const { userData, setUserData } = useContext(UserContext);
   const [loading, setLoading] = useState(true);
   const [showOtherGender, setShowOtherGender] = useState(false);
-  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const router = useRouter();
   const {
     register,
@@ -25,50 +26,41 @@ export default function ActualizarPerfil() {
   } = useForm<IUserData>();
 
   useEffect(() => {
-    if (userId) {
+    if (userData?.id) {
       const fetchUserData = async () => {
         try {
-          const user = await getUserById(userId);
+          const user = await getUserById(userData.id);
           setValue("fullname", user.fullname);
           setValue("birthdate", user.birthdate);
           setValue("genre", user.genre);
-          setValue("email", user.email);
           setValue("username", user.username);
+          setValue("description", user.description);
           setLoading(false);
-          console.log(user);
         } catch (error) {
           console.error("Error al cargar los datos del usuario", error);
         }
       };
       fetchUserData();
     }
-  }, [userId, setValue]);
+  }, [userData?.id, setValue]);
 
   const handleGenderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setShowOtherGender(e.target.value === "otro");
   };
 
   const onSubmit = async (data: IUserData) => {
-    console.log("🚀 ~ onSubmit ~ data:", data);
-    if (!userId) {
+    if (!userData?.id) {
       console.error("No se encontró el ID del usuario.");
       return;
     }
 
-    const filteredData = Object.fromEntries(
-      Object.entries(data).filter(
-        ([key, value]) => key !== "password" || value !== ""
-      )
-    );
-    console.log("🚀 ~ onSubmit ~ filteredData:", filteredData);
-    console.log("🚀 ~ onSubmit ~ data:", data);
     try {
-      const response = await fetch(`${API_URL}/users/${userId}`, {
+      const response = await fetch(`${API_URL}/users/${userData.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(filteredData),
+        body: JSON.stringify(data),
       });
 
       if (!response.ok) {
@@ -77,46 +69,22 @@ export default function ActualizarPerfil() {
         );
       }
 
-      const result = await response.json();
-      console.log("Cambios guardados exitosamente:", result);
+      setUserData({
+        ...userData,
+        fullname: data.fullname,
+        username: data.username,
+        description: data.description,
+        birthdate: data.birthdate,
+        genre: data.genre,
+      });
 
       showCustomToast("Snappy", "Datos guardados correctamente", "success");
+      router.push(`/miperfil`);
     } catch (error) {
       console.error("Error al actualizar el perfil:", error);
       showCustomToast(
         "Snappy",
         "Ocurrio un error al guardar los cambios",
-        "error"
-      );
-    }
-  };
-
-  const handleDeleteAccount = async () => {
-    try {
-      const response = await fetch(`${API_URL}/users/${userId}`, {
-        method: "DELETE",
-      });
-
-      if (!response.ok) {
-        throw new Error(
-          `Error al eliminar la cuenta: ${response.statusText} (${response.status})`
-        );
-      }
-
-      console.log("🚀 ~ handleDeleteAccount ~ userId:", userId);
-      console.log("🚀 ~ handleDeleteAccount ~ response:", response);
-
-      Cookies.remove("auth_token");
-      localStorage.removeItem("userId");
-      setToken(null);
-      setUserId(null);
-      showCustomToast("Snappy", "Cuenta eliminada correctamente", "success");
-      router.push("/");
-    } catch (error) {
-      console.error("Error al eliminar la cuenta:", error);
-      showCustomToast(
-        "Snappy",
-        "Ocurrió un error al intentar eliminar la cuenta",
         "error"
       );
     }
@@ -131,151 +99,133 @@ export default function ActualizarPerfil() {
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen px-4 sm:px-6 lg:px-8 bg-gray-100">
-      <main className="w-full max-w-md bg-white shadow-md rounded-lg p-6">
-        <h2 className="font-bold text-2xl text-center mb-6">Editar perfil</h2>
+    <main className="pt-4 min-h-screen flex flex-col items-center mb-16">
+      <h2 className="font-bold text-2xl text-center mb-4">Editar perfil</h2>
 
-        <form className="flex flex-col gap-4" onSubmit={handleSubmit(onSubmit)}>
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Nombre completo
-            </label>
-            <input
-              className={`w-full h-12 border rounded-md p-2 ${
-                errors.fullname ? "border-red-600" : "border-gray-400"
-              }`}
-              type="text"
-              {...register("fullname", validacionInputs.fullname)}
-            />
-            {errors.fullname && (
-              <span className="text-red-600 text-sm">
-                {errors.fullname.message}
-              </span>
-            )}
-          </div>
+      <FotoDePerfil />
 
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Fecha de nacimiento
-            </label>
-            <input
-              className={`w-full h-12 border rounded-md p-2 ${
-                errors.birthdate ? "border-red-600" : "border-gray-400"
-              }`}
-              type="date"
-              {...register("birthdate", validacionInputs.birthdate)}
-            />
-            {errors.birthdate && (
-              <span className="text-red-600 text-sm">
-                {errors.birthdate.message}
-              </span>
-            )}
-          </div>
+      <form
+        className="flex flex-col gap-4 px-2 w-full max-w-lg"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <div>
+          <label className="block text-sm font-medium mb-1">
+            Nombre de usuario
+          </label>
+          <input
+            className={`w-full h-12 border rounded-md p-2 ${
+              errors.username ? "border-red-600" : "border-gray-400"
+            }`}
+            type="text"
+            {...register("username", validacionInputs.username)}
+          />
+          {errors.username && (
+            <span className="text-red-600 text-sm">
+              {errors.username.message}
+            </span>
+          )}
+        </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1">Género</label>
-            <div className="flex gap-2">
-              <label className="flex-1 p-2 border rounded-md flex items-center gap-2">
-                <input
-                  type="radio"
-                  value="hombre"
-                  {...register("genre", validacionInputs.genre)}
-                  onChange={handleGenderChange}
-                />
-                Hombre
-              </label>
-              <label className="flex-1 p-2 border rounded-md flex items-center gap-2">
-                <input
-                  type="radio"
-                  value="mujer"
-                  {...register("genre", validacionInputs.genre)}
-                  onChange={handleGenderChange}
-                />
-                Mujer
-              </label>
-              <label className="flex-1 p-2 border rounded-md flex items-center gap-2">
-                <input
-                  type="radio"
-                  value="otro"
-                  {...register("genre", validacionInputs.genre)}
-                  onChange={handleGenderChange}
-                />
-                Otro
-              </label>
-            </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">
+            Nombre completo
+          </label>
+          <input
+            className={`w-full h-12 border rounded-md p-2 ${
+              errors.fullname ? "border-red-600" : "border-gray-400"
+            }`}
+            type="text"
+            {...register("fullname", validacionInputs.fullname)}
+          />
+          {errors.fullname && (
+            <span className="text-red-600 text-sm">
+              {errors.fullname.message}
+            </span>
+          )}
+        </div>
 
-            {showOtherGender && (
+        <div>
+          <label className="block text-sm font-medium mb-1">Presentación</label>
+          <textarea
+            className={`w-full h-32 border rounded-md p-2 ${
+              errors.description ? "border-red-600" : "border-gray-400"
+            }`}
+            placeholder="Escribe una breve descripción sobre ti"
+            {...register("description", validacionInputs.description)}
+          />
+          {errors.description && (
+            <span className="text-red-600 text-sm">
+              {errors.description.message}
+            </span>
+          )}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-1">
+            Fecha de nacimiento
+          </label>
+          <input
+            className={`w-full h-12 border rounded-md p-2 ${
+              errors.birthdate ? "border-red-600" : "border-gray-400"
+            }`}
+            type="date"
+            {...register("birthdate", validacionInputs.birthdate)}
+          />
+          {errors.birthdate && (
+            <span className="text-red-600 text-sm">
+              {errors.birthdate.message}
+            </span>
+          )}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-1">Género</label>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <label className="flex-1 p-2 border rounded-md flex items-center gap-2">
               <input
-                type="text"
-                placeholder="Especifica tu género"
-                className="w-full h-12 border rounded-md p-2 border-gray-400 mt-2"
+                type="radio"
+                value="hombre"
+                {...register("genre", validacionInputs.genre)}
+                onChange={handleGenderChange}
               />
-            )}
-
-            {errors.genre && (
-              <span className="text-red-600 text-sm">
-                {errors.genre.message}
-              </span>
-            )}
+              Hombre
+            </label>
+            <label className="flex-1 p-2 border rounded-md flex items-center gap-2">
+              <input
+                type="radio"
+                value="mujer"
+                {...register("genre", validacionInputs.genre)}
+                onChange={handleGenderChange}
+              />
+              Mujer
+            </label>
+            <label className="flex-1 p-2 border rounded-md flex items-center gap-2">
+              <input
+                type="radio"
+                value="otro"
+                {...register("genre", validacionInputs.genre)}
+                onChange={handleGenderChange}
+              />
+              Otro
+            </label>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Correo electrónico
-            </label>
+          {showOtherGender && (
             <input
-              className={`w-full h-12 border rounded-md p-2 ${
-                errors.email ? "border-red-600" : "border-gray-400"
-              }`}
-              type="email"
-              {...register("email", validacionInputs.email)}
-            />
-            {errors.email && (
-              <span className="text-red-600 text-sm">
-                {errors.email.message}
-              </span>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Nombre de usuario
-            </label>
-            <input
-              className={`w-full h-12 border rounded-md p-2 ${
-                errors.username ? "border-red-600" : "border-gray-400"
-              }`}
               type="text"
-              {...register("username", validacionInputs.username)}
+              placeholder="Especifica tu género"
+              className="w-full h-12 border rounded-md p-2 border-gray-400 mt-2"
             />
-            {errors.username && (
-              <span className="text-red-600 text-sm">
-                {errors.username.message}
-              </span>
-            )}
-          </div>
+          )}
 
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Nueva contraseña
-            </label>
-            <input
-              className={`w-full h-12 border rounded-md p-2 ${
-                errors.password ? "border-red-600" : "border-gray-400"
-              }`}
-              type="password"
-              placeholder="Dejar en blanco para no cambiar"
-              {...register("password", validacionInputs.passwordOptional)}
-            />
-            {errors.password && (
-              <span className="text-red-600 text-sm">
-                {errors.password.message}
-              </span>
-            )}
-          </div>
+          {errors.genre && (
+            <span className="text-red-600 text-sm">{errors.genre.message}</span>
+          )}
+        </div>
 
+        <div className="flex flex-col gap-4">
           <button
-            className={`w-full h-12 bg-black text-white font-semibold rounded-md ${
+            className={`w-full h-12 bg-black text-white font-semibold rounded-md hover:bg-gray-800 ${
               isSubmitting ? "opacity-50 cursor-not-allowed" : ""
             }`}
             type="submit"
@@ -283,40 +233,17 @@ export default function ActualizarPerfil() {
           >
             {isSubmitting ? "Guardando..." : "Guardar cambios"}
           </button>
-
           <button
-            className="w-full h-12 bg-red-600 text-white font-semibold rounded-md mt-4"
+            className="w-full h-12 bg-gray-600 text-white font-semibold rounded-md hover:bg-gray-500"
             type="button"
-            onClick={() => setShowDeleteConfirmation(true)}
+            onClick={() => router.push(`/miperfil`)}
           >
-            Eliminar cuenta
+            Cancelar
           </button>
-        </form>
+        </div>
+      </form>
 
-        {showDeleteConfirmation && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-80 text-center">
-              <p className="mb-4">
-                ¿Estás seguro de que quieres eliminar tu cuenta?
-              </p>
-              <div className="flex justify-center gap-4">
-                <button
-                  className="bg-red-600 text-white px-4 py-2 rounded-md"
-                  onClick={handleDeleteAccount}
-                >
-                  Sí, eliminar
-                </button>
-                <button
-                  className="bg-gray-300 px-4 py-2 rounded-md"
-                  onClick={() => setShowDeleteConfirmation(false)}
-                >
-                  Cancelar
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-      </main>
-    </div>
+      <Intereses />
+    </main>
   );
 }
