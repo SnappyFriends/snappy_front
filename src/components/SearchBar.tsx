@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { getUsersByUsername } from "@/helpers/users";
+import { getUsersSearchbar } from "@/helpers/users";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -32,7 +32,7 @@ const SearchBar: React.FC = () => {
       setError(null);
 
       try {
-        const users = await getUsersByUsername(searchQuery);
+        const users = await getUsersSearchbar(searchQuery);
         setFilteredUsers(
           users.map((user) => ({
             id: user.id,
@@ -75,7 +75,7 @@ const SearchBar: React.FC = () => {
     }
 
     try {
-      const users = await getUsersByUsername(searchQuery, queryParams.toString());
+      const users = await getUsersSearchbar(searchQuery, queryParams.toString());
       setFilteredUsers(
         users.map((user) => ({
           id: user.id,

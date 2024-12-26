@@ -60,12 +60,10 @@ export const getUsersSearchbar  = async (username: string, interest?: string) =>
 
     } else {
       users = await getUsers();
-
     }
     const filteredUsers = users.filter(
       (user) =>
-        user.username.toLowerCase().includes(username.toLowerCase()) ||
-        user.fullname.toLowerCase().includes(username.toLowerCase())
+        user.username.toLowerCase().includes(username.toLowerCase())
     );
     return filteredUsers;
   } catch (error) {

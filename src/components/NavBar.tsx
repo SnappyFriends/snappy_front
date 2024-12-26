@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import React, { useContext, useState } from "react";
 import Cookies from "js-cookie";
 import { showCustomToast } from "./Notificacion";
-import SearchBar from "./Searchbar";
+import SearchBar from "./SearchBar";
 
 export default function NavBar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
