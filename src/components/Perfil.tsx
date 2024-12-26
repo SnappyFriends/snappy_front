@@ -48,7 +48,7 @@ export default function PerfilComponent() {
 
         <div className="flex flex-wrap justify-center gap-4">
           <Link
-            href="/verificarcuenta"
+            href="/pasareladepago"
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-800"
           >
             Verificar cuenta
