@@ -2,15 +2,15 @@
 
 import React from "react";
 import Image from "next/image";
-import Navbar from "@/components/Navbar";
 import Conectados from "@/components/Conectados";
 import Sidebar from "@/components/Sidebar";
+import Link from "next/link";
+import SearchBar from "@/components/SearchBar";
 
 const SocialFeedView = () => {
   return (
-    <div className="min-h-screen">
-      <Navbar />
-      
+    <>
+      <SearchBar/>
       <div className="flex flex-row">
         
         <div className="hidden md:flex flex-col w-64 bg-white p-6 space-y-10 fixed left-6 top-1/2 transform -translate-y-1/2">
@@ -20,11 +20,22 @@ const SocialFeedView = () => {
         <div className="flex-1 flex flex-col items-center max-w-5xl p-4 md:ml-72 lg:ml-80 mt-10">
           
           <div className="flex justify-center space-x-6 mb-6">
-            {[...Array(5)].map((_, index) => (
+          <div className="relative w-14 h-14">
+  <Link href="/crear-story">
+    <Image
+      src="/agregarusuario.png"
+      alt="Agregar Usuario"
+      layout="fill"
+      className="rounded-full object-cover"
+    />
+  </Link>
+</div>
+
+            {[...Array(4)].map((_, index) => (
               <div key={index} className="relative w-14 h-14">
                 <Image
                   src="/agregarfoto.png"
-                  alt={`Foto ${index}`}
+                  alt={`Foto ${index + 1}`}
                   layout="fill"
                   className="rounded-full object-cover"
                 />
@@ -92,7 +103,7 @@ const SocialFeedView = () => {
         </div>
 
       </div>
-    </div>
+    </>
   );
 };
 

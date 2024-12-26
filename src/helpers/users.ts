@@ -35,8 +35,24 @@ export const getUsers = async (interest?: string): Promise<User[]> => {
   }
 };
 
-export const getUsersByUsername = async (username: string, interest?: string): Promise<User[]> => {
+export const getUsersByUsername = async (username: string) => {
+try {
+   const response = await fetch(`${API_URL}/users/username/${username}`, {
+    next: { revalidate: 1200 },
+    method: "GET",
+  });
 
+  if (!response.ok) {
+    throw new Error("Error fetching users");
+  }
+  return response.json()
+} catch (error) {
+  throw error;
+
+}
+}
+
+export const getUsersSearchbar  = async (username: string, interest?: string) => {
   try {
     let users;
     if (interest) {

@@ -74,4 +74,10 @@ export const validacionInputs = {
       return true;
     },
   },
+  description: {
+    maxLength: {
+      value: 200,
+      message: "La presentación no puede tener más de 200 caracteres",
+    },
+  },
 };

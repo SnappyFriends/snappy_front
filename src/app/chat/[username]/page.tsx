@@ -19,7 +19,7 @@ const ChatWithUser = () => {
         }
   
         const userData = await getUsersByUsername(username);
-        setUser(userData[0]);
+        setUser(userData);
       } catch (error) {
         console.error("Error fetching user:", error);
       }

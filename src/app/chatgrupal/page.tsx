@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { getUsers } from "@/helpers/users"; 
 import Image from "next/image";
-import Navbar from "@/components/Navbar";
 import Sidebar from "@/components/Sidebar";
 import Conectados from "@/components/Conectados";
 
@@ -66,7 +65,6 @@ const ChatRoomView = () => {
 
   return (
     <div className="min-h-screen">
-      <Navbar />
 
       <div className="flex flex-col lg:flex-row">
         {/* Sidebar */}

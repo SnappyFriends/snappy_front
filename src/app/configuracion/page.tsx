@@ -1,13 +1,13 @@
-import ActualizarPerfil from "@/components/ActualizarPerfil";
+import ConfiguracionComponent from "@/components/Configuracion";
 import NavBar from "@/components/NavBar";
 import SearchBar from "@/components/SearchBar";
 import React from "react";
 
-export default function EditarPerfil() {
+export default function Configuracion() {
   return (
     <>
       <SearchBar />
-      <ActualizarPerfil />
+      <ConfiguracionComponent />
       <NavBar />
     </>
   );

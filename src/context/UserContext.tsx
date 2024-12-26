@@ -1,15 +1,18 @@
 "use client";
 
-import { IUserContextType } from "@/interfaces/types";
+import { IUserContextType, IUserData } from "@/interfaces/types";
 import { createContext, useEffect, useState } from "react";
 import { ReactNode } from "react";
 import Cookies from "js-cookie";
+import { getUserById } from "@/services/userService";
 
 export const UserContext = createContext<IUserContextType>({
   token: null,
   setToken: () => {},
   userId: null,
   setUserId: () => {},
+  userData: null,
+  setUserData: () => {},
 });
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
@@ -17,6 +20,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     Cookies.get("auth_token") || null
   );
   const [userId, setUserId] = useState<string | null>(null);
+  const [userData, setUserData] = useState<IUserData | null>(null);
 
   useEffect(() => {
     const savedUserId = localStorage.getItem("userId");
@@ -31,8 +35,27 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [userId]);
 
+  useEffect(() => {
+    if (userId && !userData) {
+      const fetchUserData = async () => {
+        try {
+          const user = await getUserById(userId);
+          setUserData(user);
+        } catch (error) {
+          console.error(
+            "Error al cargar los datos del usuario en context",
+            error
+          );
+        }
+      };
+      fetchUserData();
+    }
+  }, [userId, userData]);
+
   return (
-    <UserContext.Provider value={{ token, setToken, userId, setUserId }}>
+    <UserContext.Provider
+      value={{ token, setToken, userId, setUserId, userData, setUserData }}
+    >
       {children}
     </UserContext.Provider>
   );

@@ -22,7 +22,7 @@ export default function LoginComponent() {
 
   const router = useRouter();
   const useUserContext = useContext(UserContext);
-  
+
   if (!useUserContext) {
     throw new Error(
       "UserContext no está disponible. Asegúrate de envolver este componente en un UserProvider."
@@ -44,7 +44,7 @@ export default function LoginComponent() {
       console.log("🚀 ~ onSubmit ~ resultado TRY LOGIN.TSX:", resultado);
 
       showCustomToast("Snappy", "Iniciaste sesión correctamente", "success");
-      router.push("/loadingbar");
+      router.push("/loading");
     } catch (error) {
       console.log("🚀 ~ onSubmit ~ error CATCH LOGIN.TSX:", error);
       showCustomToast("Snappy", "Usuario o contraseña incorrectos", "error");
@@ -117,7 +117,7 @@ export default function LoginComponent() {
                 )}
               </div>
               <div>
-              <button
+                <button
                   className={`w-full h-12 bg-black border border-none rounded-md text-xl text-white ${
                     isSubmitting ? "opacity-50 cursor-not-allowed" : ""
                   }`}
