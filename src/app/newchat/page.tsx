@@ -1,15 +1,107 @@
 "use client";
-import React from "react";
+
+import React, { useEffect, useState, useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import NavBar from "@/components/NavBar";
+import { getUsers } from "@/helpers/users";
+import { UserContext } from "@/context/UserContext";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
+interface IUserAPIResponse {
+  username: string;
+  id: string;
+  user_type?: string;
+  fullname?: string; 
+}
 
 const ChatView = () => {
+  const [userList, setUserList] = useState<IUserAPIResponse[]>([]);
+  const [randomUser, setRandomUser] = useState<IUserAPIResponse | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [isRequestSent, setIsRequestSent] = useState<boolean>(false);
+  const [sentRequests, setSentRequests] = useState<Set<string>>(
+    new Set<string>()
+  );
+
+  const { userId } = useContext(UserContext);
+
+  useEffect(() => {
+    const savedRequests = localStorage.getItem("sentRequests");
+    if (savedRequests) {
+      setSentRequests(new Set(JSON.parse(savedRequests)));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("sentRequests", JSON.stringify([...sentRequests]));
+  }, [sentRequests]);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const users: IUserAPIResponse[] = await getUsers();
+        console.log("Usuarios obtenidos:", users);
+        setUserList(users);
+        if (users.length > 0) {
+          setRandomUser(users[Math.floor(Math.random() * users.length)]);
+        }
+      } catch (error) {
+        console.error("Error al obtener usuarios:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, []);
+
+  const handleSnappear = () => {
+    if (userList.length > 0) {
+      const newRandomUser =
+        userList[Math.floor(Math.random() * userList.length)];
+      setRandomUser(newRandomUser);
+
+      if (sentRequests.has(newRandomUser.id)) {
+        setIsRequestSent(true);
+      } else {
+        setIsRequestSent(false);
+      }
+    }
+  };
+
+  const handleSendRequest = async () => {
+    if (!randomUser || !userId) return;
+        console.log(randomUser.id)
+        console.log(userId)
+
+    try {
+      const response = await fetch(`${API_URL}/friendships/${userId}/add-friend/${randomUser.id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  console.log(response)
+      if (response.ok) {
+        setIsRequestSent(true);
+        setSentRequests((prev) => new Set(prev.add(randomUser.id)));
+      } else {
+        const errorData = await response.json();
+        alert("Error al enviar solicitud: " + (errorData.message));
+      }
+    } catch (error) {
+      console.error("Error al conectarse al servidor:", error);
+      alert("No se pudo enviar la solicitud.");
+    }
+  };
+  
   return (
     <div>
       <NavBar />
-      <div className="flex items-center justify-center min-h-screen relative">
-        <div className="bg-white rounded-lg shadow-md w-1/2 max-w-lg min-h-[50vh] relative">
+      <div className="flex items-center justify-center mt-10 mb-5 ">
+        <div className="bg-white rounded-lg shadow-md w-1/2 max-w-lg relative">
           <div className="flex items-center justify-between px-4 py-3 border-b">
             <div className="flex items-center">
               <div className="relative w-12 h-12">
@@ -21,23 +113,51 @@ const ChatView = () => {
                 />
               </div>
               <div className="ml-3">
-                <h1 className="text-lg font-semibold">Helena Hills</h1>
-                <p className="text-sm text-gray-500">Activo(a) ahora</p>
+                {loading ? (
+                  <p className="text-gray-500">Cargando usuario...</p>
+                ) : randomUser ? (
+                  <>
+                    <h1 className="text-lg font-semibold flex items-center">
+                      <Link
+                        href={`/perfil/${randomUser.username}`}
+                        className="text-black hover:underline"
+                      >
+                        @{randomUser.username}
+                      </Link>
+                    </h1>
+                    <p className="text-sm text-gray-500">{randomUser.fullname}</p>
+                    {sentRequests.has(randomUser.id) && (
+                      <p className="text-xs text-green-500">
+                        Solicitud pendiente
+                      </p>
+                    )}
+                  </>
+                ) : (
+                  <p className="text-gray-500">No hay usuarios disponibles</p>
+                )}
               </div>
             </div>
-            <Link href="/inprogress">
-              <button className="bg-blue-500 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-600 transition">
-                Enviar solicitud
-              </button>
-            </Link>
+            <button
+              onClick={handleSendRequest}
+              disabled={isRequestSent}
+              className={`${
+                isRequestSent ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
+              } text-white px-4 py-2 rounded-lg text-sm transition`}
+            >
+              {isRequestSent ? "Solicitud enviada" : "Enviar solicitud"}
+            </button>
           </div>
-
           <div className="flex-1 px-4 py-6 overflow-y-auto min-h-[60vh]">
-            <p className="text-center text-gray-400">
-              Inicia tu conversación con Helena
-            </p>
+            {randomUser ? (
+              <p className="text-center text-gray-400">
+                Inicia tu conversación con @{randomUser.username}
+              </p>
+            ) : (
+              <p className="text-center text-gray-400">
+                Esperando selección...
+              </p>
+            )}
           </div>
-
           <div className="px-4 py-3 border-t flex items-center">
             <input
               type="text"
@@ -77,23 +197,26 @@ const ChatView = () => {
               </Link>
             </div>
           </div>
-
-        
-          <div className="absolute -top-53 left-1/2 transform -translate-x-1/2">
-  <Link href="/newchat">
-    <div className="relative w-12 h-12 cursor-pointer"> 
-      <Image
-        src="/logochatsnuevos.png"
-        alt="Enviar"
-        layout="fill"
-        className="object-contain"
-      />
-    </div>
-  </Link>
-</div>
         </div>
+        
       </div>
+      <div className="flex justify-center w-full">
+          <button
+            onClick={handleSnappear}
+            className="relative w-16 h-16 cursor-pointer"
+            aria-label="Buscar nuevo usuario"
+            title="Snappear"
+          >
+            <Image
+              src="/logochatsnuevos.png"
+              alt="Snappear"
+              layout="fill"
+              className="object-contain"
+            />
+          </button>
+        </div>
     </div>
+    
   );
 };
 
