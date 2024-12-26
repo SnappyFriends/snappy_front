@@ -12,7 +12,8 @@ import { IUserSearchResponse } from "@/interfaces/types";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function SearchBar() {
-  const { setToken, setUserId, setUserData } = useContext(UserContext);
+  const { setToken, setUserId, setUserData, userData } =
+    useContext(UserContext);
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -82,7 +83,7 @@ export default function SearchBar() {
   };
 
   return (
-    <header className="sticky top-0 left-0 w-full h-16 z-50 flex justify-center items-center border bg-white">
+    <header className="fixed top-0 left-0 w-full h-16 z-50 flex justify-center items-center border bg-white">
       <nav className="h-full flex items-center justify-between px-2 md:px-6 w-full">
         <Link href="/socialfeed" className="flex items-center">
           <Image src="/favicon.ico" width={60} height={60} alt="logo" />
@@ -180,15 +181,16 @@ export default function SearchBar() {
               className="h-full object-contain"
             />
           </Link>
-          <Image
-            src="/user.png"
-            width={40}
-            height={40}
-            alt="user"
-            className="h-full object-contain cursor-pointer"
-            onClick={toggleMenu}
-          />
-
+          <div className="w-10 h-10 rounded-full overflow-hidden">
+            <Image
+              src={userData?.profile_image || "/no_img.png"}
+              width={40}
+              height={40}
+              alt={userData?.fullname || "Foto de perfil"}
+              className="object-cover w-full h-full cursor-pointer"
+              onClick={toggleMenu}
+            />
+          </div>
           {menuOpen && (
             <div className="absolute top-14 right-0 bg-white shadow-lg rounded-md w-48">
               <Link

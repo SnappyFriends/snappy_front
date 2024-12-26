@@ -13,7 +13,7 @@ export default function PerfilComponent() {
   }
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen mt-16">
       <section className="flex flex-col justify-center items-center gap-3 md:gap-4 pt-3 md:pt-4 px-4">
         <h1 className="font-bold text-xl md:text-2xl">@{userData.username}</h1>
         <div className="w-32 h-32 md:w-40 md:h-40 lg:w-60 lg:h-60 rounded-full overflow-hidden border-4 border-black shadow-md">
