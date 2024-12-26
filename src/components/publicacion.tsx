@@ -2,6 +2,8 @@
 
 import React, { useState } from "react";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 const Publicacion = () => {
   const [contenido, setContenido] = useState("");
   const [archivo, setArchivo] = useState<File | null>(null);
@@ -36,12 +38,12 @@ const Publicacion = () => {
         formData.append("type", type);
         formData.append("archivo", archivo);
 
-        response = await fetch("https://snappy-back-si83.onrender.com/posts", {
+        response = await fetch(`${API_URL}/posts`, {
           method: "POST",
           body: formData,
         });
       } else {
-        response = await fetch("https://snappy-back-si83.onrender.com/posts", {
+        response = await fetch(`${API_URL}/posts`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body),

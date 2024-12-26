@@ -43,7 +43,7 @@ export default function SearchBar() {
         const usersWithDefaultImage = data.map((user: IUserSearchResponse) => ({
           ...user,
           profile_image:
-            user.profile_image === "no_img.png"
+            user.profile_image === "/no_img.png"
               ? DEFAULT_IMAGE
               : user.profile_image,
         }));

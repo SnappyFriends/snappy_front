@@ -1,14 +1,14 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import Navbar from "@/components/Navbar";
+import NavBar from "@/components/NavBar";
 import Conectados from "@/components/Conectados";
 import Sidebar from "@/components/Sidebar";
 
 export default function MensajesPrivados() {
   return (
     <>
-      <Navbar />
+      <NavBar />
       
       <div className="flex min-h-screen relative">
         

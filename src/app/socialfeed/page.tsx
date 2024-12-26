@@ -5,6 +5,7 @@ import Image from "next/image";
 import Conectados from "@/components/Conectados";
 import Sidebar from "@/components/Sidebar";
 import Link from "next/link";
+import SearchBar from "@/components/SearchBar";
 
 const SocialFeedView = () => {
   return (

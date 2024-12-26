@@ -1,6 +1,6 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
+import NavBar from "@/components/NavBar";
 import Sidebar from "@/components/Sidebar";
 import React, { useState, useContext } from "react";
 import { UserContext } from "@/context/UserContext";
@@ -66,7 +66,7 @@ const CrearStory = () => {
 
   return (
     <>
-      <Navbar />
+      <NavBar />
       <Sidebar />
 
       <div className="max-w-md mx-auto mt-10 p-4 border rounded shadow-lg">

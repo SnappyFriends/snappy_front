@@ -4,9 +4,11 @@ import React, { useState, useContext } from "react";
 import { UserContext } from "@/context/UserContext"; 
 import NavBar from "@/components/NavBar";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export default function PaymentGateway() {
   const [subscriptionDuration, setSubscriptionDuration] = useState("1");
-  const { user_type, userId } = useContext(UserContext);
+  const { userData, userId } = useContext(UserContext);
 
   const pricePerMonth = 9.99;
   const duration = parseInt(subscriptionDuration, 10);
@@ -17,7 +19,7 @@ export default function PaymentGateway() {
   
     if (userId) {
       try {
-        const response = await fetch(`http://localhost:3000/purchases/subscribe/${userId}`, {
+        const response = await fetch(`${API_URL}/purchases/subscribe/${userId}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -45,10 +47,10 @@ export default function PaymentGateway() {
     }
   };
 
-  if (user_type === "premium") {
+  if (userData?.user_type === "premium") {
     return (
       <div>
-        <Navbar />
+        <NavBar />
         <div className="min-h-screen flex justify-center items-center p-4">
           <div className="w-full max-w-lg p-6 bg-white rounded-lg flex flex-col gap-8 shadow-lg">
             <h2 className="text-2xl font-bold text-center mb-6">Tus detalles de suscripción premium</h2>
