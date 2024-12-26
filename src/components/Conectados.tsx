@@ -42,7 +42,7 @@ const Conectados: React.FC = () => {
         <p className="text-gray-500 text-sm">No hay usuarios disponibles en este momento.</p>
       ) : (
         firstSixUsers.map(user => (
-          <Link key={user.id} href={`/mensajesprivados`}>
+          <Link key={user.id} href={`/chat/${user.username}`}>
             <div className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-100 transition cursor-pointer">
               <div className="flex items-center space-x-4">
                 <div className="relative w-12 h-12">
