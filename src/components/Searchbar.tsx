@@ -1,246 +1,200 @@
 "use client";
 
+import React, { useState, useEffect } from "react";
+import { getUsersByUsername } from "@/helpers/users";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
-import Cookies from "js-cookie";
-import { showCustomToast } from "./Notificacion";
-import { UserContext } from "@/context/UserContext";
-import { IUserSearchResponse } from "@/interfaces/types";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-const DEFAULT_IMAGE = "defaultfoto.png";
+interface SearchUser {
+  id: string;
+  username: string;
+  profile_image: string;
+}
 
-export default function SearchBar() {
-  const { setToken, setUserId } = useContext(UserContext);
-  const router = useRouter();
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filteredUsers, setFilteredUsers] = useState([]);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [totalResults, setTotalResults] = useState(0);
-  const [currentPage, setCurrentPage] = useState(1);
-  const resultsPerPage = 5;
+const SearchBar: React.FC = () => {
+  const [searchQuery, setSearchQuery] = useState<string>(""); 
+  const [filteredUsers, setFilteredUsers] = useState<SearchUser[]>([]); 
+  const [loading, setLoading] = useState<boolean>(false); 
+  const [error, setError] = useState<string | null>(null); 
+  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+  const [showDropdown, setShowDropdown] = useState<boolean>(false); 
 
-  const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const term = e.target.value;
-    setSearchTerm(term);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
 
-    if (term === "") {
-      setFilteredUsers([]);
-      setTotalResults(0);
-      return;
+    const fetchFilteredUsers = async () => {
+      if (!searchQuery) {
+        setFilteredUsers([]); 
+        return;
+      }
+
+      setLoading(true);
+      setError(null);
+
+      try {
+        const users = await getUsersByUsername(searchQuery);
+        setFilteredUsers(
+          users.map((user) => ({
+            id: user.id,
+            username: user.username,
+            profile_image: "/agregarfoto.png", 
+          }))
+        ); 
+      } catch (err) {
+        console.error(err);
+        setError("Error fetching users");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const delayDebounce = setTimeout(() => {
+      fetchFilteredUsers();
+    }, 500); 
+
+    return () => clearTimeout(delayDebounce); 
+  }, [searchQuery]);
+
+  const toggleInterest = (interest: string) => {
+    setSelectedInterests((prevSelected) =>
+      prevSelected.includes(interest)
+        ? prevSelected.filter((item) => item !== interest)
+        : [...prevSelected, interest]
+    );
+  };
+
+  const handleSearchClick = async () => {
+    const queryParams = new URLSearchParams();
+
+    // if (searchQuery) queryParams.append("username", searchQuery);
+
+    if (selectedInterests.length > 0) {
+      selectedInterests.forEach((interest) => {
+        queryParams.append("interests", interest);
+      });
     }
 
     try {
-      const response = await fetch(
-        `${API_URL}/users?username=${term}&page=${currentPage}&limit=${resultsPerPage}`
-      );
-      if (response.ok) {
-        const data = await response.json();
-
-        const usersWithDefaultImage = data.map((user: IUserSearchResponse) => ({
-          ...user,
-          profile_image:
-            user.profile_image === "/no_img.png"
-              ? DEFAULT_IMAGE
-              : user.profile_image,
-        }));
-
-        setFilteredUsers(usersWithDefaultImage);
-      } else {
-        console.error("Error fetching users:", response.statusText);
-        setFilteredUsers([]);
-      }
-    } catch (error) {
-      console.error("Error fetching users:", error);
-      setFilteredUsers([]);
+      const users = await getUsersByUsername(searchQuery, queryParams.toString());
+      setFilteredUsers(
+        users.map((user) => ({
+          id: user.id,
+          username: user.username,
+          profile_image: "/agregarfoto.png", 
+        }))
+      ); 
+    } catch (err) {
+      console.error(err);
+      setError("Error fetching users");
+    } finally {
+      setLoading(false);
     }
-  };
-
-  const handleLogout = () => {
-    Cookies.remove("auth_token");
-    localStorage.removeItem("userId");
-    setToken(null);
-    setUserId(null);
-    showCustomToast("Snappy", "Cerraste sesión correctamente", "success");
-    router.push("/");
-  };
-
-  const toggleMenu = () => {
-    setMenuOpen((prev) => !prev);
-  };
-
-  const handlePageChange = (newPage: number) => {
-    if (newPage <= 0) return;
-    setCurrentPage(newPage);
-    handleSearch({
-      target: { value: searchTerm },
-    } as React.ChangeEvent<HTMLInputElement>);
+    // const baseUrl = "http://localhost:3000/users";
+    // const finalUrl = `${baseUrl}?${queryParams.toString()}`;
+    
+    // window.location.href = finalUrl; 
   };
 
   return (
-    <header className="sticky top-0 left-0 w-full h-16 z-50 flex justify-center items-center border bg-white">
-      <nav className="h-full flex items-center justify-between px-2 md:px-6 w-full">
-        <Link href="/socialfeed" className="flex items-center">
-          <Image src="/favicon.ico" width={60} height={60} alt="logo" />
-          <h1 className="hidden md:block md:font-bold md:text-2xl">SNAPPY</h1>
-        </Link>
+    <div className="relative container mx-auto px-4 md:px-6 py-4 md:py-6">
+      <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
+        <input
+          type="text"
+          placeholder="Buscar usuarios..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full md:w-3/5 p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 transition duration-300"
+          aria-label="Buscar usuarios"
+        />
 
-        <div className="relative w-96">
-          <form className="flex mx-2 md:mx-0">
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={handleSearch}
-              className="border border-gray-500 rounded-full rounded-r-none w-full h-11 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
-              placeholder="Buscar..."
-            />
-            <div className="border border-gray-500 rounded-full rounded-l-none w-14 h-11 flex items-center justify-center">
-              <Image
-                src="/lupa.png"
-                width={30}
-                height={30}
-                alt="lupa"
-                className="h-full object-contain"
-              />
-            </div>
-          </form>
-
-          {filteredUsers.length > 0 && (
-            <ul className="absolute top-12 left-0 w-full bg-white border border-gray-300 rounded-md shadow-md max-h-60 overflow-y-auto">
-              {filteredUsers.map((user: IUserSearchResponse) => (
-                <li
-                  key={user.id}
-                  className="p-2 hover:bg-gray-100 cursor-pointer"
-                >
-                  <Link href={`/user/${user.id}`}>
-                    <div className="flex items-center">
-                      <Image
-                        src={user.profile_image}
-                        width={30}
-                        height={30}
-                        alt={`${user.fullname}'s profile`}
-                        className="rounded-full"
-                      />
-                      <div className="ml-3">
-                        <p className="font-semibold">{user.fullname}</p>
-                        <p className="text-sm text-gray-500">
-                          @{user.username}
-                        </p>
-                      </div>
-                    </div>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
-
-          {filteredUsers.length > resultsPerPage && (
-            <div className="flex justify-center mt-2">
-              <button
-                className="px-4 py-2 bg-gray-200 rounded-md"
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                Anterior
-              </button>
-              <span className="mx-4">{currentPage}</span>
-              <button
-                className="px-4 py-2 bg-gray-200 rounded-md"
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={filteredUsers.length < resultsPerPage}
-              >
-                Siguiente
-              </button>
-            </div>
-          )}
-        </div>
-
-        <div className="flex items-center gap-4 relative">
-          <Link
-            href="/crearpublicacion"
-            className="hidden md:block h-full object-contain cursor-pointer"
+        <div className="relative w-full md:w-1/3">
+          <button
+            type="button"
+            onClick={() => setShowDropdown(!showDropdown)}
+            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-white flex justify-between items-center"
           >
-            <Image
-              src="/add.png"
-              width={40}
-              height={40}
-              alt="crear publicación"
-              className="h-full object-contain"
-            />
-          </Link>
-          <Image
-            src="/user.png"
-            width={40}
-            height={40}
-            alt="user"
-            className="h-full object-contain cursor-pointer"
-            onClick={toggleMenu}
-          />
+            <span className="text-gray-500">
+              {selectedInterests.length > 0
+                ? `${selectedInterests.length} Intereses`
+                : "Intereses"}
+            </span>
+            <span className="text-gray-400">▼</span>
+          </button>
 
-          {menuOpen && (
-            <div className="absolute top-14 right-0 bg-white shadow-lg rounded-md w-48">
-              <Link
-                href="/miperfil"
-                className="flex items-center px-4 py-2 hover:bg-gray-100"
-              >
-                <Image src="/user.png" width={20} height={20} alt="Mi perfil" />
-                <span className="ml-2">Mi perfil</span>
-              </Link>
-              <Link
-                href="/crearpublicacion"
-                className="flex items-center px-4 py-2 hover:bg-gray-100"
-              >
-                <Image
-                  src="/add.png"
-                  width={20}
-                  height={20}
-                  alt="Crear publicacion"
-                />
-                <span className="ml-2">Crear publicación</span>
-              </Link>
-              <Link
-                href="/editarperfil"
-                className="flex items-center px-4 py-2 hover:bg-gray-100"
-              >
-                <Image
-                  src="/editarperfil.png"
-                  width={20}
-                  height={20}
-                  alt="Editar perfil"
-                />
-                <span className="ml-2">Editar perfil</span>
-              </Link>
-              <Link
-                href="/configuracion"
-                className="flex items-center px-4 py-2 hover:bg-gray-100"
-              >
-                <Image
-                  src="/settings.png"
-                  width={20}
-                  height={20}
-                  alt="Configuración"
-                />
-                <span className="ml-2">Configuración</span>
-              </Link>
-              <button
-                onClick={handleLogout}
-                className="flex items-center px-4 py-2 w-full text-left hover:bg-gray-100"
-              >
-                <Image
-                  src="/logout.png"
-                  width={20}
-                  height={20}
-                  alt="Cerrar sesión"
-                />
-                <span className="ml-2">Cerrar sesión</span>
-              </button>
+          {showDropdown && (
+            <div className="absolute top-full left-0 w-full max-h-60 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg z-10 overflow-y-auto">
+              <ul className="space-y-2 p-2">
+                {[
+                  "Programación",
+                  "Tecnología",
+                  "Música",
+                  "Literatura",
+                  "Cultura",
+                  "Filosofía",
+                  "Viajes",
+                  "Deportes",
+                  "Naturaleza",
+                  "Videojuegos"
+                ].map((interest) => (
+                  <li key={interest}>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={selectedInterests.includes(interest)}
+                        onChange={() => toggleInterest(interest)}
+                        className="form-checkbox h-4 w-4 text-blue-500"
+                      />
+                      <span className="text-gray-700">{interest}</span>
+                    </label>
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
         </div>
-      </nav>
-    </header>
+
+        <button
+          className="w-full md:w-auto p-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition duration-300"
+          onClick={handleSearchClick} 
+        >
+          Buscar
+        </button>
+      </div>
+
+      <div className="relative mt-6 w-full md:w-3/5">
+        {loading && <p className="text-center">Cargando...</p>}
+        {error && <p className="text-red-500 text-center">{error}</p>}
+
+        <div className="absolute z-10 top-0 w-full max-h-60 overflow-y-auto mt-2 bg-white shadow-lg">
+          {filteredUsers.length > 0 ? (
+            filteredUsers.map((user) => (
+              <div
+                key={user.id}
+                className="flex items-center space-x-3 p-2 border-b border-gray-200 hover:bg-gray-50 transition duration-300"
+              >
+                <Link href={`../perfil/${user.username}`} className="flex items-center">
+                  <div className="relative w-8 h-8">
+                    <Image
+                      src={user.profile_image}
+                      alt={`Profile picture of ${user.username}`}
+                      layout="fill"
+                      objectFit="cover"
+                      className="rounded-full"
+                    />
+                  </div>
+                  <span className="text-sm font-semibold text-gray-800 ml-3">
+                    {user.username}
+                  </span>
+                </Link>
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-500 text-center"></p>
+          )}
+        </div>
+      </div>
+    </div>
   );
-}
+};
+
+export default SearchBar;
