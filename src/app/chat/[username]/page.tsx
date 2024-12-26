@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+
 import { useParams } from "next/navigation";
 import Image from "next/image";
-import { getUserById, getUsersByUsername, User } from "@/helpers/users";
+import {  getUsersByUsername, User } from "@/helpers/users";
 
 const ChatWithUser = () => {
   const { username } = useParams(); // Captura el username de la URL
