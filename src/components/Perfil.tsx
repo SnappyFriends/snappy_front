@@ -9,7 +9,7 @@ export default function PerfilComponent() {
   const { userData } = useContext(UserContext);
 
   if (!userData) {
-    return <div>Cargando...</div>;
+    return <div className="flex justify-center items-center min-h-screen">Cargando...</div>;
   }
 
   return (

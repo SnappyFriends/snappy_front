@@ -10,10 +10,9 @@ import { UserContext } from "@/context/UserContext";
 import { IUserSearchResponse } from "@/interfaces/types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
-const DEFAULT_IMAGE = "defaultfoto.png";
 
 export default function SearchBar() {
-  const { setToken, setUserId } = useContext(UserContext);
+  const { setToken, setUserId, setUserData } = useContext(UserContext);
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -44,7 +43,7 @@ export default function SearchBar() {
           ...user,
           profile_image:
             user.profile_image === "no_img.png"
-              ? DEFAULT_IMAGE
+              ? "/no_img.png"
               : user.profile_image,
         }));
 
@@ -64,6 +63,8 @@ export default function SearchBar() {
     localStorage.removeItem("userId");
     setToken(null);
     setUserId(null);
+    setUserData(null);
+
     showCustomToast("Snappy", "Cerraste sesión correctamente", "success");
     router.push("/");
   };
@@ -108,33 +109,41 @@ export default function SearchBar() {
             </div>
           </form>
 
-          {filteredUsers.length > 0 && (
-            <ul className="absolute top-12 left-0 w-full bg-white border border-gray-300 rounded-md shadow-md max-h-60 overflow-y-auto">
-              {filteredUsers.map((user: IUserSearchResponse) => (
-                <li
-                  key={user.id}
-                  className="p-2 hover:bg-gray-100 cursor-pointer"
-                >
-                  <Link href={`/user/${user.id}`}>
-                    <div className="flex items-center">
-                      <Image
-                        src={user.profile_image}
-                        width={30}
-                        height={30}
-                        alt={`${user.fullname}'s profile`}
-                        className="rounded-full"
-                      />
-                      <div className="ml-3">
-                        <p className="font-semibold">{user.fullname}</p>
-                        <p className="text-sm text-gray-500">
-                          @{user.username}
-                        </p>
-                      </div>
-                    </div>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          {searchTerm && (
+            <>
+              {filteredUsers.length > 0 ? (
+                <ul className="absolute top-12 left-0 w-full bg-white border border-gray-300 rounded-md shadow-md max-h-60 overflow-y-auto">
+                  {filteredUsers.map((user: IUserSearchResponse) => (
+                    <li
+                      key={user.id}
+                      className="p-2 hover:bg-gray-100 cursor-pointer"
+                    >
+                      <Link href={`/user/${user.id}`}>
+                        <div className="flex items-center">
+                          <Image
+                            src={user.profile_image}
+                            width={30}
+                            height={30}
+                            alt={`${user.fullname}'s profile`}
+                            className="rounded-full"
+                          />
+                          <div className="ml-3">
+                            <p className="font-semibold">{user.fullname}</p>
+                            <p className="text-sm text-gray-500">
+                              @{user.username}
+                            </p>
+                          </div>
+                        </div>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="absolute top-12 left-0 w-full bg-white border border-gray-300 rounded-md shadow-md p-2 text-center text-gray-500">
+                  No se encontró el usuario
+                </p>
+              )}
+            </>
           )}
 
           {filteredUsers.length > resultsPerPage && (

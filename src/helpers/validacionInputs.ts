@@ -2,9 +2,9 @@ export const validacionInputs = {
   fullname: {
     required: "El nombre completo es obligatorio",
     pattern: {
-      value: /^(?=.*\b\w{2,}\b.*\b\w{2,}\b).*$/,
+      value: /^(?=.*\b[a-zA-Z]{2,}\b.*\b[a-zA-Z]{2,}\b)[a-zA-Z\s]+$/,
       message:
-        "Debe contener al menos dos palabras separadas por un espacio y cada palabra debe tener al menos dos caracteres",
+        "Debe contener al menos dos palabras separadas por un espacio, cada palabra debe tener al menos dos caracteres, y no puede contener caracteres especiales ni números",
     },
   },
   birthdate: {

@@ -36,7 +36,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   }, [userId]);
 
   useEffect(() => {
-    if (userId && !userData) {
+    if (userId) {
       const fetchUserData = async () => {
         try {
           const user = await getUserById(userId);
@@ -50,7 +50,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       };
       fetchUserData();
     }
-  }, [userId, userData]);
+  }, [userId]);
 
   return (
     <UserContext.Provider
