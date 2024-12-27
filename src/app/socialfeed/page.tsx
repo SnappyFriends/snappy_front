@@ -1,13 +1,25 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Conectados from "@/components/Conectados";
 import Sidebar from "@/components/Sidebar";
 import Link from "next/link";
 import NavBar from "@/components/NavBar";
+import { Post } from "@/interfaces/types";
 
 const SocialFeedView = () => {
+	const [posts, setPosts] = useState<Post[]>([]);
+
+	useEffect(() => {
+		const fetchPosts = async () => {
+			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`);
+			const data = await response.json();
+			setPosts(data);
+		};
+		fetchPosts();
+	}, []);
+
 	return (
 		<>
 			<NavBar />
@@ -54,47 +66,53 @@ const SocialFeedView = () => {
 					</div>
 
 					<div className="w-full max-w-md space-y-4">
-						<div className="flex items-center justify-between">
-							<div className="flex items-center">
-								<div className="relative w-10 h-10">
+						{posts.map((post) => (
+							<div key={post.post_id} className="w-full max-w-md space-y-4">
+								<div className="flex items-center justify-between">
+									<div className="flex items-center">
+										<div className="relative w-10 h-10">
+											<Image
+												src={post.user.profile_image}
+												alt={post.user.username}
+												layout="fill"
+												className="rounded-full object-cover"
+											/>
+										</div>
+										<div className="ml-4">
+											<h2 className="text-sm font-semibold">
+												{post.user.username}
+											</h2>
+											<p className="text-xs text-gray-500">
+												{new Date(post.creation_date).toLocaleString()}{" "}
+											</p>
+										</div>
+									</div>
+									<button className="bg-green-500 text-white px-4 py-1 rounded-full text-sm">
+										Seguir
+									</button>
+								</div>
+
+								<div className="relative w-full h-80">
 									<Image
-										src="/agregarfoto.png"
-										alt="starryskies23"
+										src={post.fileUrl}
+										alt="Post image"
 										layout="fill"
-										className="rounded-full object-cover"
+										className="rounded-lg object-cover"
 									/>
 								</div>
-								<div className="ml-4">
-									<h2 className="text-sm font-semibold">starryskies23</h2>
+
+								<p className="text-sm text-gray-700">{post.content}</p>
+
+								<div className="flex items-center justify-between">
 									<p className="text-xs text-gray-500">
-										Te comenzó a seguir • 1d
+										{post.reactions.length} Reacciones
 									</p>
+									<button className="bg-blue-500 text-white px-4 py-1 rounded-full text-xs">
+										Comentar
+									</button>
 								</div>
 							</div>
-							<button className="bg-green-500 text-white px-4 py-1 rounded-full text-sm">
-								Seguir
-							</button>
-						</div>
-
-						<div className="relative w-full h-80">
-							<Image
-								src="/fotofeed.png"
-								alt="Post image"
-								layout="fill"
-								className="rounded-lg object-cover"
-							/>
-						</div>
-
-						<p className="text-sm text-gray-700">
-							Hermoso viaje a Japón en el verano!
-						</p>
-
-						<div className="flex items-center justify-between">
-							<p className="text-xs text-gray-500">2 Comentarios</p>
-							<button className="bg-blue-500 text-white px-4 py-1 rounded-full text-xs">
-								Comentar
-							</button>
-						</div>
+						))}
 					</div>
 				</div>
 
