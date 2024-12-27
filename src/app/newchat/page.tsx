@@ -208,7 +208,7 @@ const ChatView = () => {
             title="Snappear"
           >
             <Image
-              src="/logochatsnuevos.png"
+              src="/snappear.png"
               alt="Snappear"
               layout="fill"
               className="object-contain"
