@@ -42,7 +42,6 @@ const ChatView = () => {
     const fetchUsers = async () => {
       try {
         const users: IUserAPIResponse[] = await getUsers();
-        console.log("Usuarios obtenidos:", users);
         setUserList(users);
         if (users.length > 0) {
           setRandomUser(users[Math.floor(Math.random() * users.length)]);
