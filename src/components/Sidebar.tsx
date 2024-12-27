@@ -39,10 +39,10 @@ const Sidebar = () =>{
             <Link href="/pasareladepago">Membresía Premium</Link>
           </div>
           <div className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
-            <Image src="/logochatsnuevos.png" alt="Snappear" width={24} height={24} />
+            <Image src="/snappear.png" alt="Snappear" width={24} height={24} />
             <Link href="/newchat">SNAPPEAR</Link>
           </div>
-        
+          
           
         </div>
       </div>
