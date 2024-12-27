@@ -47,7 +47,7 @@ const Conectados: React.FC = () => {
               <div className="flex items-center space-x-4">
                 <div className="relative w-12 h-12">
                   <Image
-                    src={ "/agregarfoto.png"} 
+                    src={user.profile_image}
                     alt={user.username}
                     layout="fill"
                     className="rounded-full object-cover"

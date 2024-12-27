@@ -17,6 +17,7 @@ export default function NavBar() {
   const handleLogout = () => {
     Cookies.remove("auth_token");
     localStorage.removeItem("userId");
+    localStorage.removeItem("users");
     setToken(null);
     setUserId(null);
     showCustomToast("Snappy", "Cerraste sesión correctamente", "success");
