@@ -5,6 +5,7 @@ import { getUsers } from "@/helpers/users";
 import Image from "next/image";
 import Sidebar from "@/components/Sidebar";
 import Conectados from "@/components/Conectados";
+// import { useSocket } from "@/helpers/useSocket";
 
 interface User {
   id: string;
@@ -22,6 +23,9 @@ const ChatRoomView = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isAdding, setIsAdding] = useState(false);
 
+  // const {socket} = useSocket()
+
+
   const fetchUsers = async () => {
     try {
       const users = await getUsers();
@@ -34,6 +38,9 @@ const ChatRoomView = () => {
 
   useEffect(() => {
     fetchUsers();
+    // socket.on('receiveGroupMessage', (message) => {
+    //   console.log('Mensaje de grupo recibido:', message);
+    // });
   }, []);
 
   const addMemberToRoom = (user: User) => {
