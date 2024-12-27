@@ -36,7 +36,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   }, [userId]);
 
   useEffect(() => {
-    if (userId && !userData) {
+    if (userId) {
       const fetchUserData = async () => {
         try {
           const user = await getUserById(userId);
