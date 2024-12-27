@@ -91,7 +91,7 @@ export default function NavBar() {
             <li>
               <Link href="/mensajesprivados">
                 <Image
-                  src="/chatsprivados.png"
+                  src="/mensajes.png"
                   width={40}
                   height={40}
                   alt="chats privados"
@@ -101,7 +101,7 @@ export default function NavBar() {
             <li>
               <Link href="/newchat">
                 <Image
-                  src="/logochatsnuevos.png"
+                  src="/snappear.png"
                   width={50}
                   height={40}
                   alt="snappear"
