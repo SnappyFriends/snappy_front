@@ -151,7 +151,7 @@ export default function NavBar() {
                     </li>
                     <li>
                       <Link
-                        href="/publicacion"
+                        href="/crearpublicacion"
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
                         <Image
