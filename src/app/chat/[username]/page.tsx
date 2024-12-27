@@ -9,6 +9,7 @@ import {  getUsersByUsername, User } from "@/helpers/users";
 const ChatWithUser = () => {
   const { username } = useParams(); // Captura el username de la URL
   const [user, setUser] = useState<User | null>(null);
+  
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -17,6 +18,8 @@ const ChatWithUser = () => {
           console.error("Invalid username");
           return;
         }
+
+        
   
         const userData = await getUsersByUsername(username);
         setUser(userData);
@@ -31,6 +34,8 @@ const ChatWithUser = () => {
   if (!user) {
     return <p className="text-center">Cargando usuario...</p>;
   }
+
+  
 
   return (
     <div className="min-h-screen">
