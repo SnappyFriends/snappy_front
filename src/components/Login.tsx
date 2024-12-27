@@ -12,8 +12,11 @@ import { useContext } from "react";
 import { UserContext } from "@/context/UserContext";
 import Cookies from "js-cookie";
 import { validacionInputs } from "@/helpers/validacionInputs";
+import { GoogleLogin } from "@react-oauth/google";
 
 export default function LoginComponent() {
+  console.log("Google Client ID:", process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID);
+
   const {
     register,
     handleSubmit,
@@ -128,7 +131,7 @@ export default function LoginComponent() {
                 </button>
               </div>
               <div>
-                <button
+                {/* <button
                   className="w-full h-12 bg-[#EEEEEE] border border-none rounded-md text-xl flex items-center justify-center gap-2"
                   type="button"
                 >
@@ -139,7 +142,59 @@ export default function LoginComponent() {
                     height={24}
                   />
                   Continuar con Google
-                </button>
+                </button> */}
+
+                <div>
+                  <GoogleLogin
+                    onSuccess={async (credentialResponse) => {
+                      const { credential } = credentialResponse;
+                      try {
+                        // Envía el token de Google al backend
+                        const response = await fetch("/api/auth/google", {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                          },
+                          body: JSON.stringify({ token: credential }),
+                        });
+
+                        if (response.ok) {
+                          const { token, userId } = await response.json();
+
+                          // Guarda token y userId en el contexto y almacenamiento
+                          Cookies.set("auth_token", token, { expires: 1 });
+                          setToken(token);
+                          setUserId(userId);
+
+                          showCustomToast(
+                            "Snappy",
+                            "Inicio de sesión con Google exitoso",
+                            "success"
+                          );
+                          router.push("/loadingbar");
+                        } else {
+                          throw new Error("Error al autenticar con Google");
+                        }
+                      } catch (error) {
+                        console.error("Error en Google Login:", error);
+                        showCustomToast(
+                          "Snappy",
+                          "Hubo un error al autenticar con Google",
+                          "error"
+                        );
+                      }
+                    }}
+                    onError={() => {
+                      showCustomToast(
+                        "Snappy",
+                        "Inicio de sesión con Google fallido",
+                        "error"
+                      );
+                    }}
+                    shape="pill"
+                    text="continue_with"
+                  />
+                </div>
               </div>
               <hr className="border-[#EEEEEE]" />
               <div>

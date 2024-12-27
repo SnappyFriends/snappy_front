@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { UserProvider } from "../context/UserContext";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const interRegular = localFont({
   src: "./fonts/Inter28pt-Regular.woff",
@@ -23,10 +24,14 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body className={`${interRegular.variable} antialiased`}>
-        <UserProvider>
-          <Toaster />
-          {children}
-        </UserProvider>
+        <GoogleOAuthProvider
+          clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ""}
+        >
+          <UserProvider>
+            <Toaster />
+            {children}
+          </UserProvider>
+        </GoogleOAuthProvider>
       </body>
     </html>
   );
