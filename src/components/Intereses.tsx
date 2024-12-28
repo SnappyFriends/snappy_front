@@ -25,111 +25,71 @@ const Interests = () => {
     fetchInterests();
   }, []);
 
-  const handleAddInterest = async (interestId: string) => {
+  const toggleInterest = async (interestId: string) => {
     if (!userId || !userData) return;
+
+    const isAssigned = (userData?.interests || []).some(
+      (i) => i.interest_id === interestId
+    );
 
     try {
       setLoading(true);
-      await assignInterest(userId, interestId);
-      setUserData({
-        ...userData,
-        interests: [
-          ...(userData.interests || []),
-          allInterests.find((i) => i.interest_id === interestId)!,
-        ],
-      });
+      if (isAssigned) {
+        await removeInterest(userId, interestId);
+        setUserData({
+          ...userData,
+          interests: userData.interests?.filter(
+            (i) => i.interest_id !== interestId
+          ),
+        });
+      } else {
+        await assignInterest(userId, interestId);
+        setUserData({
+          ...userData,
+          interests: [
+            ...(userData.interests || []),
+            allInterests.find((i) => i.interest_id === interestId)!,
+          ],
+        });
+      }
     } catch (error) {
-      console.error("Error adding interest:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleRemoveInterest = async (interestId: string) => {
-    if (!userId || !userData) return;
-
-    try {
-      setLoading(true);
-      await removeInterest(userId, interestId);
-      setUserData({
-        ...userData,
-        interests: (userData.interests || []).filter(
-          (i) => i.interest_id !== interestId
-        ),
-      });
-    } catch (error) {
-      console.error("Error removing interest:", error);
+      console.error(
+        `Error ${isAssigned ? "removing" : "adding"} interest:`,
+        error
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="py-4 min-h-screen">
-      <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">
+    <div className="py-6">
+      <h1 className="text-2xl font-bold mb-2 text-center text-gray-800">
         Administra tus intereses
       </h1>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl text-center font-semibold text-gray-700 mb-4">
-            Tus intereses
-          </h2>
-          {userData?.interests?.length ? (
-            <ul className="space-y-4">
-              {userData.interests.map((interest) => (
-                <li
-                  key={interest.interest_id}
-                  className="flex items-center justify-between bg-gray-50 p-4 rounded-lg shadow-sm"
-                >
-                  <span className="text-gray-800">{interest.name}</span>
-                  <button
-                    className="text-red-600 hover:text-red-800 font-semibold"
-                    onClick={() => handleRemoveInterest(interest.interest_id)}
-                    disabled={loading}
-                  >
-                    Eliminar
-                  </button>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p className="text-gray-500">No tienes intereses asignados.</p>
-          )}
-        </div>
+      <div className="max-w-4xl mx-auto bg-white rounded-lg border p-6">
+        <div className="flex flex-wrap gap-4">
+          {allInterests.map((interest) => {
+            const isSelected = (userData?.interests || []).some(
+              (i) => i.interest_id === interest.interest_id
+            );
 
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl text-center font-semibold text-gray-700 mb-4">
-            Todos los intereses
-          </h2>
-          <ul className="space-y-4">
-            {allInterests.map((interest) => (
-              <li
+            return (
+              <button
                 key={interest.interest_id}
-                className="flex items-center justify-between bg-gray-50 p-4 rounded-lg shadow-sm"
+                className={`px-4 py-2 rounded-full font-medium transition ${
+                  isSelected
+                    ? "bg-blue-500 text-white hover:bg-blue-600"
+                    : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+                }`}
+                onClick={() => toggleInterest(interest.interest_id)}
+                disabled={loading}
               >
-                <span className="text-gray-800">{interest.name}</span>
-                <button
-                  className={`font-semibold ${
-                    (userData?.interests || []).some(
-                      (i) => i.interest_id === interest.interest_id
-                    )
-                      ? "text-gray-400 cursor-not-allowed"
-                      : "text-green-600 hover:text-green-800"
-                  }`}
-                  onClick={() => handleAddInterest(interest.interest_id)}
-                  disabled={
-                    loading ||
-                    (userData?.interests || []).some(
-                      (i) => i.interest_id === interest.interest_id
-                    )
-                  }
-                >
-                  Agregar
-                </button>
-              </li>
-            ))}
-          </ul>
+                {interest.name}
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>
