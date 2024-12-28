@@ -8,7 +8,7 @@ import { UserContext } from "@/context/UserContext";
 import { showCustomToast } from "@/components/Notificacion";
 
 const CrearPublicacion = () => {
-  const [contenido, setContenido] = useState("");
+	const [contenido, setContenido] = useState("");
 	const [file, setFile] = useState<File | null>(null);
 	const [fileSizeError, setFileSizeError] = useState<string | null>(null);
 	const { userData } = useContext(UserContext);

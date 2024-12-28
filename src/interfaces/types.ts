@@ -72,7 +72,8 @@ export interface Post {
   content: string;
   creation_date: string;
   fileUrl: string;
-  reactions: Reactions[];
+  reactions: Reaction[];
+  comments: Comment[];
   user: {
     id: string;
     username: string;
@@ -80,6 +81,16 @@ export interface Post {
   };
 }
 
-export interface Reactions {
+export interface Reaction {
   reaction: "like" | "dislike";
+}
+
+export interface Comment {
+  id: string;
+  content: string;
+  user: {
+    id: string;
+    username: string;
+    profile_image: string;
+  };
 }

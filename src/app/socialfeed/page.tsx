@@ -107,9 +107,14 @@ const SocialFeedView = () => {
 									<p className="text-xs text-gray-500">
 										{post.reactions.length} Reacciones
 									</p>
-									<button className="bg-blue-500 text-white px-4 py-1 rounded-full text-xs">
-										Comentar
-									</button>
+									<p className="text-xs text-gray-500">
+										{post.comments.length} Comentarios
+									</p>
+									<Link href={`/publicacion/${post.post_id}`}>
+										<button className="bg-blue-500 text-white px-4 py-1 rounded-full text-xs">
+											Comentar
+										</button>
+									</Link>
 								</div>
 							</div>
 						))}
