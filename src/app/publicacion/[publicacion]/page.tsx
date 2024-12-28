@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useContext, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Conectados from "@/components/Conectados";
 import Sidebar from "@/components/Sidebar";
 import NavBar from "@/components/NavBar";
@@ -20,7 +21,10 @@ const Publicacion = ({
 	const [loading, setLoading] = useState(true);
 	const [showCommentBox, setShowCommentBox] = useState(false);
 	const [comment, setComment] = useState("");
+	const [showDropdown, setShowDropdown] = useState(false);
+	const [showDeleteModal, setShowDeleteModal] = useState(false);
 	const { userData } = useContext(UserContext);
+	const router = useRouter();
 
 	useEffect(() => {
 		const fetchParams = async () => {
@@ -105,6 +109,27 @@ const Publicacion = ({
 		}
 	};
 
+	const handleDeletePost = async () => {
+		try {
+			const response = await fetch(
+				`${process.env.NEXT_PUBLIC_API_URL}/posts/${uuid}`,
+				{
+					method: "DELETE",
+				}
+			);
+			if (response.ok) {
+				showCustomToast("Snappy", "Publicación eliminada", "success");
+	
+				setTimeout(() => { router.push("/socialfeed") }, 1000);
+			} else {
+				alert("Hubo un error al eliminar la publicación");
+			}
+		} catch (error) {
+			console.error("Error al eliminar publicación:", error);
+		}
+		setShowDeleteModal(false);
+	};
+
 	if (loading) {
 		return <div>Cargando...</div>;
 	}
@@ -121,7 +146,7 @@ const Publicacion = ({
 					<Sidebar />
 				</div>
 
-				<div className="flex-1 flex flex-col items-center max-w-5xl p-4 md:ml-72 lg:ml-80 mt-10">
+				<div className="flex-1 flex flex-col items-center max-w-6xl px-4 md:px-8 mt-10 mx-auto">
 					<div className="w-full max-w-md space-y-4">
 						<div className="flex items-center justify-between">
 							<div className="flex items-center">
@@ -142,9 +167,32 @@ const Publicacion = ({
 									</p>
 								</div>
 							</div>
-							<button className="bg-green-500 text-white px-4 py-1 rounded-full text-sm">
-								Seguir
-							</button>
+							<div className="flex items-center gap-2">
+								<button className="bg-green-500 text-white px-4 py-1 rounded-full text-sm">
+									Seguir
+								</button>
+
+								{userData?.username === post.user.username && (
+									<div className="relative">
+										<button
+											onClick={() => setShowDropdown((prev) => !prev)}
+											className="text-xs text-gray-500"
+										>
+											⋮
+										</button>
+										{showDropdown && (
+											<div className="absolute right-0 top-full mt-2 w-40 bg-white border border-gray-300 rounded-lg shadow-lg z-50">
+												<button
+													onClick={() => setShowDeleteModal(true)}
+													className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
+												>
+													Eliminar publicación
+												</button>
+											</div>
+										)}
+									</div>
+								)}
+							</div>
 						</div>
 
 						<div className="relative w-full h-80">
@@ -219,6 +267,30 @@ const Publicacion = ({
 					<Conectados />
 				</div>
 			</div>
+
+			{showDeleteModal && (
+				<div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+					<div className="bg-white p-6 rounded-lg shadow-lg w-80">
+						<h3 className="text-lg font-semibold text-center mb-4">
+							¿Estás seguro de que quieres eliminar esta publicación?
+						</h3>
+						<div className="flex justify-between">
+							<button
+								onClick={() => setShowDeleteModal(false)}
+								className="bg-gray-300 text-gray-700 px-4 py-2 rounded"
+							>
+								Cancelar
+							</button>
+							<button
+								onClick={handleDeletePost}
+								className="bg-red-600 text-white px-4 py-2 rounded"
+							>
+								Eliminar
+							</button>
+						</div>
+					</div>
+				</div>
+			)}
 		</>
 	);
 };
