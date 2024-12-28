@@ -6,12 +6,14 @@ import NavBar from "@/components/NavBar";
 import Conectados from "@/components/Conectados";
 import { UserContext } from "@/context/UserContext";
 import { showCustomToast } from "@/components/Notificacion";
+import { useRouter } from "next/navigation";
 
 const CrearPublicacion = () => {
 	const [contenido, setContenido] = useState("");
 	const [file, setFile] = useState<File | null>(null);
 	const [fileSizeError, setFileSizeError] = useState<string | null>(null);
 	const { userData } = useContext(UserContext);
+	const router = useRouter();
 
 	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const selectedFile = event.target.files ? event.target.files[0] : null;
@@ -58,13 +60,10 @@ const CrearPublicacion = () => {
 			const result = await response.json();
 
 			if (result.fileUrl) {
-				console.log("Imagen cargada con éxito:", result.fileUrl);
-
 				showCustomToast("Snappy", "Publicación subida con éxito", "success");
+
+				setTimeout(() => { router.push("/socialfeed") }, 1000);
 			} else {
-				console.error(
-					"La respuesta del servidor no incluye la URL de la imagen."
-				);
 				showCustomToast("Snappy", "Error al subir la publicación", "error");
 			}
 		} catch (error) {
