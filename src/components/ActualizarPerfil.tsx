@@ -99,13 +99,13 @@ export default function ActualizarPerfil() {
   }
 
   return (
-    <main className="pt-4 min-h-screen flex flex-col items-center mb-16">
+    <main className="pt-4 min-h-screen flex flex-col items-center mb-4">
       <h2 className="font-bold text-2xl text-center mb-4">Editar perfil</h2>
 
       <FotoDePerfil />
 
       <form
-        className="flex flex-col gap-4 px-2 w-full max-w-lg"
+        className="flex flex-col gap-4 px-2 w-full max-w-3xl"
         onSubmit={handleSubmit(onSubmit)}
       >
         <div>
@@ -223,6 +223,8 @@ export default function ActualizarPerfil() {
           )}
         </div>
 
+        <Intereses />
+
         <div className="flex flex-col gap-4">
           <button
             className={`w-full h-12 bg-black text-white font-semibold rounded-md hover:bg-gray-800 ${
@@ -242,8 +244,6 @@ export default function ActualizarPerfil() {
           </button>
         </div>
       </form>
-
-      <Intereses />
     </main>
   );
 }
