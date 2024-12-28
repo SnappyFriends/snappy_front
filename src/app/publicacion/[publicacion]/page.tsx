@@ -8,6 +8,7 @@ import { Post } from "@/interfaces/types";
 import Image from "next/image";
 import { UserContext } from "@/context/UserContext";
 import { showCustomToast } from "@/components/Notificacion";
+import { timeAgo } from "@/helpers/timeAgo";
 
 const Publicacion = ({
 	params,
@@ -57,7 +58,7 @@ const Publicacion = ({
 	const handleCommentSubmit = async () => {
 		if (!comment.trim()) return;
 
-        if(!userData) return;
+		if (!userData) return;
 
 		const response = await fetch(
 			`${process.env.NEXT_PUBLIC_API_URL}/comments`,
@@ -137,7 +138,7 @@ const Publicacion = ({
 										{post.user.username}
 									</h2>
 									<p className="text-xs text-gray-500">
-										{new Date(post.creation_date).toLocaleString()}
+										{timeAgo(post.creation_date)}{" "}
 									</p>
 								</div>
 							</div>
@@ -160,6 +161,9 @@ const Publicacion = ({
 						<div className="flex items-center justify-between">
 							<p className="text-xs text-gray-500">
 								{post.reactions?.length} Reacciones
+							</p>
+							<p className="text-xs text-gray-500">
+								{post.comments?.length} Comentarios
 							</p>
 							<button
 								onClick={() => setShowCommentBox((prev) => !prev)}
