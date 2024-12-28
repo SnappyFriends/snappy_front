@@ -1,166 +1,139 @@
-"use client";
-
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { useContext } from "react";
+import { useState, useEffect, useContext } from "react";
+import {
+  getAllInterests,
+  assignInterest,
+  removeInterest,
+} from "../services/interestService";
 import { UserContext } from "@/context/UserContext";
-import { showCustomToast } from "./Notificacion";
 import { IInterest } from "@/interfaces/types";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
-export default function Intereses() {
-  const { userData, setUserData, userId } = useContext(UserContext);
-  const [interests, setInterests] = useState<IInterest[]>([]);
-  const [userInterests, setUserInterests] = useState<string[]>([]);
-  const { handleSubmit } = useForm();
+const Interests = () => {
+  const { userId, userData, setUserData } = useContext(UserContext);
+  const [allInterests, setAllInterests] = useState<IInterest[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchInterests = async () => {
       try {
-        const response = await fetch(`${API_URL}/interests`);
-        if (!response.ok) throw new Error("Error al cargar intereses");
-        const data: IInterest[] = await response.json();
-        setInterests(data);
+        const interests: IInterest[] = await getAllInterests();
+        setAllInterests(interests);
       } catch (error) {
-        console.error(error);
-        showCustomToast(
-          "Error",
-          "No se pudieron cargar los intereses",
-          "error"
-        );
+        console.error("Error fetching interests:", error);
       }
     };
 
     fetchInterests();
   }, []);
 
-  useEffect(() => {
-    const fetchUserInterests = async () => {
-      if (!userId) return;
-      try {
-        const response = await fetch(`${API_URL}/users/${userId}`);
-        if (!response.ok)
-          throw new Error("Error al cargar intereses del usuario");
-        const data = await response.json();
-        setUserInterests(
-          data.interests.map((interest: IInterest) => interest.interest_id)
-        );
-      } catch (error) {
-        console.error(error);
-        showCustomToast(
-          "Error",
-          "No se pudieron cargar tus intereses",
-          "error"
-        );
-      }
-    };
-
-    fetchUserInterests();
-  }, [userId]);
-
-  const toggleInterest = (interestId: string) => {
-    setUserInterests((prev) =>
-      prev.includes(interestId)
-        ? prev.filter((id) => id !== interestId)
-        : [...prev, interestId]
-    );
-  };
-
-  const onSubmit = async () => {
-    if (!userId) {
-      showCustomToast("Error", "No se encontró el usuario", "error");
-      return;
-    }
+  const handleAddInterest = async (interestId: string) => {
+    if (!userId || !userData) return;
 
     try {
-      for (const interestId of userInterests) {
-        await fetch(
-          `${API_URL}/users/${userId}/assign-interest/${interestId}`,
-          {
-            method: "POST",
-          }
-        );
-      }
-
-      const interestsToRemove = (userData?.interests ?? [])
-        .filter((interest) => !userInterests.includes(interest.interest_id))
-        .map((interest) => interest.interest_id);
-
-      for (const interestId of interestsToRemove ?? []) {
-        await fetch(
-          `${API_URL}/users/${userId}/remove-interest/${interestId}`,
-          {
-            method: "DELETE",
-          }
-        );
-      }
-
-      await updateUserInterests(userId);
-
-      showCustomToast(
-        "Éxito",
-        "Tus intereses han sido actualizados",
-        "success"
-      );
+      setLoading(true);
+      await assignInterest(userId, interestId);
+      setUserData({
+        ...userData,
+        interests: [
+          ...(userData.interests || []),
+          allInterests.find((i) => i.interest_id === interestId)!,
+        ],
+      });
     } catch (error) {
-      console.error(error);
-      showCustomToast(
-        "Error",
-        "No se pudieron actualizar tus intereses",
-        "error"
-      );
+      console.error("Error adding interest:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const updateUserInterests = async (userId: string) => {
-    try {
-      const response = await fetch(`${API_URL}/users/${userId}`);
-      const updatedUserData = await response.json();
+  const handleRemoveInterest = async (interestId: string) => {
+    if (!userId || !userData) return;
 
-      if (userData) {
-        setUserData({
-          ...userData,
-          interests: updatedUserData.interests ?? [],
-        });
-      }
+    try {
+      setLoading(true);
+      await removeInterest(userId, interestId);
+      setUserData({
+        ...userData,
+        interests: (userData.interests || []).filter(
+          (i) => i.interest_id !== interestId
+        ),
+      });
     } catch (error) {
-      console.error("Error al actualizar los intereses en el contexto:", error);
+      console.error("Error removing interest:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="py-5 w-full max-w-lg p-2">
-      <h2 className="text-xl text-center font-bold mb-4">Actualizar Intereses</h2>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-          {interests.map((interest) => (
-            <label
-              key={interest.interest_id}
-              className={`p-2 border rounded-md cursor-pointer ${
-                userInterests.includes(interest.interest_id)
-                  ? "bg-blue-200"
-                  : ""
-              }`}
-            >
-              <input
-                type="checkbox"
-                value={interest.interest_id}
-                checked={userInterests.includes(interest.interest_id)}
-                onChange={() => toggleInterest(interest.interest_id)}
-                className="hidden"
-              />
-              {interest.name}
-            </label>
-          ))}
+    <div className="py-4 min-h-screen">
+      <h1 className="text-2xl font-bold mb-6 text-center text-gray-800">
+        Administra tus intereses
+      </h1>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-xl text-center font-semibold text-gray-700 mb-4">
+            Tus intereses
+          </h2>
+          {userData?.interests?.length ? (
+            <ul className="space-y-4">
+              {userData.interests.map((interest) => (
+                <li
+                  key={interest.interest_id}
+                  className="flex items-center justify-between bg-gray-50 p-4 rounded-lg shadow-sm"
+                >
+                  <span className="text-gray-800">{interest.name}</span>
+                  <button
+                    className="text-red-600 hover:text-red-800 font-semibold"
+                    onClick={() => handleRemoveInterest(interest.interest_id)}
+                    disabled={loading}
+                  >
+                    Eliminar
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-gray-500">No tienes intereses asignados.</p>
+          )}
         </div>
-        <button
-          type="submit"
-          className="mt-4 w-full bg-black text-white py-2 rounded-md hover:bg-gray-800"
-        >
-          Guardar intereses
-        </button>
-      </form>
+
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-xl text-center font-semibold text-gray-700 mb-4">
+            Todos los intereses
+          </h2>
+          <ul className="space-y-4">
+            {allInterests.map((interest) => (
+              <li
+                key={interest.interest_id}
+                className="flex items-center justify-between bg-gray-50 p-4 rounded-lg shadow-sm"
+              >
+                <span className="text-gray-800">{interest.name}</span>
+                <button
+                  className={`font-semibold ${
+                    (userData?.interests || []).some(
+                      (i) => i.interest_id === interest.interest_id
+                    )
+                      ? "text-gray-400 cursor-not-allowed"
+                      : "text-green-600 hover:text-green-800"
+                  }`}
+                  onClick={() => handleAddInterest(interest.interest_id)}
+                  disabled={
+                    loading ||
+                    (userData?.interests || []).some(
+                      (i) => i.interest_id === interest.interest_id
+                    )
+                  }
+                >
+                  Agregar
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   );
-}
+};
+
+export default Interests;
