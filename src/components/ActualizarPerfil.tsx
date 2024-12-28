@@ -223,6 +223,8 @@ export default function ActualizarPerfil() {
           )}
         </div>
 
+        <Intereses />
+
         <div className="flex flex-col gap-4">
           <button
             className={`w-full h-12 bg-black text-white font-semibold rounded-md hover:bg-gray-800 ${
@@ -242,8 +244,6 @@ export default function ActualizarPerfil() {
           </button>
         </div>
       </form>
-
-      <Intereses />
     </main>
   );
 }
