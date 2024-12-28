@@ -170,6 +170,21 @@ export default function NavBar() {
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
                         <Image
+                          src="/editarperfil.png"
+                          alt="Editar perfil"
+                          width={20}
+                          height={20}
+                          className="mr-2"
+                        />
+                        Editar perfil
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/configuracion"
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        <Image
                           src="/settings.png"
                           alt="Configuración"
                           width={20}
