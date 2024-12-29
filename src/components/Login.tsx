@@ -150,7 +150,7 @@ export default function LoginComponent() {
                       const { credential } = credentialResponse;
                       try {
                         // Envía el token de Google al backend
-                        const response = await fetch("/api/auth/google", {
+                        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/google`, {
                           method: "POST",
                           headers: {
                             "Content-Type": "application/json",

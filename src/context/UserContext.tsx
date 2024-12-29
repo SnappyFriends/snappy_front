@@ -50,7 +50,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       };
       fetchUserData();
     }
-  }, [userId, userData]);
+  }, [userId]);
 
   return (
     <UserContext.Provider
