@@ -10,6 +10,12 @@ import Image from "next/image";
 import { UserContext } from "@/context/UserContext";
 import { showCustomToast } from "@/components/Notificacion";
 import { timeAgo } from "@/helpers/timeAgo";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart as faSolidHeart } from "@fortawesome/free-solid-svg-icons";
+import {
+	faHeart as faRegHeart,
+	faComment,
+} from "@fortawesome/free-regular-svg-icons";
 
 const Publicacion = ({
 	params,
@@ -25,6 +31,7 @@ const Publicacion = ({
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
 	const { userData } = useContext(UserContext);
 	const router = useRouter();
+	const [reaction, setReaction] = useState(false);
 
 	useEffect(() => {
 		const fetchParams = async () => {
@@ -57,7 +64,7 @@ const Publicacion = ({
 
 			fetchPost();
 		}
-	}, [uuid]);
+	}, [uuid, reaction]);
 
 	const handleCommentSubmit = async () => {
 		if (!comment.trim()) return;
@@ -119,8 +126,10 @@ const Publicacion = ({
 			);
 			if (response.ok) {
 				showCustomToast("Snappy", "Publicación eliminada", "success");
-	
-				setTimeout(() => { router.push("/socialfeed") }, 1000);
+
+				setTimeout(() => {
+					router.push("/socialfeed");
+				}, 1000);
 			} else {
 				alert("Hubo un error al eliminar la publicación");
 			}
@@ -130,6 +139,67 @@ const Publicacion = ({
 		setShowDeleteModal(false);
 	};
 
+	const handleLikeToggle = async (postId: string, isLiked: boolean) => {
+		if (!userData || !post) return;
+
+		try {
+			const existingReaction = post.reactions.find(
+				(reaction) => reaction.user.id === userData.id
+			);
+
+			if (isLiked && existingReaction) {
+				await fetch(
+					`${process.env.NEXT_PUBLIC_API_URL}/reactions/${existingReaction.id}`,
+					{
+						method: "DELETE",
+						headers: { "Content-Type": "application/json" },
+					}
+				);
+
+				setPost((prevPost) =>
+					prevPost
+						? {
+								...prevPost,
+								reactions: prevPost.reactions.filter(
+									(reaction) => reaction.id !== existingReaction.id
+								),
+						  }
+						: prevPost
+				);
+
+				setReaction(false);
+			} else {
+				const response = await fetch(
+					`${process.env.NEXT_PUBLIC_API_URL}/reactions/${postId}`,
+					{
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({
+							user_id: userData.id,
+							reaction: "like",
+							reaction_type: "post",
+						}),
+					}
+				);
+
+				const newReaction = await response.json();
+
+				setPost((prevPost) =>
+					prevPost
+						? {
+								...prevPost,
+								reactions: [...prevPost.reactions, newReaction],
+						  }
+						: prevPost
+				);
+
+				setReaction(true);
+			}
+		} catch (error) {
+			console.error("Error toggling like:", error);
+		}
+	};
+
 	if (loading) {
 		return <div>Cargando...</div>;
 	}
@@ -137,6 +207,10 @@ const Publicacion = ({
 	if (!post) {
 		return <div>Publicación no encontrada</div>;
 	}
+
+	const isLiked = post.reactions.some(
+		(reaction) => reaction.user.id === userData?.id
+	);
 
 	return (
 		<>
@@ -207,12 +281,34 @@ const Publicacion = ({
 						<p className="text-sm text-gray-700">{post.content}</p>
 
 						<div className="flex items-center justify-between">
-							<p className="text-xs text-gray-500">
-								{post.reactions?.length} Reacciones
-							</p>
-							<p className="text-xs text-gray-500">
-								{post.comments?.length} Comentarios
-							</p>
+							<div className="flex space-x-3">
+								<p
+									className={`text-xs cursor-pointer ${
+										isLiked ? "text-red-500" : "text-gray-500"
+									}`}
+									onClick={() => handleLikeToggle(post.post_id, isLiked)}
+									style={{
+										transform: "scale(1)",
+										transition: "transform 0.2s",
+									}}
+									onMouseEnter={(e) =>
+										(e.currentTarget.style.transform = "scale(1.1)")
+									}
+									onMouseLeave={(e) =>
+										(e.currentTarget.style.transform = "scale(1)")
+									}
+								>
+									<FontAwesomeIcon
+										icon={isLiked ? faSolidHeart : faRegHeart}
+										size="lg"
+									/>{" "}
+									{post.reactions.length}
+								</p>
+								<p className="text-xs text-gray-500">
+									<FontAwesomeIcon icon={faComment} size="lg" />{" "}
+									{post.comments.length}
+								</p>
+							</div>
 							<button
 								onClick={() => setShowCommentBox((prev) => !prev)}
 								className="bg-blue-500 text-white px-4 py-1 rounded-full text-xs"

@@ -82,6 +82,10 @@ export interface Post {
 }
 
 export interface Reaction {
+  id: string;
+  user: {
+    id: string;
+  };
   reaction: "like" | "dislike";
 }
 

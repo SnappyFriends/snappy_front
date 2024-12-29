@@ -9,10 +9,14 @@ import NavBar from "@/components/NavBar";
 import { Post } from "@/interfaces/types";
 import { UserContext } from "@/context/UserContext";
 import { timeAgo } from "@/helpers/timeAgo";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHeart as faSolidHeart } from "@fortawesome/free-solid-svg-icons";
+import { faHeart as faRegHeart, faComment } from "@fortawesome/free-regular-svg-icons";
 
 const SocialFeedView = () => {
 	const [posts, setPosts] = useState<Post[]>([]);
 	const { userData } = useContext(UserContext);
+	const [reaction, setReaction] = useState(false);
 
 	useEffect(() => {
 		const fetchPosts = async () => {
@@ -29,7 +33,81 @@ const SocialFeedView = () => {
 			setPosts(data);
 		};
 		fetchPosts();
-	}, []);
+	}, [reaction]);
+
+	const handleLikeToggle = async (postId: string, isLiked: boolean) => {
+		if (!userData) return;
+
+		try {
+			const post = posts.find((p) => p.post_id === postId);
+
+			if (!post) {
+				console.error("Post not found.");
+				return;
+			}
+
+			const existingReaction = post.reactions.find(
+				(reaction) => reaction.user.id === userData.id
+			);
+
+			console.log(existingReaction);
+
+			if (isLiked && existingReaction) {
+				await fetch(
+					`${process.env.NEXT_PUBLIC_API_URL}/reactions/${existingReaction.id}`,
+					{
+						method: "DELETE",
+						headers: { "Content-Type": "application/json" },
+					}
+				);
+
+				setPosts((prevPosts) =>
+					prevPosts.map((post) =>
+						post.post_id === postId
+							? {
+									...post,
+									reactions: post.reactions.filter(
+										(reaction) => reaction.id !== existingReaction.id
+									),
+							  }
+							: post
+					)
+				);
+
+				setReaction(false);
+			} else {
+				const response = await fetch(
+					`${process.env.NEXT_PUBLIC_API_URL}/reactions/${postId}`,
+					{
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({
+							user_id: userData.id,
+							reaction: "like",
+							reaction_type: "post",
+						}),
+					}
+				);
+
+				const newReaction = await response.json();
+
+				setPosts((prevPosts) =>
+					prevPosts.map((post) =>
+						post.post_id === postId
+							? {
+									...post,
+									reactions: [...post.reactions, newReaction],
+							  }
+							: post
+					)
+				);
+
+				setReaction(true);
+			}
+		} catch (error) {
+			console.error("Error toggling like:", error);
+		}
+	};
 
 	return (
 		<>
@@ -77,27 +155,15 @@ const SocialFeedView = () => {
 					</div>
 
 					<div className="w-full max-w-md space-y-4">
-						{posts.map((post) => (
-							<div key={post.post_id} className="w-full max-w-md space-y-4">
-								<div className="flex items-center justify-between">
-									<div className="flex items-center">
-										<Link
-											href={
-												post.user.username === userData?.username
-													? "/miperfil"
-													: `/perfil/${post.user.username}`
-											}
-										>
-											<div className="relative w-10 h-10">
-												<Image
-													src={post.user.profile_image}
-													alt={post.user.username}
-													layout="fill"
-													className="rounded-full object-cover"
-												/>
-											</div>
-										</Link>
-										<div className="ml-4">
+						{posts.map((post) => {
+							const isLiked = post.reactions.some(
+								(reaction) => reaction.user.id === userData?.id
+							);
+
+							return (
+								<div key={post.post_id} className="w-full max-w-md space-y-4">
+									<div className="flex items-center justify-between">
+										<div className="flex items-center">
 											<Link
 												href={
 													post.user.username === userData?.username
@@ -105,52 +171,92 @@ const SocialFeedView = () => {
 														: `/perfil/${post.user.username}`
 												}
 											>
-												<h2 className="text-sm font-semibold">
-													{post.user.username}
-												</h2>
+												<div className="relative w-10 h-10">
+													<Image
+														src={post.user.profile_image}
+														alt={post.user.username}
+														layout="fill"
+														className="rounded-full object-cover"
+													/>
+												</div>
 											</Link>
+											<div className="ml-4">
+												<Link
+													href={
+														post.user.username === userData?.username
+															? "/miperfil"
+															: `/perfil/${post.user.username}`
+													}
+												>
+													<h2 className="text-sm font-semibold">
+														{post.user.username}
+													</h2>
+												</Link>
+												<Link href={`/publicacion/${post.post_id}`}>
+													<p className="text-xs text-gray-500">
+														{timeAgo(post.creation_date)}{" "}
+													</p>
+												</Link>
+											</div>
+										</div>
+										<button className="bg-green-500 text-white px-4 py-1 rounded-full text-sm">
+											Seguir
+										</button>
+									</div>
+
+									<Link href={`/publicacion/${post.post_id}`}>
+										<div className="relative w-full h-80">
+											<Image
+												src={post.fileUrl}
+												alt="Post image"
+												layout="fill"
+												className="rounded-lg object-cover"
+											/>
+										</div>
+									</Link>
+
+									<p className="text-sm text-gray-700">{post.content}</p>
+
+									<div className="flex items-center justify-between">
+										<div className="flex space-x-3">
+											<p
+												className={`text-xs cursor-pointer ${
+													isLiked ? "text-red-500" : "text-gray-500"
+												}`}
+												onClick={() => handleLikeToggle(post.post_id, isLiked)}
+												style={{
+													transform: "scale(1)",
+													transition: "transform 0.2s",
+												}}
+												onMouseEnter={(e) =>
+													(e.currentTarget.style.transform = "scale(1.1)")
+												}
+												onMouseLeave={(e) =>
+													(e.currentTarget.style.transform = "scale(1)")
+												}
+											>
+												<FontAwesomeIcon
+													icon={isLiked ? faSolidHeart : faRegHeart}
+													size="lg"
+												/>{" "}
+												{post.reactions.length}
+											</p>
 											<Link href={`/publicacion/${post.post_id}`}>
 												<p className="text-xs text-gray-500">
-													{timeAgo(post.creation_date)}{" "}
+													<FontAwesomeIcon icon={faComment} size="lg" />{" "}
+													{post.comments.length}
 												</p>
 											</Link>
 										</div>
+										<Link href={`/publicacion/${post.post_id}`}>
+											<button className="bg-blue-500 text-white px-4 py-1 rounded-full text-xs">
+												Comentar
+											</button>
+										</Link>
 									</div>
-									<button className="bg-green-500 text-white px-4 py-1 rounded-full text-sm">
-										Seguir
-									</button>
 								</div>
-
-								<Link href={`/publicacion/${post.post_id}`}>
-									<div className="relative w-full h-80">
-										<Image
-											src={post.fileUrl}
-											alt="Post image"
-											layout="fill"
-											className="rounded-lg object-cover"
-										/>
-									</div>
-								</Link>
-
-								<p className="text-sm text-gray-700">{post.content}</p>
-
-								<div className="flex items-center justify-between">
-									<p className="text-xs text-gray-500">
-										{post.reactions.length} Reacciones
-									</p>
-									<Link href={`/publicacion/${post.post_id}`}>
-										<p className="text-xs text-gray-500">
-											{post.comments.length} Comentarios
-										</p>
-									</Link>
-									<Link href={`/publicacion/${post.post_id}`}>
-										<button className="bg-blue-500 text-white px-4 py-1 rounded-full text-xs">
-											Comentar
-										</button>
-									</Link>
-								</div>
-							</div>
-						))}
+							);
+						})}
 					</div>
 				</div>
 
