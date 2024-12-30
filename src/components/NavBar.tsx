@@ -17,6 +17,7 @@ export default function NavBar() {
   const handleLogout = () => {
     Cookies.remove("auth_token");
     localStorage.removeItem("userId");
+    localStorage.removeItem("users");
     setToken(null);
     setUserId(null);
     showCustomToast("Snappy", "Cerraste sesión correctamente", "success");
@@ -90,7 +91,7 @@ export default function NavBar() {
             <li>
               <Link href="/mensajesprivados">
                 <Image
-                  src="/chatsprivados.png"
+                  src="/mensajes.png"
                   width={40}
                   height={40}
                   alt="chats privados"
@@ -100,7 +101,7 @@ export default function NavBar() {
             <li>
               <Link href="/newchat">
                 <Image
-                  src="/logochatsnuevos.png"
+                  src="/snappear.png"
                   width={50}
                   height={40}
                   alt="snappear"
@@ -150,7 +151,7 @@ export default function NavBar() {
                     </li>
                     <li>
                       <Link
-                        href="/publicacion"
+                        href="/crearpublicacion"
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
                         <Image
@@ -166,6 +167,21 @@ export default function NavBar() {
                     <li>
                       <Link
                         href="/editarperfil"
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        <Image
+                          src="/editarperfil.png"
+                          alt="Editar perfil"
+                          width={20}
+                          height={20}
+                          className="mr-2"
+                        />
+                        Editar perfil
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/configuracion"
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
                         <Image

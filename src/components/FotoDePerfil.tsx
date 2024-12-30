@@ -89,7 +89,7 @@ export default function FotoDePerfil() {
       <div className="relative flex justify-center">
         <label
           htmlFor="fileImg"
-          className="cursor-pointer w-40 h-40 flex justify-center items-center rounded-full overflow-hidden border-2 border-black bg-gray-200 hover:border-blue-600 transition-colors duration-200"
+          className="cursor-pointer w-80 h-80 flex justify-center items-center rounded-full overflow-hidden border-4 border-black bg-gray-200 hover:border-blue-500 hover:border-8 transition-colors duration-200"
         >
           <input
             id="fileImg"
@@ -118,7 +118,7 @@ export default function FotoDePerfil() {
           disabled={!file || fileSizeError !== null}
           className="bg-blue-500 text-white py-2 px-4 rounded-lg disabled:opacity-50 transition-colors duration-200 hover:bg-blue-600"
         >
-          Upload
+          Subir foto
         </button>
       </div>
     </div>

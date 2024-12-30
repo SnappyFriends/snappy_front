@@ -66,3 +66,35 @@ export interface IUserSearchResponse {
   fullname: string;
   username: string;
 }
+
+export interface Post {
+  post_id: string;
+  content: string;
+  creation_date: string;
+  fileUrl: string;
+  reactions: Reaction[];
+  comments: Comment[];
+  user: {
+    id: string;
+    username: string;
+    profile_image: string;
+  };
+}
+
+export interface Reaction {
+  id: string;
+  user: {
+    id: string;
+  };
+  reaction: "like" | "dislike";
+}
+
+export interface Comment {
+  id: string;
+  content: string;
+  user: {
+    id: string;
+    username: string;
+    profile_image: string;
+  };
+}

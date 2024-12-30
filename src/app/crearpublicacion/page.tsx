@@ -1,99 +1,119 @@
 "use client";
 
+import React, { useContext, useState } from "react";
 import Sidebar from "@/components/Sidebar";
-import React, { useState } from "react";
-import { UserContext } from "@/context/UserContext";
-import { useContext } from "react";
 import NavBar from "@/components/NavBar";
+import Conectados from "@/components/Conectados";
+import { UserContext } from "@/context/UserContext";
+import { showCustomToast } from "@/components/Notificacion";
+import { useRouter } from "next/navigation";
 
-const Publicacion = () => {
-  const [contenido, setContenido] = useState("");
-  const [archivo, setArchivo] = useState<File | null>(null);
-  const [mensaje, setMensaje] = useState("");
-  const { userId } = useContext(UserContext);
+const CrearPublicacion = () => {
+	const [contenido, setContenido] = useState("");
+	const [file, setFile] = useState<File | null>(null);
+	const [fileSizeError, setFileSizeError] = useState<string | null>(null);
+	const { userData } = useContext(UserContext);
+	const router = useRouter();
 
-  const determinarTipoArchivo = (archivo: File | null) => {
-    if (!archivo) return "asdsd"; // Si no hay archivo, es texto puro
-    const mimeType = archivo.type;
-    if (mimeType.startsWith("image/")) return "image";
-    if (mimeType.startsWith("video/")) return "video";
-    return "asdsd"; // Otro tipo no definido
-  };
+	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+		const selectedFile = event.target.files ? event.target.files[0] : null;
+		if (selectedFile) {
+			const isValidImage = selectedFile.type.startsWith("image/");
+			if (!isValidImage) {
+				alert("Por favor selecciona un archivo de imagen.");
+				setFileSizeError(null);
+				setFile(null);
+				return;
+			}
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+			if (selectedFile.size > 200 * 1024) {
+				setFileSizeError("La imagen debe ser de máximo 200 KB.");
+				setFile(null);
+			} else {
+				setFileSizeError(null);
+				setFile(selectedFile);
+			}
+		}
+	};
 
-    const Id = userId;
-    const file = determinarTipoArchivo(archivo);
+	const handleSubmit = async (e: React.FormEvent) => {
+		e.preventDefault();
 
-    const body = {
-      userId: Id,
-      content: contenido,
-      fileUrl: file,
-    };
+		if (!userData?.id || !file) return;
 
-    try {
-    
+		const formData = new FormData();
+		formData.append("userId", userData.id);
+		formData.append("content", contenido);
+		formData.append("fileImg", file);
 
-      // Envío en formato JSON si no hay archivo
-      console.log(JSON.stringify(body));
-       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
+		try {
+			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`, {
+				method: "POST",
+				body: formData,
+			});
 
-      if (response.ok) {
-        setMensaje("Publicación creada con éxito.");
-        setContenido("");
-        setArchivo(null);
-      } else {
-        setMensaje("Error al crear la publicación.");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      setMensaje("Ocurrió un error al enviar la información.");
-    }
-  };
+			if (!response.ok) {
+				const errorText = await response.text();
+				throw new Error(`Failed to upload image: ${errorText}`);
+			}
 
-  return (
-    <>
-      <NavBar />
-      <Sidebar />
+			const result = await response.json();
 
-      <div className="max-w-md mx-auto mt-10 p-4 border rounded shadow-lg">
-        <h2 className="text-2xl font-bold mb-4">Crear Publicación</h2>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-          {/* Textarea para el contenido */}
-          <textarea
-            className="p-2 border rounded"
-            placeholder="Escribe tu publicación aquí..."
-            value={contenido}
-            onChange={(e) => setContenido(e.target.value)}
-            required
-          ></textarea>
+			if (result.fileUrl) {
+				showCustomToast("Snappy", "Publicación subida con éxito", "success");
 
-          {/* Input para adjuntar archivo */}
-          <input
-            type="file"
-            onChange={(e) => setArchivo(e.target.files?.[0] || null)}
-            className="p-2 border rounded"
-          />
+				setTimeout(() => { router.push("/socialfeed") }, 1000);
+			} else {
+				showCustomToast("Snappy", "Error al subir la publicación", "error");
+			}
+		} catch (error) {
+			console.error("Error uploading image:", error);
+			showCustomToast("Snappy", "Error al subir la publicación", "error");
+		}
+	};
 
-          {/* Botón de enviar */}
-          <button
-            type="submit"
-            className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition"
-          >
-            Publicar
-          </button>
-        </form>
+	return (
+		<>
+			<NavBar />
+			<Sidebar />
 
-        {/* Mensajes */}
-        {mensaje && <p className="mt-4 text-center text-sm">{mensaje}</p>}
-      </div>
-    </>
-  );
+			<div className="max-w-md mx-auto mt-10 p-4 border rounded shadow-lg">
+				<h2 className="text-2xl font-bold mb-4">Crear Publicación</h2>
+				<form onSubmit={handleSubmit} className="flex flex-col gap-4">
+					<textarea
+						className="p-2 border rounded"
+						placeholder="Escribe tu publicación aquí..."
+						value={contenido}
+						onChange={(e) => setContenido(e.target.value)}
+						required
+					></textarea>
+
+					<input
+						type="file"
+						name="fileImg"
+						id="fileImg"
+						onChange={handleFileChange}
+						className="p-2 border rounded"
+					/>
+
+					{fileSizeError && (
+						<p className="text-red-500 text-center text-sm">{fileSizeError}</p>
+					)}
+
+					<button
+						type="submit"
+						className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition"
+					>
+						Publicar
+					</button>
+				</form>
+			</div>
+
+			<div className="hidden md:flex flex-col w-80 space-y-6 absolute right-20 top-1/2 transform -translate-y-1/2">
+				<Conectados />
+			</div>
+		</>
+	);
 };
 
-export default Publicacion;
+export default CrearPublicacion;

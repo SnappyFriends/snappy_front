@@ -73,7 +73,7 @@ export default function PerfilComponent() {
           <button>
             <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden">
               <Image
-                src="/foto.jpg"
+                src={userData.profile_image}
                 alt="Foto de perfil"
                 width={200}
                 height={200}
