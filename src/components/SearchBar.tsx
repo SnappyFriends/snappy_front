@@ -4,6 +4,8 @@ import { getUsersSearchbar } from "@/helpers/users";
 import Image from "next/image";
 import Link from "next/link";
 
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 interface SearchUser {
   id: string;
   username: string;
@@ -28,7 +30,7 @@ const SearchBar: React.FC = () => {
   useEffect(() => {
     const fetchInterests = async () => {
       try {
-        const response = await fetch("http://localhost:3000/interests");
+        const response = await fetch(`${API_URL}/interests`);
         const data = await response.json();
         setInterests(data);
       } catch (err) {
