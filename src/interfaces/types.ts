@@ -98,3 +98,29 @@ export interface Comment {
     profile_image: string;
   };
 }
+
+
+export interface IStory {
+  story_id: string;
+  content: string;
+  fileUrl: string | null;
+  creation_date: string;
+  expiration_date: string;
+  user: {
+    userId: string;
+    username: string;
+    fullname: string;
+  };
+}
+
+export interface IStoryResponse {
+  stories: IStory[];
+}
+
+export interface IStoryCreate {
+  content: string;
+  fileUrl: string | null;
+  creation_date: string;
+  expiration_date: string;
+  userId: string;
+}
