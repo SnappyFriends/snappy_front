@@ -6,19 +6,14 @@ import React, { useState, useContext } from "react";
 import { UserContext } from "@/context/UserContext";
 import { useRouter } from "next/navigation";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 const CrearStory = () => {
   const [archivo, setArchivo] = useState<File | null>(null);
   const [mensaje, setMensaje] = useState("");
-  const { userId } = useContext(UserContext); 
+  const [content, setContent] = useState("");
+  const { userId } = useContext(UserContext);
   const router = useRouter();
-
-  const determinarTipoArchivo = (archivo: File | null) => {
-    if (!archivo) return null; 
-    const mimeType = archivo.type;
-    if (mimeType.startsWith("image/")) return "image";
-    if (mimeType.startsWith("video/")) return "video";
-    return null; 
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,10 +23,8 @@ const CrearStory = () => {
       return;
     }
 
-    const tipoArchivo = determinarTipoArchivo(archivo);
-
-    if (!tipoArchivo) {
-      setMensaje("Tipo de archivo no válido.");
+    if (!content.trim()) {
+      setMensaje("El contenido no puede estar vacío.");
       return;
     }
 
@@ -41,22 +34,26 @@ const CrearStory = () => {
     }
 
     const formData = new FormData();
-    formData.append("userId", userId); 
-    formData.append("file", archivo);
-    formData.append("expiresIn", "86400"); 
+    formData.append("userId", userId);
+    formData.append("content", content);
+    formData.append("fileImg", archivo);
+
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/stories`, {
+      const response = await fetch(`${API_URL}/stories`, {
         method: "POST",
         body: formData,
       });
 
-      if (response.ok) {
-        window.alert("¡Story creada con éxito!"); 
-        setArchivo(null);
+      const responseData = await response.json();
 
+      if (response.ok) {
+        window.alert("¡Story creada con éxito!");
+        setArchivo(null);
+        setContent("");
         router.push("/socialfeed");
       } else {
         setMensaje("Error al crear la story.");
+        console.log("Error en la API:", responseData);
       }
     } catch (error) {
       console.error("Error:", error);
@@ -82,6 +79,14 @@ const CrearStory = () => {
             />
           </label>
 
+          <textarea
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            className="p-2 border rounded"
+            placeholder="Escribe algo sobre tu día..."
+            required
+          />
+
           <button
             type="submit"
             className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition"
@@ -90,7 +95,7 @@ const CrearStory = () => {
           </button>
         </form>
 
-        {mensaje && <p className="mt-4 text-center text-sm">{mensaje}</p>}
+        {mensaje && <p className="mt-4 text-center text-sm text-red-500">{mensaje}</p>}
       </div>
     </>
   );
