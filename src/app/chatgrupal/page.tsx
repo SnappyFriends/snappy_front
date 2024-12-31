@@ -5,6 +5,7 @@ import { getUsers } from "@/helpers/users";
 import Image from "next/image";
 import Sidebar from "@/components/Sidebar";
 import Conectados from "@/components/Conectados";
+import NavBar from "@/components/NavBar";
 // import { useSocket } from "@/helpers/useSocket";
 
 interface User {
@@ -72,19 +73,17 @@ const ChatRoomView = () => {
 
   return (
     <div className="min-h-screen">
+      <NavBar />
 
       <div className="flex flex-col lg:flex-row">
-        {/* Sidebar */}
         <div className="hidden lg:flex flex-col w-64 bg-white p-6 space-y-10 fixed left-6 top-1/2 transform -translate-y-1/2">
           <Sidebar />
         </div>
 
-        {/* Chat content */}
         <div className="lg:w-3/5 md:w-full ml-0 lg:ml-80 mt-12 lg:mt-32">
         <div className="flex items-center justify-center h-auto relative">
             <div className="flex w-full max-w-6xl rounded-lg bg-white shadow-md">
 
-              {/* Members section */}
               <div className="lg:w-1/4 sm:w-full md:w-full h-[calc(100vh-200px)] border-r px-4 py-6 bg-gray-100 overflow-y-auto">
               <h3 className="text-xl font-semibold mb-4">Miembros de la Sala</h3>
                 <div className="space-y-4">
@@ -143,7 +142,6 @@ const ChatRoomView = () => {
                 )}
               </div>
 
-              {/* Chat section */}
               <div className="lg:w-3/4 sm:w-full px-4 py-6 flex flex-col bg-gray-50 h-[calc(100vh-200px)] overflow-y-auto">
               <div className="flex items-center justify-between border-b pb-4">
                   <div className="flex items-center">
@@ -205,7 +203,6 @@ const ChatRoomView = () => {
           </div>
         </div>
 
-        {/* Conectados */}
         <div className="hidden lg:flex flex-col w-80 space-y-6 absolute right-20 top-1/2 transform -translate-y-1/2">
           <Conectados />
         </div>
