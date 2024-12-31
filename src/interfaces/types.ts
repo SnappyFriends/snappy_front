@@ -140,3 +140,21 @@ export interface IStoryCreate {
   expiration_date: string;
   userId: string;
 }
+
+export interface Chats {
+  id: string;
+  key: string;
+  messages: [IMessage];
+}
+
+export interface IMessage {
+  username: string;
+  sender_id: string;
+  user_type: string;
+  profile_image: string;
+  message_id: string;
+  content: string;
+  send_date: string;
+  type: string;
+  is_anonymous: boolean;
+}

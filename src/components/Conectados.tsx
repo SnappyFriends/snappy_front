@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { getUsers } from "@/helpers/users"; 
-import Link from "next/link"; 
+import { getUsers } from "@/helpers/users";
+import Link from "next/link";
 
 interface User {
   id: string;
@@ -34,14 +34,16 @@ const Conectados: React.FC = () => {
     fetchUsers();
   }, []);
 
-  const firstSixUsers = users.slice(0, 6);
+  const firstSixUsers = users.slice(8, 20);
 
   return (
     <div className="space-y-4 p-4 rounded-lg ml-24 mt-20">
       {firstSixUsers.length === 0 ? (
-        <p className="text-gray-500 text-sm">No hay usuarios disponibles en este momento.</p>
+        <p className="text-gray-500 text-sm">
+          No hay usuarios disponibles en este momento.
+        </p>
       ) : (
-        firstSixUsers.map(user => (
+        firstSixUsers.map((user) => (
           <Link key={user.id} href={`/chat/${user.username}`}>
             <div className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-100 transition cursor-pointer">
               <div className="flex items-center space-x-4">
