@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useContext, useEffect, useState } from "react";
 import { timeAgo } from "@/helpers/timeAgo"; 
-
+import VerifiedAccount from "./VerifiedAccount";
 
 interface User {
   userId: string;
@@ -99,7 +99,6 @@ export default function PerfilComponent() {
   return (
     <main className="min-h-screen">
       <section className="flex flex-col justify-center items-center gap-3 md:gap-4 pt-3 md:pt-4 px-4">
-        <h1 className="font-bold text-xl md:text-2xl">@{userData.username}</h1>
         <div className="w-32 h-32 md:w-40 md:h-40 lg:w-60 lg:h-60 rounded-full overflow-hidden border-4 border-black shadow-md">
           <Image
             src={userData.profile_image}
@@ -109,9 +108,9 @@ export default function PerfilComponent() {
             className="object-cover w-full h-full"
           />
         </div>
-        <h2 className="text-lg font-bold md:text-xl lg:text-2xl">
-          {userData.fullname}
-        </h2>
+        <h1 className="text-lg font-bold md:text-xl lg:text-2xl">
+          {userData.fullname} {userData?.user_type === "premium" ? <VerifiedAccount /> : ""}
+        </h1>
         <div className="flex flex-wrap justify-center gap-4">
           <article className="text-center w-24 md:w-28">
             <p className="text-lg font-bold md:text-xl">1000</p>

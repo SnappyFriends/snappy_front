@@ -16,6 +16,7 @@ import {
 	faHeart as faRegHeart,
 	faComment,
 } from "@fortawesome/free-regular-svg-icons";
+import VerifiedAccount from "@/components/VerifiedAccount";
 
 const Publicacion = ({
 	params,
@@ -89,13 +90,19 @@ const Publicacion = ({
 		if (response.ok) {
 			showCustomToast("Snappy", "Comentario enviado", "success");
 
+			const responseData = await response.json();
+
+			console.log(responseData);
+
 			const newComment = {
-				id: Date.now().toString(),
+				id: responseData.comment_id,
 				content: comment,
+				comment_date: responseData.comment_date,
 				user: {
 					id: userData.id,
 					username: userData.username,
 					profile_image: userData.profile_image,
+					user_type: userData.user_type,
 				},
 			};
 
@@ -234,7 +241,12 @@ const Publicacion = ({
 								</div>
 								<div className="ml-4">
 									<h2 className="text-sm font-semibold">
-										{post.user.username}
+										{post.user.username}{" "}
+										{post.user.user_type === "premium" ? (
+											<VerifiedAccount />
+										) : (
+											""
+										)}
 									</h2>
 									<p className="text-xs text-gray-500">
 										{timeAgo(post.creation_date)}{" "}
@@ -348,7 +360,15 @@ const Publicacion = ({
 										</div>
 										<div>
 											<p className="font-semibold text-sm">
-												{comment.user.username}
+												{comment.user.username}{" "}
+												{comment.user.user_type === "premium" ? (
+													<VerifiedAccount />
+												) : (
+													""
+												)}
+											</p>
+											<p className="text-xs text-gray-500">
+												{timeAgo(comment.comment_date)}{" "}
 											</p>
 											<p className="text-sm text-gray-700">{comment.content}</p>
 										</div>

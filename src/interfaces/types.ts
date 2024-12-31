@@ -91,6 +91,7 @@ export interface Post {
     id: string;
     username: string;
     profile_image: string;
+    user_type: string;
   };
 }
 
@@ -105,10 +106,12 @@ export interface Reaction {
 export interface Comment {
   id: string;
   content: string;
+  comment_date: string;
   user: {
     id: string;
     username: string;
     profile_image: string;
+    user_type: string;
   };
 }
 
@@ -122,6 +125,7 @@ export interface IStory {
     userId: string;
     username: string;
     fullname: string;
+    user_type: string;
   };
 }
 

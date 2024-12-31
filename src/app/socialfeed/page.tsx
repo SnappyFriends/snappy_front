@@ -11,13 +11,14 @@ import { timeAgo } from "@/helpers/timeAgo";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart as faSolidHeart } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as faRegHeart, faComment } from "@fortawesome/free-regular-svg-icons";
+import VerifiedAccount from "@/components/VerifiedAccount";
 
 interface Story {
   story_id: string;
-  user: { userId: string; username: string; fullname: string; profile_image: string };
+  content: string;
   fileUrl: string;
   creation_date: string;
-  content: string;
+  user: { userId: string; username: string; fullname: string; profile_image: string, user_type: string };
 }
 
 const SocialFeedView = () => {
@@ -273,7 +274,7 @@ const SocialFeedView = () => {
                           }
                         >
                           <h2 className="text-sm font-semibold">
-                            {post.user.username}
+                            {post.user.username} {post.user.user_type === "premium" ? <VerifiedAccount /> : ""}
                           </h2>
                         </Link>
                         <Link href={`/publicacion/${post.post_id}`}>
@@ -377,7 +378,7 @@ const SocialFeedView = () => {
         </button>
       </div>
       <div className="mt-4 flex flex-col items-center text-center">
-        <h3 className="text-lg font-bold">{selectedStory.user.username}</h3>
+        <h3 className="text-lg font-bold">{selectedStory.user.username} {selectedStory.user.user_type === "premium" ? <VerifiedAccount /> : ""}</h3>
         <p className="text-sm text-gray-500 mb-2">
           {timeAgo(selectedStory.creation_date)}
         </p>
