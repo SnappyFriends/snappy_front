@@ -26,6 +26,7 @@ const SocialFeedView = () => {
   const [reaction, setReaction] = useState(false);
   const [stories, setStories] = useState<Story[]>([]);
   const [selectedStory, setSelectedStory] = useState<Story | null>(null);
+  const [myStories, setMyStories] = useState<Story[]>([]);
   
   useEffect(() => {
     const fetchPosts = async () => {
@@ -58,6 +59,18 @@ const SocialFeedView = () => {
     fetchPosts();
     fetchStories();
   }, [reaction, userData]);
+
+  const fetchMyStories = async () => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/stories/user/${userData?.id}`);
+    const data = await response.json();
+
+    data.sort((a: Story, b: Story) => {
+      return new Date(a.creation_date).getTime() - new Date(b.creation_date).getTime();
+    });
+
+    setMyStories(data);
+    setSelectedStory(data[0]);
+  }
 
   const handleLikeToggle = async (postId: string, isLiked: boolean) => {
     if (!userData) return;
@@ -137,8 +150,28 @@ const SocialFeedView = () => {
 
   const closeModal = () => {
     setSelectedStory(null);
+    setMyStories([]);
   };
 
+  const handlePrevClick = () => {
+    const currentList = myStories.length > 0 ? myStories : stories;
+  const currentIndex = currentList.findIndex(
+    (s) => s.story_id === selectedStory?.story_id
+  );
+  const prevIndex =
+    currentIndex > 0 ? currentIndex - 1 : currentList.length - 1;
+  setSelectedStory(currentList[prevIndex]);
+  }
+
+  const handleNextClick = () => {
+    const currentList = myStories.length > 0 ? myStories : stories;
+  const currentIndex = currentList.findIndex(
+    (s) => s.story_id === selectedStory?.story_id
+  );
+  const nextIndex =
+    currentIndex < currentList.length - 1 ? currentIndex + 1 : 0;
+  setSelectedStory(currentList[nextIndex]);
+  }
 
   return (
     <>
@@ -159,7 +192,7 @@ const SocialFeedView = () => {
                 width={200}
                 height={200}
                 className="object-cover w-full h-full"
-
+                onClick={fetchMyStories}
               />
             </div>
             <div className="absolute bottom-0 right-0 w-5 h-5 md:w-6 md:h-6 bg-white rounded-full flex items-center justify-center">
@@ -324,14 +357,7 @@ const SocialFeedView = () => {
       <div className="flex justify-between items-center h-96">
         <button
           className="text-lg font-bold text-gray-700 hover:text-black"
-          onClick={() => {
-            const currentIndex = stories.findIndex(
-              (s) => s.story_id === selectedStory.story_id
-            );
-            const prevIndex =
-              currentIndex > 0 ? currentIndex - 1 : stories.length - 1;
-            setSelectedStory(stories[prevIndex]);
-          }}
+          onClick={handlePrevClick}
         >
           &#8249;
         </button>
@@ -345,14 +371,7 @@ const SocialFeedView = () => {
         </div>
         <button
           className="text-lg font-bold text-gray-700 hover:text-black"
-          onClick={() => {
-            const currentIndex = stories.findIndex(
-              (s) => s.story_id === selectedStory.story_id
-            );
-            const nextIndex =
-              currentIndex < stories.length - 1 ? currentIndex + 1 : 0;
-            setSelectedStory(stories[nextIndex]);
-          }}
+          onClick={handleNextClick}
         >
           &#8250;
         </button>
