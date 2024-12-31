@@ -143,8 +143,8 @@ export default function NavBar() {
                         <Image
                           src="/user.png"
                           alt="Mi perfil"
-                          width={20}
-                          height={20}
+                          width={15}
+                          height={15}
                           className="mr-2"
                         />
                         Mi perfil
@@ -158,8 +158,8 @@ export default function NavBar() {
                         <Image
                           src="/add.png"
                           alt="Crear publicación"
-                          width={20}
-                          height={20}
+                          width={15}
+                          height={5}
                           className="mr-2"
                         />
                         Crear publicación
@@ -173,8 +173,8 @@ export default function NavBar() {
                         <Image
                           src="/editarperfil.png"
                           alt="Editar perfil"
-                          width={20}
-                          height={20}
+                          width={15}
+                          height={15}
                           className="mr-2"
                         />
                         Editar perfil
@@ -188,8 +188,8 @@ export default function NavBar() {
                         <Image
                           src="/settings.png"
                           alt="Configuración"
-                          width={20}
-                          height={20}
+                          width={15}
+                          height={15}
                           className="mr-2"
                         />
                         Configuración
@@ -203,8 +203,8 @@ export default function NavBar() {
                         <Image
                           src="/logout.png"
                           alt="Cerrar sesión"
-                          width={20}
-                          height={20}
+                          width={15}
+                          height={15}
                           className="mr-2"
                         />
                         Cerrar sesión
