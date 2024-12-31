@@ -5,6 +5,7 @@ import Sidebar from "@/components/Sidebar";
 import React, { useState, useContext } from "react";
 import { UserContext } from "@/context/UserContext";
 import { useRouter } from "next/navigation";
+import Conectados from "@/components/Conectados";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -96,6 +97,9 @@ const CrearStory = () => {
         </form>
 
         {mensaje && <p className="mt-4 text-center text-sm text-red-500">{mensaje}</p>}
+        <div className="hidden md:flex flex-col w-80 space-y-6 absolute right-20 top-1/2 transform -translate-y-1/2">
+				<Conectados />
+			</div>
       </div>
     </>
   );
