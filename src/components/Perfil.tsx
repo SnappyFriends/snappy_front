@@ -131,19 +131,28 @@ export default function PerfilComponent() {
         </div>
 
         <div className="flex flex-wrap justify-center gap-4">
-          <Link
-            href="/pasareladepago"
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-800"
-          >
-            Verificar cuenta
-          </Link>
-          <Link
-            href="/editarperfil"
-            className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-700"
-          >
-            Editar perfil
-          </Link>
-        </div>
+  {userData?.user_type === "premium" ? (
+    <Link
+      href="/pasareladepago"
+      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-800"
+    >
+      Tu membresía
+    </Link>
+  ) : (
+    <Link
+      href="/pasareladepago"
+      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-800"
+    >
+      Verificar cuenta
+    </Link>
+  )}
+  <Link
+    href="/editarperfil"
+    className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-700"
+  >
+    Editar perfil
+  </Link>
+</div>
         <div className="w-full px-2 text-center">
           {userData.interests && userData.interests.length > 0 && (
             <p>
