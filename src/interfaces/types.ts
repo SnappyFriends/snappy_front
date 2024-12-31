@@ -30,6 +30,19 @@ export interface IUserContextType {
   setUserId: (id: string | null) => void;
   userData: IUserData | null;
   setUserData: (data: IUserData | null) => void;
+  userGoogle: IUserDataGoogle | null;
+  setUserGoogle: (data: IUserDataGoogle | null) => void;
+}
+
+export interface IUserDataGoogle {
+  email: string;
+  googleId: string;
+  picture?: string;
+  fullname: string;
+  username?: string;
+  profile_image?: string;
+  birthdate?: string;
+  genre?: "hombre" | "mujer" | "otro" | string;
 }
 
 export interface IInterest {
@@ -98,7 +111,6 @@ export interface Comment {
     profile_image: string;
   };
 }
-
 
 export interface IStory {
   story_id: string;

@@ -1,6 +1,10 @@
 "use client";
 
-import { IUserContextType, IUserData } from "@/interfaces/types";
+import {
+  IUserContextType,
+  IUserData,
+  IUserDataGoogle,
+} from "@/interfaces/types";
 import { createContext, useEffect, useState } from "react";
 import { ReactNode } from "react";
 import Cookies from "js-cookie";
@@ -13,6 +17,8 @@ export const UserContext = createContext<IUserContextType>({
   setUserId: () => {},
   userData: null,
   setUserData: () => {},
+  userGoogle: null,
+  setUserGoogle: () => {},
 });
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
@@ -21,6 +27,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   );
   const [userId, setUserId] = useState<string | null>(null);
   const [userData, setUserData] = useState<IUserData | null>(null);
+  const [userGoogle, setUserGoogle] = useState<IUserDataGoogle | null>(null);
 
   useEffect(() => {
     const savedUserId = localStorage.getItem("userId");
@@ -54,7 +61,16 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <UserContext.Provider
-      value={{ token, setToken, userId, setUserId, userData, setUserData }}
+      value={{
+        token,
+        setToken,
+        userId,
+        setUserId,
+        userData,
+        setUserData,
+        userGoogle,
+        setUserGoogle,
+      }}
     >
       {children}
     </UserContext.Provider>

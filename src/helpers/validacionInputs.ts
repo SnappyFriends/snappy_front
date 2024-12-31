@@ -10,7 +10,8 @@ export const validacionInputs = {
   birthdate: {
     required: "La fecha de nacimiento es obligatoria",
     validate: {
-      validAge: (value: string) => {
+      validAge: (value: string | undefined) => {
+        if (!value) return true;
         const today = new Date();
         const birthDate = new Date(value);
         const age = today.getFullYear() - birthDate.getFullYear();
