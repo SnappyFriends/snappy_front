@@ -11,7 +11,7 @@ import SearchBar from "./SearchBar";
 
 export default function NavBar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { setToken, setUserId } = useContext(UserContext);
+  const { setToken, setUserId, setUserGoogle } = useContext(UserContext);
   const router = useRouter();
 
   const handleLogout = () => {
@@ -20,6 +20,7 @@ export default function NavBar() {
     localStorage.removeItem("users");
     setToken(null);
     setUserId(null);
+    setUserGoogle(null);
     showCustomToast("Snappy", "Cerraste sesión correctamente", "success");
     router.push("/");
   };

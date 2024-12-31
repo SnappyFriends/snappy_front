@@ -9,12 +9,18 @@ export function middleware(req: NextRequest) {
     !isLoggedIn &&
     pathname !== "/" &&
     pathname !== "/register" &&
-    pathname !== "/terminos"
+    pathname !== "/terminos" &&
+    pathname !== "/completarregistro"
   ) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
-  if (isLoggedIn && (pathname === "/" || pathname === "/register")) {
+  if (
+    isLoggedIn &&
+    (pathname === "/" ||
+      pathname === "/register" ||
+      pathname === "/completarregistro")
+  ) {
     return NextResponse.redirect(new URL("/socialfeed", req.url));
   }
 

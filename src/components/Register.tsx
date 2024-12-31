@@ -36,7 +36,6 @@ export default function RegisterComponent() {
       showCustomToast("Snappy", "¡Registro exitoso!", "success");
       router.push("/");
     } catch (error) {
-      console.log("🚀 ~ onSubmit ~ error CATCH REGISTER.TSX:", error);
       showCustomToast(
         "Snappy",
         `${(error as Error).message || "Hubo un error inesperado."}`,
@@ -227,21 +226,6 @@ export default function RegisterComponent() {
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? "Registrando..." : "Registrarte"}
-                </button>
-              </div>
-
-              <div>
-                <button
-                  className="w-full h-12 bg-[#EEEEEE] border border-none rounded-md text-xl flex items-center justify-center gap-2"
-                  type="button"
-                >
-                  <Image
-                    src="/google.png"
-                    alt="Google logo"
-                    width={24}
-                    height={24}
-                  />
-                  Continuar con Google
                 </button>
               </div>
 

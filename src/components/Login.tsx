@@ -15,8 +15,6 @@ import { validacionInputs } from "@/helpers/validacionInputs";
 import { GoogleLogin } from "@react-oauth/google";
 
 export default function LoginComponent() {
-  console.log("Google Client ID:", process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID);
-
   const {
     register,
     handleSubmit,
@@ -31,7 +29,7 @@ export default function LoginComponent() {
       "UserContext no está disponible. Asegúrate de envolver este componente en un UserProvider."
     );
   }
-  const { setToken, setUserId } = useUserContext;
+  const { setToken, setUserId, setUserGoogle } = useUserContext;
 
   const onSubmit = async (data: IFormDataLogin) => {
     try {
@@ -44,12 +42,9 @@ export default function LoginComponent() {
         setUserId(userId);
       }
 
-      console.log("🚀 ~ onSubmit ~ resultado TRY LOGIN.TSX:", resultado);
-
       showCustomToast("Snappy", "Iniciaste sesión correctamente", "success");
       router.push("/loading");
-    } catch (error) {
-      console.log("🚀 ~ onSubmit ~ error CATCH LOGIN.TSX:", error);
+    } catch {
       showCustomToast("Snappy", "Usuario o contraseña incorrectos", "error");
     }
   };
@@ -131,47 +126,53 @@ export default function LoginComponent() {
                 </button>
               </div>
               <div>
-                {/* <button
-                  className="w-full h-12 bg-[#EEEEEE] border border-none rounded-md text-xl flex items-center justify-center gap-2"
-                  type="button"
-                >
-                  <Image
-                    src="/google.png"
-                    alt="Google logo"
-                    width={24}
-                    height={24}
-                  />
-                  Continuar con Google
-                </button> */}
-
                 <div>
                   <GoogleLogin
                     onSuccess={async (credentialResponse) => {
                       const { credential } = credentialResponse;
                       try {
-                        // Envía el token de Google al backend
-                        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/google`, {
-                          method: "POST",
-                          headers: {
-                            "Content-Type": "application/json",
-                          },
-                          body: JSON.stringify({ token: credential }),
-                        });
+                        const response = await fetch(
+                          `${process.env.NEXT_PUBLIC_API_URL}/auth/google`,
+                          {
+                            method: "POST",
+                            headers: {
+                              "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({ token: credential }),
+                          }
+                        );
 
                         if (response.ok) {
-                          const { token, userId } = await response.json();
+                          const responseData = await response.json();
 
-                          // Guarda token y userId en el contexto y almacenamiento
-                          Cookies.set("auth_token", token, { expires: 1 });
-                          setToken(token);
-                          setUserId(userId);
+                          if (responseData.token) {
+                            const { token, userId } = responseData;
+                            Cookies.set("auth_token", token, { expires: 1 });
+                            setToken(token);
+                            setUserId(userId);
 
-                          showCustomToast(
-                            "Snappy",
-                            "Inicio de sesión con Google exitoso",
-                            "success"
-                          );
-                          router.push("/loadingbar");
+                            showCustomToast(
+                              "Snappy",
+                              "Inicio de sesión con Google exitoso",
+                              "success"
+                            );
+                            router.push("/loadingbar");
+                          } else {
+                            const { email, googleId, picture, fullname } =
+                              responseData;
+                            setUserGoogle({
+                              email,
+                              googleId,
+                              picture,
+                              fullname,
+                              username: "",
+                              profile_image: picture || "",
+                              birthdate: "",
+                              genre: "",
+                            });
+
+                            router.push("/completarregistro");
+                          }
                         } else {
                           throw new Error("Error al autenticar con Google");
                         }
