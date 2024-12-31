@@ -50,7 +50,7 @@ const CrearStory = () => {
         window.alert("¡Story creada con éxito!");
         setArchivo(null);
         setContent("");
-        router.push("/socialfeed");
+        router.push("/miperfil");
       } else {
         setMensaje("Error al crear la story.");
         console.log("Error en la API:", responseData);
