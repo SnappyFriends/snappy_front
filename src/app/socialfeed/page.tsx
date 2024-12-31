@@ -26,7 +26,7 @@ const SocialFeedView = () => {
   const [reaction, setReaction] = useState(false);
   const [stories, setStories] = useState<Story[]>([]);
   const [selectedStory, setSelectedStory] = useState<Story | null>(null);
-
+  
   useEffect(() => {
     const fetchPosts = async () => {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`);
@@ -150,17 +150,31 @@ const SocialFeedView = () => {
 
         <div className="flex-1 flex flex-col items-center max-w-6xl px-4 md:px-8 mt-10 mx-auto">
           <div className="flex justify-center space-x-6 mb-6">
-            <div className="relative w-14 h-14">
-              <Link href="/crear-story">
-                <p>+</p>
-              </Link>
+          <div className="relative w-16 h-16 md:w-20 md:h-20">
+          <button title="Ver mis historias">
+            <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden">
               <Image
-            src={userData?.profile_image || "/user.png"}
-			alt="Perfil"
-                layout="fill"
-                className="rounded-full object-cover"
+                src={userData?.profile_image || "/user.png"}
+                alt="Foto de perfil"
+                width={200}
+                height={200}
+                className="object-cover w-full h-full"
+
               />
             </div>
+            <div className="absolute bottom-0 right-0 w-5 h-5 md:w-6 md:h-6 bg-white rounded-full flex items-center justify-center">
+              <Link href={"/crear-story"}>
+              <Image
+                src="/addhistoria.png"
+                alt="Añadir historia"
+                width={20}
+                height={20}
+                className="object-cover"
+              />
+              </Link>
+            </div>
+          </button>
+        </div>
 
             {stories?.slice(0, 5).map((story) => (
               <div
@@ -174,9 +188,9 @@ const SocialFeedView = () => {
                   layout="fill"
                   className="rounded-full object-cover"
                 />
-                <p className="text-xs mt-14 text-center font-semibold">
-                  {story.user.username}
-                </p>
+             <p className="text-xs mt-14 text-center font-semibold text-ellipsis whitespace-nowrap">
+  {story.user.username.length > 8 ? `${story.user.username.slice(0, 8)}...` : story.user.username}
+</p>
               </div>
             ))}
           </div>
