@@ -37,7 +37,7 @@ const Conectados: React.FC = () => {
   const firstSixUsers = users.slice(0, 6);
 
   return (
-    <div className="space-y-4 p-4 rounded-lg ml-24">
+    <div className="space-y-4 p-4 rounded-lg ml-24 mt-20">
       {firstSixUsers.length === 0 ? (
         <p className="text-gray-500 text-sm">No hay usuarios disponibles en este momento.</p>
       ) : (
