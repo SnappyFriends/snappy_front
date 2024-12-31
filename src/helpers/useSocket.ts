@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback } from "react";
-import { io, Socket } from "socket.io-client";
 import Cookies from "js-cookie";
+import SocketService from "./socket";
 
 interface NotificationPayload {
   type:
@@ -22,50 +22,50 @@ interface NotificationPayload {
 }
 
 export const useSocket = () => {
-  const token = Cookies.get("token");
-  const socketRef = useRef<Socket | null>(null);
+  const token = Cookies.get("auth_token");
+  const socketRef = useRef<ReturnType<typeof SocketService.getInstance> | null>(
+    null
+  );
 
   useEffect(() => {
     if (token) {
-      socketRef.current = io(process.env.NEXT_PUBLIC_SOCKET_URL, {
-        auth: { token },
-        transports: ["websocket"],
-      });
+      const socket = SocketService.getInstance();
+      socketRef.current = socket;
 
-      socketRef.current.on("connect", () => {
+      socket.on("connect", () => {
         console.log("Conectado al servidor de websockets");
       });
 
-      socketRef.current.on("error", (error: string) => {
+      socket.on("error", (error: string) => {
         console.error("Error de socket:", error);
       });
 
-      socketRef.current.on("friendRequestNotification", (data) => {
+      socket.on("friendRequestNotification", (data) => {
         console.log("Nueva solicitud de amistad:", data);
       });
 
-      socketRef.current.on("messageNotification", (data) => {
+      socket.on("messageNotification", (data) => {
         console.log("Nuevo mensaje:", data);
       });
 
-      socketRef.current.on("postReactionNotification", (data) => {
-        console.log("Nueva reacci贸n:", data);
+      socket.on("postReactionNotification", (data) => {
+        console.log("Nueva reacción:", data);
       });
 
-      socketRef.current.on("commentNotification", (data) => {
+      socket.on("commentNotification", (data) => {
         console.log("Nuevo comentario:", data);
       });
 
-      socketRef.current.on("groupInvitationNotification", (data) => {
-        console.log("Nueva invitaci贸n a grupo:", data);
+      socket.on("groupInvitationNotification", (data) => {
+        console.log("Nueva invitación a grupo:", data);
       });
 
-      socketRef.current.on("purchaseNotification", (data) => {
-        console.log("Nueva notificaci贸n de compra:", data);
+      socket.on("purchaseNotification", (data) => {
+        console.log("Nueva notificación de compra:", data);
       });
 
-      socketRef.current.on("systemNotification", (data) => {
-        console.log("Notificaci贸n del sistema:", data);
+      socket.on("systemNotification", (data) => {
+        console.log("Notificación del sistema:", data);
       });
     }
 
