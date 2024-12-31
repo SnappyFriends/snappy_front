@@ -155,8 +155,8 @@ const SocialFeedView = () => {
                 <p>+</p>
               </Link>
               <Image
-                src={"/user.png"}
-                alt="Agregar Usuario"
+            src={userData?.profile_image || "/user.png"}
+			alt="Perfil"
                 layout="fill"
                 className="rounded-full object-cover"
               />
