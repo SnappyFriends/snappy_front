@@ -133,7 +133,7 @@ export default function NavBar() {
                 />
               </button>
               {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg">
+                <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
                   <ul className="py-1">
                     <li>
                       <Link
