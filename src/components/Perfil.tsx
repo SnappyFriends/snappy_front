@@ -42,23 +42,29 @@ export default function PerfilComponent() {
         `${process.env.NEXT_PUBLIC_API_URL}/stories`
       );
       const data: Story[] = await response.json();
-
-      const userStories = data.filter(
-        (story) => story.user.userId === userData?.id
-      );
-
-      userStories.sort((a, b) => {
-        return (
-          new Date(b.creation_date).getTime() -
-          new Date(a.creation_date).getTime()
-        );
-      });
-
+  
+      const currentTime = new Date().getTime();
+      const twentyFourHoursAgo = currentTime - 24 * 60 * 60 * 1000; 
+  
+      const userStories = data
+        .filter(
+          (story) =>
+            story.user.userId === userData?.id && 
+            new Date(story.creation_date).getTime() >= twentyFourHoursAgo 
+        )
+        .sort((a, b) => {
+          return (
+            new Date(b.creation_date).getTime() -
+            new Date(a.creation_date).getTime()
+          );
+        });
+  
       setStories(userStories);
     } catch (error) {
       console.error("Error fetching stories:", error);
     }
   };
+  
 
   const openModal = (story: Story): void => {
     setSelectedStory(story);
