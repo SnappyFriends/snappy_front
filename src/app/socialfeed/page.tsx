@@ -18,6 +18,7 @@ interface Story {
   content: string;
   fileUrl: string;
   creation_date: string;
+  expiration_date:string;
   user: { userId: string; username: string; fullname: string; profile_image: string, user_type: string };
 }
 
@@ -29,7 +30,8 @@ const SocialFeedView = () => {
   const [selectedStory, setSelectedStory] = useState<Story | null>(null);
   const [myStories, setMyStories] = useState<Story[]>([]);
   
-  useEffect(() => {
+
+useEffect(() => {
     const fetchPosts = async () => {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`);
       const data = await response.json();
@@ -48,18 +50,32 @@ const SocialFeedView = () => {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/stories`);
       const data = await response.json();
 
-      const filteredStories = data.filter((story: Story) => story.user.userId !== userData?.id);
+      const currentTime = new Date().getTime();
+      const twentyFourHoursAgo = currentTime - 24 * 60 * 60 * 1000; 
 
-      filteredStories.sort((a: Story, b: Story) => {
+      const unexpiredStories = data.filter((story: Story) => {
+        const storyCreationTime = new Date(story.creation_date).getTime();
+        const storyExpirationTime = new Date(story.expiration_date).getTime();
+
+       
+        return (
+          story.user.userId !== userData?.id &&
+          storyCreationTime >= twentyFourHoursAgo &&
+          currentTime < storyExpirationTime
+        );
+      });
+
+      unexpiredStories.sort((a: Story, b: Story) => {
         return new Date(b.creation_date).getTime() - new Date(a.creation_date).getTime();
       });
 
-      setStories(filteredStories);
+      setStories(unexpiredStories);
     };
 
     fetchPosts();
     fetchStories();
   }, [reaction, userData]);
+
 
   const fetchMyStories = async () => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/stories/user/${userData?.id}`);
