@@ -1,5 +1,4 @@
 "use client";
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import React, { useEffect, useState, useRef, useContext } from "react";
 import { useParams } from "next/navigation";
@@ -12,6 +11,7 @@ import NavBar from "@/components/NavBar";
 import Sidebar from "@/components/Sidebar";
 import Conectados from "@/components/Conectados";
 import { Chats, IMessage } from "@/interfaces/types";
+import { timeAgo } from "@/helpers/timeAgo";
 
 const ChatWithUser = () => {
   const { username } = useParams();
@@ -52,15 +52,8 @@ const ChatWithUser = () => {
                 );
                 const messagesData = await responseMessages.json();
 
-                setChat(chatData);
-
-                const uniqueMessages = messagesData.messages.filter(
-                  (msg: { message_id: any }, index: any, self: any[]) =>
-                    index ===
-                    self.findIndex((m) => m.message_id === msg.message_id)
-                );
-
-                setMessages(uniqueMessages);
+                setChat(messagesData);
+                setMessages(messagesData.messages);
               } else {
                 const users = [receiverId, userData?.id];
                 const createChatResponse = await fetch(
@@ -112,21 +105,17 @@ const ChatWithUser = () => {
     });
 
     socket.current.on("connect", () => {
-      console.log("Connected to the chat socket");
+      console.log("Conexión WebSocket establecida.");
     });
 
     socket.current.on("connect_error", (error) => {
-      console.error("WebSocket connection error:", error);
+      console.error("Error de conexión al WebSocket:", error);
     });
 
     socket.current.on("receivePrivateMessage", (newMessage) => {
-      setMessages((prevMessages) => {
-        const isDuplicate = prevMessages.some(
-          (msg) => msg.message_id === newMessage.message_id
-        );
-        if (isDuplicate) return prevMessages;
-        return [...prevMessages, newMessage];
-      });
+      console.log("Mensaje recibido en WebSocket:", newMessage);
+
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
     });
 
     if (chat) {
@@ -134,11 +123,9 @@ const ChatWithUser = () => {
     }
 
     return () => {
-      if (socket.current && socket.current.connected) {
-        console.log("Disconnecting socket...");
+      if (socket.current) {
         socket.current.disconnect();
-      } else {
-        console.log("Socket already disconnected.");
+        console.log("Conexión WebSocket desconectada.");
       }
     };
   }, [chat]);
@@ -164,13 +151,7 @@ const ChatWithUser = () => {
     };
 
     try {
-      if (socket.current) {
-        socket.current.emit("message", newMessage);
-      } else {
-        console.error("Socket no está disponible");
-      }
-
-      const responseMessage = await fetch(
+      /* const responseMessage = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/messages`,
         {
           method: "POST",
@@ -183,7 +164,7 @@ const ChatWithUser = () => {
 
       if (responseMessage.ok) {
         const responseData = await responseMessage.json();
-        console.log(responseData);
+        console.log("Mensaje guardado en backend:", responseData);
 
         const messagesData = {
           username: responseData.username,
@@ -195,29 +176,41 @@ const ChatWithUser = () => {
           send_date: responseData.send_date,
           type: responseData.type,
           is_anonymous: responseData.is_anonymous,
-        };
+          
+          }; 
+          
+          */
 
-        setMessages((prevMessages) => {
-          const isDuplicate = prevMessages.some(
-            (msg) => msg.message_id === messagesData.message_id
-          );
+      const sendDate = timeAgo(new Date().toISOString());
 
-          if (isDuplicate) {
-            return prevMessages;
-          }
+      const messagesData = {
+        username: userData.username,
+        sender_id: userData.id,
+        user_type: userData.user_type,
+        profile_image: userData.profile_image,
+        content: message,
+        send_date: sendDate,
+        type: "text",
+        is_anonymous: false,
+      };
+      setMessages((prevMessages) => [...prevMessages, messagesData]);
 
-          return [...prevMessages, messagesData];
-        });
-
-        setMessage("");
+      if (socket.current) {
+        socket.current.emit("message", newMessage);
+        console.log("Enviando evento 'message' al servidor:", newMessage);
       } else {
+        console.error("Socket no está disponible");
+      }
+
+      setMessage("");
+      /* } else {
         const errorText = await responseMessage.text();
         console.error(
           "Error sending message:",
           responseMessage.status,
           errorText
         );
-      }
+      } */
     } catch (error) {
       console.error("Error sending message:", error);
     }
@@ -262,14 +255,20 @@ const ChatWithUser = () => {
                     messages.map((uniqueMsg, index) => {
                       const isSender = uniqueMsg.sender_id === userData?.id;
 
-                      const messageKey = `${uniqueMsg.message_id || index}-${
-                        uniqueMsg.username || index
-                      }`;
-
-                      return (
+                      const divContainer = isSender ? (
                         <div
-                          className={isSender ? "text-right" : "text-left"}
-                          key={messageKey}
+                          className="text-right"
+                          key={`${uniqueMsg.sender_id}-${index}`}
+                        >
+                          <div className="p-2 bg-blue-100 rounded-lg my-2">
+                            <p>{uniqueMsg.username}</p>
+                            <p>{uniqueMsg.content}</p>
+                          </div>
+                        </div>
+                      ) : (
+                        <div
+                          className="text-left"
+                          key={`${uniqueMsg.sender_id}-${index}`}
                         >
                           <div className="p-2 bg-blue-100 rounded-lg my-2">
                             <p>{uniqueMsg.username}</p>
@@ -277,6 +276,8 @@ const ChatWithUser = () => {
                           </div>
                         </div>
                       );
+
+                      return divContainer;
                     })
                   ) : (
                     <p className="text-gray-400 text-center">

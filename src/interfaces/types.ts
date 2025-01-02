@@ -152,7 +152,6 @@ export interface IMessage {
   sender_id: string;
   user_type: string;
   profile_image: string;
-  message_id: string;
   content: string;
   send_date: string;
   type: string;
