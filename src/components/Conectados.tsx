@@ -12,7 +12,7 @@ interface User extends BaseUser {
   isOnline: boolean;
 }
 
-const socket: Socket = io(process.env.NEXT_PUBLIC_API_URL);
+const socket: Socket = io("http://localhost:3000");
 
 const Conectados: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -54,7 +54,12 @@ const Conectados: React.FC = () => {
     isOnline: onlineUsers.includes(user.id),
   }));
 
-  const firstSixUsers = usersWithOnlineStatus.slice(0, 6);
+  const sortedUsers = [...usersWithOnlineStatus].sort((a, b) => {
+    if (a.isOnline === b.isOnline) return 0;
+    return a.isOnline ? -1 : 1;
+  });
+
+  const firstSixUsers = sortedUsers.slice(0, 6);
 
   return (
     <div className="space-y-4 p-4 rounded-lg ml-24 mt-20">
