@@ -102,6 +102,7 @@ const ChatWithUser = () => {
         token: authToken,
       },
       withCredentials: true,
+      transports: ["websocket", "polling"],
     });
 
     socket.current.on("connect", () => {
