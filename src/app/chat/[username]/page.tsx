@@ -12,6 +12,7 @@ import Sidebar from "@/components/Sidebar";
 import Conectados from "@/components/Conectados";
 import { Chats, IMessage } from "@/interfaces/types";
 import { timeAgo } from "@/helpers/timeAgo";
+import { cookies } from "next/headers";
 
 const ChatWithUser = () => {
   const { username } = useParams();
@@ -98,9 +99,12 @@ const ChatWithUser = () => {
     }
 
     socket.current = io(`${process.env.NEXT_PUBLIC_API_URL}/chat`, {
-      auth: {
-        token: authToken,
+      extraHeaders: {
+        cookie: document.cookie,
       },
+      /* auth: {
+        token: authToken,
+      }, */
       withCredentials: true,
       transports: ["websocket"],
     });
