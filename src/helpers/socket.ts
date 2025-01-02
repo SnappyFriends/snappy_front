@@ -6,13 +6,14 @@ class SocketService {
 
   public static getInstance(): Socket {
     if (!this.instance) {
-      this.instance = io(`${process.env.NEXT_PUBLIC_API_URL}`, {
+      this.instance = io(`${process.env.NEXT_PUBLIC_SOCKET_URL}/chat`, {
         auth: {
           token:
             typeof window !== "undefined" ? Cookies.get("auth_token") : null,
         },
 
         withCredentials: true,
+        transports: ["websocket"],
       });
     }
     return this.instance;

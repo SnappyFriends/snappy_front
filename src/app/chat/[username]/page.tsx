@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import React, { useEffect, useState, useRef, useContext } from "react";
 import { useParams } from "next/navigation";
@@ -51,8 +52,15 @@ const ChatWithUser = () => {
                 );
                 const messagesData = await responseMessages.json();
 
-                setChat(messagesData);
-                setMessages(messagesData.messages);
+                setChat(chatData);
+
+                const uniqueMessages = messagesData.messages.filter(
+                  (msg: { message_id: any }, index: any, self: any[]) =>
+                    index ===
+                    self.findIndex((m) => m.message_id === msg.message_id)
+                );
+
+                setMessages(uniqueMessages);
               } else {
                 const users = [receiverId, userData?.id];
                 const createChatResponse = await fetch(
@@ -102,25 +110,35 @@ const ChatWithUser = () => {
       },
       withCredentials: true,
     });
-    if (socket.current) {
-      socket.current.on("connect", () => {});
 
-      socket.current.on("connect_error", (error) => {
-        console.error("Error de conexión al WebSocket:", error);
+    socket.current.on("connect", () => {
+      console.log("Connected to the chat socket");
+    });
+
+    socket.current.on("connect_error", (error) => {
+      console.error("WebSocket connection error:", error);
+    });
+
+    socket.current.on("receivePrivateMessage", (newMessage) => {
+      setMessages((prevMessages) => {
+        const isDuplicate = prevMessages.some(
+          (msg) => msg.message_id === newMessage.message_id
+        );
+        if (isDuplicate) return prevMessages;
+        return [...prevMessages, newMessage];
       });
+    });
 
-      socket.current.on("receivePrivateMessage", (newMessage) => {
-        setMessages((prevMessages) => [...prevMessages, newMessage]);
-      });
-
-      if (chat) {
-        socket.current.emit("join_chat", chat);
-      }
+    if (chat) {
+      socket.current.emit("join_chat", chat);
     }
 
     return () => {
-      if (socket.current) {
+      if (socket.current && socket.current.connected) {
+        console.log("Disconnecting socket...");
         socket.current.disconnect();
+      } else {
+        console.log("Socket already disconnected.");
       }
     };
   }, [chat]);
@@ -151,6 +169,7 @@ const ChatWithUser = () => {
       } else {
         console.error("Socket no está disponible");
       }
+
       const responseMessage = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/messages`,
         {
@@ -165,6 +184,7 @@ const ChatWithUser = () => {
       if (responseMessage.ok) {
         const responseData = await responseMessage.json();
         console.log(responseData);
+
         const messagesData = {
           username: responseData.username,
           sender_id: responseData.sender_id,
@@ -177,13 +197,17 @@ const ChatWithUser = () => {
           is_anonymous: responseData.is_anonymous,
         };
 
-        /* const saveData = {
-          id: responseData.id,
-          key: responseData.key,
-          messages: [messagesData],
-        }; */
+        setMessages((prevMessages) => {
+          const isDuplicate = prevMessages.some(
+            (msg) => msg.message_id === messagesData.message_id
+          );
 
-        setMessages((prevMessages) => [...prevMessages, messagesData]);
+          if (isDuplicate) {
+            return prevMessages;
+          }
+
+          return [...prevMessages, messagesData];
+        });
 
         setMessage("");
       } else {
@@ -235,32 +259,24 @@ const ChatWithUser = () => {
               <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
                 {chat ? (
                   messages.length > 0 ? (
-                    messages.map((uniqueMsg) => {
-                      // Mapeo solo sobre los mensajes del primer chat
+                    messages.map((uniqueMsg, index) => {
                       const isSender = uniqueMsg.sender_id === userData?.id;
 
-                      // Definir el contenedor fuera de la expresión de JSX
-                      const divContainer = isSender ? (
-                        <div className="text-right" key={uniqueMsg.message_id}>
-                          {" "}
-                          {/* Usar uniqueMsg.message_id como key */}
-                          <div className="p-2 bg-blue-100 rounded-lg my-2">
-                            <p>{uniqueMsg.username}</p>
-                            <p>{uniqueMsg.content}</p>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="text-left" key={uniqueMsg.message_id}>
-                          {" "}
-                          {/* Usar uniqueMsg.message_id como key */}
+                      const messageKey = `${uniqueMsg.message_id || index}-${
+                        uniqueMsg.username || index
+                      }`;
+
+                      return (
+                        <div
+                          className={isSender ? "text-right" : "text-left"}
+                          key={messageKey}
+                        >
                           <div className="p-2 bg-blue-100 rounded-lg my-2">
                             <p>{uniqueMsg.username}</p>
                             <p>{uniqueMsg.content}</p>
                           </div>
                         </div>
                       );
-
-                      return divContainer;
                     })
                   ) : (
                     <p className="text-gray-400 text-center">
