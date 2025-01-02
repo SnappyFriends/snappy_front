@@ -13,7 +13,7 @@ class SocketService {
         },
 
         withCredentials: true,
-        transports: ["websocket"],
+        transports: ["websocket", "polling"],
       });
     }
     return this.instance;
