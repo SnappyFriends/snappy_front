@@ -4,25 +4,30 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { getUsers } from "@/helpers/users";
 import Link from "next/link";
+import { io, Socket } from "socket.io-client";
 
-interface User {
-  id: string;
-  username: string;
-  profile_image: string;
+import { User as BaseUser } from "@/helpers/users";
+
+interface User extends BaseUser {
+  isOnline: boolean;
 }
+
+const socket: Socket = io(process.env.NEXT_PUBLIC_API_URL);
 
 const Conectados: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
+  const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
 
   useEffect(() => {
     const fetchUsers = async () => {
       const storedUsers = localStorage.getItem("users");
       if (storedUsers) {
-        setUsers(JSON.parse(storedUsers));
+        const parsedUsers: BaseUser[] = JSON.parse(storedUsers);
+        setUsers(parsedUsers.map((user) => ({ ...user, isOnline: false })));
       } else {
         try {
-          const fetchedUsers: User[] = await getUsers();
-          setUsers(fetchedUsers);
+          const fetchedUsers: BaseUser[] = await getUsers();
+          setUsers(fetchedUsers.map((user) => ({ ...user, isOnline: false })));
 
           localStorage.setItem("users", JSON.stringify(fetchedUsers));
         } catch (error) {
@@ -32,9 +37,24 @@ const Conectados: React.FC = () => {
     };
 
     fetchUsers();
+
+    socket.on("onlineUsers", (onlineUsersList: string[]) => {
+      setOnlineUsers(onlineUsersList);
+    });
+
+    socket.emit("getOnlineUsers");
+
+    return () => {
+      socket.off("onlineUsers");
+    };
   }, []);
 
-  const firstSixUsers = users.slice(8, 20);
+  const usersWithOnlineStatus = users.map((user) => ({
+    ...user,
+    isOnline: onlineUsers.includes(user.id),
+  }));
+
+  const firstSixUsers = usersWithOnlineStatus.slice(0, 6);
 
   return (
     <div className="space-y-4 p-4 rounded-lg ml-24 mt-20">
@@ -58,7 +78,11 @@ const Conectados: React.FC = () => {
                 <h3 className="text-sm font-semibold">{user.username}</h3>
               </div>
               <div>
-                <span className="w-3 h-3 bg-green-500 rounded-full block"></span>
+                <span
+                  className={`w-3 h-3 rounded-full block ${
+                    user.isOnline ? "bg-green-500" : "bg-gray-400"
+                  }`}
+                ></span>
               </div>
             </div>
           </Link>
