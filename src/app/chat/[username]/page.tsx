@@ -97,16 +97,16 @@ const ChatWithUser = () => {
       return;
     }
 
-    socket.current = io(`${process.env.NEXT_PUBLIC_API_URL}/chat`, {
-      extraHeaders: {
-        cookie: document.cookie,
-      },
-      /* auth: {
-        token: authToken,
-      }, */
-      withCredentials: true,
-      transports: ["websocket"],
-    });
+    socket.current = io(
+      `${process.env.NEXT_PUBLIC_API_URL}/chat?token=${authToken}`,
+      {
+        auth: {
+          token: authToken,
+        },
+        withCredentials: true,
+        transports: ["websocket"],
+      }
+    );
 
     socket.current.on("connect", () => {
       console.log("Conexión WebSocket establecida.");
