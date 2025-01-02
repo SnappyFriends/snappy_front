@@ -6,13 +6,13 @@ import { getUsers } from "@/helpers/users";
 import Link from "next/link";
 import { io, Socket } from "socket.io-client";
 import { UserContext } from "@/context/UserContext";
+import Cookies from "js-cookie";
+
 import { User as BaseUser } from "@/helpers/users";
 
 interface User extends BaseUser {
   isOnline: boolean;
 }
-
-const socket: Socket = io(process.env.NEXT_PUBLIC_API_URL);
 
 const Conectados: React.FC = () => {
   const { userId } = useContext(UserContext);
@@ -20,6 +20,23 @@ const Conectados: React.FC = () => {
   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
 
   useEffect(() => {
+    const authToken = Cookies.get("auth_token");
+    if (!authToken) {
+      console.error("No auth token found in cookies");
+      return;
+    }
+
+    const socket: Socket = io(
+      `${process.env.NEXT_PUBLIC_API_URL}/chat?token=${authToken}`,
+      {
+        auth: {
+          token: authToken,
+        },
+        withCredentials: true,
+        transports: ["websocket"],
+      }
+    );
+
     const fetchUsers = async () => {
       const storedUsers = localStorage.getItem("users");
       if (storedUsers) {
