@@ -158,3 +158,34 @@ export interface IMessage {
   type: string;
   is_anonymous: boolean;
 }
+
+export interface IUsernameData {
+  id: string;
+  fullname: string;
+  username: string;
+  email: string;
+  birthdate: string;
+  genre: string;
+  description: string | null;
+  registration_date: string;
+  last_login_date: string;
+  user_type: "regular" | "admin" | "premium";
+  status: "active" | "inactive" | "banned";
+  profile_image: string;
+  location: string;
+  googleId: string | null;
+  interests: {
+    interest_id: string;
+    name: string;
+  }[];
+  // stories: any[];
+  // privacy: any[];
+  // responses: any[];
+  // reportedReports: any[];
+  // reportingReports: any[];
+  // polls: any[];
+  // posts: any[];
+  // reactions: any[];
+  // comments: any[];
+  // groupMembers: any[];
+}
