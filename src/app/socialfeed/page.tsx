@@ -81,8 +81,17 @@ useEffect(() => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/stories/user/${userData?.id}`);
     const data = await response.json();
 
-    data.sort((a: Story, b: Story) => {
-      return new Date(a.creation_date).getTime() - new Date(b.creation_date).getTime();
+    const currentTime = new Date().getTime();
+    const twentyFourHoursAgo = currentTime - 24 * 60 * 60 * 1000; 
+    
+    const recentStories = data.filter((story: Story) => {
+      const storyCreationTime = new Date(story.creation_date).getTime();
+      return storyCreationTime >= twentyFourHoursAgo;
+    });
+
+
+    recentStories.sort((a: Story, b: Story) => {
+      return new Date(b.creation_date).getTime() - new Date(a.creation_date).getTime();
     });
 
     setMyStories(data);
