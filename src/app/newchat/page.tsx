@@ -74,33 +74,38 @@ const ChatView = () => {
 
 	const handleSendRequest = async () => {
 		if (!randomUser || !userId) return;
-		console.log(randomUser.id);
-		console.log(userId);
-
+	
 		try {
-			const response = await fetch(
-				`${API_URL}/friendships/${userId}/add-friend/${randomUser.id}`,
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-				}
-			);
-			console.log(response);
+			const endpoint = isRequestSent
+				? `${API_URL}/friendships/${userId}/remove-friend/${randomUser.id}` 
+				: `${API_URL}/friendships/${userId}/add-friend/${randomUser.id}`;  
+	
+			const response = await fetch(endpoint, {
+				method: isRequestSent ? "DELETE" : "POST",
+				headers: { "Content-Type": "application/json" },
+			});
+	
 			if (response.ok) {
-				setIsRequestSent(true);
-				setSentRequests((prev) => new Set(prev.add(randomUser.id)));
+				setIsRequestSent(!isRequestSent); 
+				setSentRequests((prev) => {
+					const updatedRequests = new Set(prev);
+					if (isRequestSent) {
+						updatedRequests.delete(randomUser.id); 
+					} else {
+						updatedRequests.add(randomUser.id); 
+					}
+					return updatedRequests;
+				});
 			} else {
 				const errorData = await response.json();
-				alert("Error al enviar solicitud: " + errorData.message);
+				alert(`Error: ${errorData.message}`);
 			}
 		} catch (error) {
 			console.error("Error al conectarse al servidor:", error);
-			alert("No se pudo enviar la solicitud.");
+			alert("No se pudo procesar la acción.");
 		}
 	};
-
+	
 	return (
 		<div>
 			<NavBar />
@@ -134,11 +139,7 @@ const ChatView = () => {
 										<p className="text-sm text-gray-500">
 											{randomUser.fullname}
 										</p>
-										{sentRequests.has(randomUser.id) && (
-											<p className="text-xs text-green-500">
-												Solicitud pendiente
-											</p>
-										)}
+									
 									</>
 								) : (
 									<p className="text-gray-500">No hay usuarios disponibles</p>
@@ -147,12 +148,11 @@ const ChatView = () => {
 						</div>
 						<button
 							onClick={handleSendRequest}
-							disabled={isRequestSent}
 							className={`${
 								isRequestSent ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
 							} text-white px-4 py-2 rounded-lg text-sm transition`}
 						>
-							{isRequestSent ? "Solicitud enviada" : "Enviar solicitud"}
+							{isRequestSent ? "Dejar de seguir" : "Seguir"}
 						</button>
 					</div>
 					<div className="flex-1 px-4 py-6 overflow-y-auto min-h-[60vh]">
@@ -173,36 +173,8 @@ const ChatView = () => {
 							className="flex-1 border border-gray-300 rounded-full px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
 						/>
 						<div className="flex items-center ml-3 space-x-3">
-							<Link href="/microfono">
-								<div className="relative w-6 h-6">
-									<Image
-										src="/microfono.png"
-										alt="Microfono"
-										layout="fill"
-										className="object-contain"
-									/>
-								</div>
-							</Link>
-							<Link href="/emoji">
-								<div className="relative w-6 h-6">
-									<Image
-										src="/cara-feliz.png"
-										alt="Emoji"
-										layout="fill"
-										className="object-contain"
-									/>
-								</div>
-							</Link>
-							<Link href="/fotos">
-								<div className="relative w-6 h-6">
-									<Image
-										src="/galeria-de-imagenes.png"
-										alt="Galeria"
-										layout="fill"
-										className="object-contain"
-									/>
-								</div>
-							</Link>
+							<button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm transition"> Enviar
+							</button>
 						</div>
 					</div>
 				</div>
