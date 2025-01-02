@@ -37,7 +37,12 @@ export default function LoginComponent() {
       const { token, userId } = resultado;
 
       if (token) {
-        Cookies.set("auth_token", token, { expires: 1 });
+        Cookies.set("auth_token", token, {
+          expires: 1,
+          path: "/",
+          secure: true,
+          sameSite: "None",
+        });
         setToken(token);
         setUserId(userId);
       }
@@ -147,7 +152,12 @@ export default function LoginComponent() {
 
                           if (responseData.token) {
                             const { token, userId } = responseData;
-                            Cookies.set("auth_token", token, { expires: 1 });
+                            Cookies.set("auth_token", token, {
+                              expires: 1,
+                              path: "/",
+                              secure: true,
+                              sameSite: "None",
+                            });
                             setToken(token);
                             setUserId(userId);
 

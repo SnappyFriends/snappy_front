@@ -55,7 +55,12 @@ export default function CompletarRegistro() {
         const { token, userId } = result;
 
         if (token) {
-          Cookies.set("auth_token", token, { expires: 1 });
+          Cookies.set("auth_token", token, {
+            expires: 1,
+            path: "/",
+            secure: true,
+            sameSite: "None",
+          });
           setToken(token);
           setUserId(userId);
         }
