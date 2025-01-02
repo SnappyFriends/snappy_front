@@ -4,7 +4,7 @@ import { UserContext } from "@/context/UserContext";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useContext, useEffect, useState } from "react";
-import { timeAgo } from "@/helpers/timeAgo"; 
+import { timeAgo } from "@/helpers/timeAgo";
 import VerifiedAccount from "./VerifiedAccount";
 
 interface User {
@@ -38,7 +38,9 @@ export default function PerfilComponent() {
 
   const fetchUserStories = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/stories`);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/stories`
+      );
       const data: Story[] = await response.json();
 
       const userStories = data.filter(
@@ -46,7 +48,10 @@ export default function PerfilComponent() {
       );
 
       userStories.sort((a, b) => {
-        return new Date(b.creation_date).getTime() - new Date(a.creation_date).getTime();
+        return (
+          new Date(b.creation_date).getTime() -
+          new Date(a.creation_date).getTime()
+        );
       });
 
       setStories(userStories);
@@ -73,9 +78,12 @@ export default function PerfilComponent() {
 
   const deleteStory = async (storyId: string) => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/stories/${storyId}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/stories/${storyId}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       if (response.ok) {
         setStories((prevStories) =>
@@ -109,7 +117,8 @@ export default function PerfilComponent() {
           />
         </div>
         <h1 className="text-lg font-bold md:text-xl lg:text-2xl">
-          {userData.fullname} {userData?.user_type === "premium" ? <VerifiedAccount /> : ""}
+          {userData.fullname}{" "}
+          {userData?.user_type === "premium" ? <VerifiedAccount /> : ""}
         </h1>
         <div className="flex flex-wrap justify-center gap-4">
           <article className="text-center w-24 md:w-28">
@@ -130,28 +139,28 @@ export default function PerfilComponent() {
         </div>
 
         <div className="flex flex-wrap justify-center gap-4">
-  {userData?.user_type === "premium" ? (
-    <Link
-      href="/pasareladepago"
-      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-800"
-    >
-      Tu membresía
-    </Link>
-  ) : (
-    <Link
-      href="/pasareladepago"
-      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-800"
-    >
-      Verificar cuenta
-    </Link>
-  )}
-  <Link
-    href="/editarperfil"
-    className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-700"
-  >
-    Editar perfil
-  </Link>
-</div>
+          {userData?.user_type === "premium" ? (
+            <Link
+              href="/pasareladepago"
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-800"
+            >
+              Tu membresía
+            </Link>
+          ) : (
+            <Link
+              href="/pasareladepago"
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-800"
+            >
+              Verificar cuenta
+            </Link>
+          )}
+          <Link
+            href="/editarperfil"
+            className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-700"
+          >
+            Editar perfil
+          </Link>
+        </div>
         <div className="w-full px-2 text-center">
           {userData.interests && userData.interests.length > 0 && (
             <p>
@@ -163,8 +172,8 @@ export default function PerfilComponent() {
         <div className="flex-1 flex flex-col items-center max-w-6xl px-4 md:px-8 mt-10 mx-auto">
           <div className="flex justify-center space-x-6 mb-6">
             <div className="relative w-16 h-16 md:w-20 md:h-20">
-            <button title="Ver mis historias">
-            <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden">
+              <button title="Ver mis historias">
+                <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden">
                   <Image
                     src={userData?.profile_image || "/user.png"}
                     alt="Foto de perfil"
@@ -204,7 +213,9 @@ export default function PerfilComponent() {
                             (s) => s.story_id === selectedStory.story_id
                           );
                           const prevIndex =
-                            currentIndex > 0 ? currentIndex - 1 : stories.length - 1;
+                            currentIndex > 0
+                              ? currentIndex - 1
+                              : stories.length - 1;
                           setSelectedStory(stories[prevIndex]);
                         }}
                       >
@@ -225,7 +236,9 @@ export default function PerfilComponent() {
                             (s) => s.story_id === selectedStory.story_id
                           );
                           const nextIndex =
-                            currentIndex < stories.length - 1 ? currentIndex + 1 : 0;
+                            currentIndex < stories.length - 1
+                              ? currentIndex + 1
+                              : 0;
                           setSelectedStory(stories[nextIndex]);
                         }}
                       >
@@ -233,11 +246,15 @@ export default function PerfilComponent() {
                       </button>
                     </div>
                     <div className="mt-4 flex flex-col items-center text-center">
-                      <h3 className="text-lg font-bold">{selectedStory.user.username}</h3>
+                      <h3 className="text-lg font-bold">
+                        {selectedStory.user.username}
+                      </h3>
                       <p className="text-sm text-gray-500 mb-2">
                         {timeAgo(selectedStory.creation_date)}
                       </p>
-                      <p className="text-sm max-w-lg">{selectedStory.content}</p>
+                      <p className="text-sm max-w-lg">
+                        {selectedStory.content}
+                      </p>
                       <button
                         onClick={() => deleteStory(selectedStory.story_id)}
                         className="mt-4 px-4 py-2 text-red-600 rounded-md"
