@@ -94,8 +94,8 @@ useEffect(() => {
       return new Date(b.creation_date).getTime() - new Date(a.creation_date).getTime();
     });
 
-    setMyStories(data);
-    setSelectedStory(data[0]);
+    setMyStories(recentStories);
+    setSelectedStory(recentStories[0]);
   }
 
   const handleLikeToggle = async (postId: string, isLiked: boolean) => {
