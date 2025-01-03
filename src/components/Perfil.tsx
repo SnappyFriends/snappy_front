@@ -52,6 +52,61 @@ export default function PerfilComponent() {
   const [selectedStory, setSelectedStory] = useState<Story | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedPost, setSelectedPost] = useState<IPost | null>(null);
+  const [isFollowedModalOpen, setIsFollowedModalOpen] = useState<boolean>(false);
+  const [followed, setFollowed] = useState<User[]>([]);
+  
+  const [isFollowingModalOpen, setIsFollowingModalOpen] = useState<boolean>(false);
+  const [following, setFollowing] = useState<User[]>([]);
+  
+  const fetchFollowers = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/follow/${userData?.id}/followers`
+      );
+      if (!response.ok) {
+        throw new Error("Error al obtener seguidores");
+      }
+      const data: User[] = await response.json();
+      setFollowing(data);
+    } catch (error) {
+      console.error("Error fetching friends:", error);
+      alert("Hubo un problema al cargar tus seguidores");
+    }
+  };
+
+  const fetchFollowed = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/follow/${userData?.id}/following`
+      );
+      if (!response.ok) {
+        throw new Error("Error al obtener seguidos");
+      }
+      const data: User[] = await response.json();
+      setFollowed(data);
+    } catch (error) {
+      console.error("Error fetching friends:", error);
+      alert("Hubo un problema al cargar tus seguidos");
+    }
+  };
+  const openFriendsModal = async () => {
+    await fetchFollowed();
+    setIsFollowedModalOpen(true);
+  };
+  
+  const closeFriendsModal = () => {
+    setIsFollowedModalOpen(false);
+  };
+
+  const openFollowingModal = async () => {
+    await fetchFollowers();
+    setIsFollowingModalOpen(true);
+  };
+  
+  const closeFollowingModal = () => {
+    setIsFollowingModalOpen(false);
+  };
+
 
   useEffect(() => {
     if (userData) {
@@ -168,18 +223,22 @@ export default function PerfilComponent() {
           {userData?.user_type === "premium" ? <VerifiedAccount /> : ""}
         </h1>
         <div className="flex flex-wrap justify-center gap-4">
-          <article className="text-center w-24 md:w-28">
-            <p className="text-lg font-bold md:text-xl">
-              {userData.following.length}
-            </p>
-            <p>Amigos</p>
-          </article>
-          <article className="text-center w-24 md:w-28">
-            <p className="text-lg font-bold md:text-xl">
-              {userData.followers.length}
-            </p>
-            <p>Seguidores</p>
-          </article>
+        <article className="text-center w-24 md:w-28">
+  <button onClick={openFriendsModal}>
+    <p className="text-lg font-bold md:text-xl">
+      {userData.following.length}
+    </p>
+    <p>Seguidos</p>
+  </button>
+</article>
+<article className="text-center w-24 md:w-28">
+  <button onClick={openFollowingModal}>
+    <p className="text-lg font-bold md:text-xl">
+      {userData.followers.length}
+    </p>
+    <p>Seguidos</p>
+  </button>
+</article>
           <article className="text-center w-24 md:w-28">
             <p className="text-lg font-bold md:text-xl">
               {userData.posts.length}
@@ -350,6 +409,84 @@ export default function PerfilComponent() {
       {selectedPost && (
         <PostDetails post={selectedPost} close={closePostDetails} />
       )}
+      {isFollowedModalOpen && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <div className="bg-white rounded-lg p-6 w-full max-w-lg flex flex-col relative">
+      <button
+        className="absolute top-2 right-2 text-black font-bold"
+        onClick={closeFriendsModal}
+      >
+        X
+      </button>
+      <h2 className="text-lg font-bold mb-4">Tus Seguidos</h2>
+      {followed.length > 0 ? (
+        <div className="space-y-4">
+          {followed.map((followed) => (
+            <div
+              key={followed.userId}
+              className="flex justify-between items-center bg-gray-100 p-3 rounded-md"
+            >
+              <div className="flex items-center space-x-4">
+                <Image
+                  src={followed.profile_image}
+                  alt="Imagen de perfil"
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                />
+                <span className="font-medium">{followed.username}</span>
+              </div>
+              {/* <button
+                className="text-grey-600 hover:underline"
+              >
+                Dejar de seguir
+              </button> */}
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="text-gray-500">No sigues a nadie aún.</p>
+      )}
+    </div>
+  </div>
+)}
+{isFollowingModalOpen && (
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <div className="bg-white rounded-lg p-6 w-full max-w-lg flex flex-col relative">
+      <button
+        className="absolute top-2 right-2 text-black font-bold"
+        onClick={closeFollowingModal}
+      >
+        X
+      </button>
+      <h2 className="text-lg font-bold mb-4">Tus Seguidos</h2>
+      {following.length > 0 ? (
+        <div className="space-y-4">
+          {following.map((following) => (
+            <div
+              key={following.userId}
+              className="flex justify-between items-center bg-gray-100 p-3 rounded-md"
+            >
+              <div className="flex items-center space-x-4">
+                <Image
+                  src={following.profile_image}
+                  alt="Imagen de perfil"
+                  width={40}
+                  height={40}
+                  className="rounded-full"
+                />
+                <span className="font-medium">{following.username}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <p className="text-gray-500">Nadie te sigue aún.</p>
+      )}
+    </div>
+  </div>
+)}
+
     </main>
   );
 }

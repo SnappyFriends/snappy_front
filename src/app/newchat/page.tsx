@@ -77,8 +77,8 @@ const ChatView = () => {
 	
 		try {
 			const endpoint = isRequestSent
-				? `${API_URL}/friendships/${userId}/remove-friend/${randomUser.id}` 
-				: `${API_URL}/friendships/${userId}/add-friend/${randomUser.id}`;  
+				? `${API_URL}/follow/${userId}/${randomUser.id}` 
+				: `${API_URL}/follow/${userId}/${randomUser.id}`;  
 	
 			const response = await fetch(endpoint, {
 				method: isRequestSent ? "DELETE" : "POST",
