@@ -81,7 +81,7 @@ const ProfileView = ({
 						if (user.followers && user.followers.length > 0) {
 							const isFollowing = user.followers.map(
 								(follower: { id: string }) => {
-									if (follower.id == userData?.id) return true;
+									if (follower.id == userTargetData?.id) return true;
 									else return false;
 								}
 							);
@@ -97,11 +97,9 @@ const ProfileView = ({
 			};
 			fetchUser();
 		}
-	}, [username, userData]);
+	}, [username, userTargetData]);
 
-	if (!userData) {
-		return "Cargando...";
-	}
+	if (!userTargetData) return "Cargando...";
 
 	// const lastLoginDate = userTargetData.last_login_date
 	//   ? new Date(userTargetData.last_login_date)
@@ -119,7 +117,7 @@ const ProfileView = ({
         <section className="flex flex-col justify-center items-center gap-3 md:gap-4 pt-3 md:pt-4 px-4">
           <div className="w-32 h-32 md:w-40 md:h-40 lg:w-60 lg:h-60 rounded-full overflow-hidden border-4 border-black shadow-md">
             <Image
-              src={userData.profile_image}
+              src={userTargetData.profile_image}
               alt="Foto de perfil"
               width={600}
               height={600}
@@ -127,25 +125,25 @@ const ProfileView = ({
             />
           </div>
           <h1 className="text-lg font-bold md:text-xl lg:text-2xl">
-            {userData.fullname}{" "}
-            {userData?.user_type === "premium" ? <VerifiedAccount /> : ""}
+            {userTargetData.fullname}{" "}
+            {userTargetData?.user_type === "premium" ? <VerifiedAccount /> : ""}
           </h1>
           <div className="flex flex-wrap justify-center gap-4">
             <article className="text-center w-24 md:w-28">
-              <p className="text-lg font-bold md:text-xl">{userData.following.length}</p>
+              <p className="text-lg font-bold md:text-xl">{userTargetData.following.length}</p>
               <p>Amigos</p>
             </article>
             <article className="text-center w-24 md:w-28">
-              <p className="text-lg font-bold md:text-xl">{userData.followers.length}</p>
+              <p className="text-lg font-bold md:text-xl">{userTargetData.followers.length}</p>
               <p>Seguidores</p>
             </article>
             <article className="text-center w-24 md:w-28">
-              <p className="text-lg font-bold md:text-xl">{userData.posts.length}</p>
+              <p className="text-lg font-bold md:text-xl">{userTargetData.posts.length}</p>
               <p>Publicaciones</p>
             </article>
           </div>
           <div className="px-2 text-center">
-            <p>{userData.description}</p>
+            <p>{userTargetData.description}</p>
           </div>
 
 					<div className="flex flex-wrap justify-center gap-4">
@@ -167,11 +165,11 @@ const ProfileView = ({
 						</Link>
 					</div>
 					<div className="w-full px-2 text-center">
-						{userData.interests &&
-							userData.interests.length > 0 && (
+						{userTargetData.interests &&
+							userTargetData.interests.length > 0 && (
 								<p>
 									<span className="font-bold">Intereses: </span>
-									{userData.interests
+									{userTargetData.interests
 										.map((interest) => interest.name)
 										.join(", ")}
 								</p>
@@ -206,7 +204,7 @@ const ProfileView = ({
             </div>
           </div> */}
 					<div className="flex flex-wrap justify-center gap-4">
-						<p>{userData.fullname} no tiene publicaciones.</p>
+						<p>{userTargetData.fullname} no tiene publicaciones.</p>
 					</div>
 				</section>
 			</main>
