@@ -65,8 +65,9 @@ export interface IUserData {
   user_type: "regular" | "admin" | string;
   status: "active" | "inactive" | string;
   interests: IInterest[] | undefined;
-  followers: string[];
-  following: string[];
+  posts: { post_id: string; fileUrl: string }[];
+  following: { id: string; username: string; profile_image: string }[];
+  followers: { id: string; username: string; profile_image: string }[];
 }
 
 export interface IUserSearch {
@@ -179,8 +180,9 @@ export interface IUsernameData {
     interest_id: string;
     name: string;
   }[];
-  followers: string[];
-  following: string[];
+  posts: { post_id: string; fileUrl: string }[];
+  following: { id: string; username: string; profile_image: string }[];
+  followers: { id: string; username: string; profile_image: string }[];
   // stories: any[];
   // privacy: any[];
   // responses: any[];
