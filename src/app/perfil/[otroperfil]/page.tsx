@@ -99,7 +99,7 @@ const ProfileView = ({
 		}
 	}, [username, userData]);
 
-	if (!userTargetData) {
+	if (!userData) {
 		return "Cargando...";
 	}
 
@@ -167,11 +167,11 @@ const ProfileView = ({
 						</Link>
 					</div>
 					<div className="w-full px-2 text-center">
-						{userTargetData.interests &&
-							userTargetData.interests.length > 0 && (
+						{userData.interests &&
+							userData.interests.length > 0 && (
 								<p>
 									<span className="font-bold">Intereses: </span>
-									{userTargetData.interests
+									{userData.interests
 										.map((interest) => interest.name)
 										.join(", ")}
 								</p>
@@ -206,7 +206,7 @@ const ProfileView = ({
             </div>
           </div> */}
 					<div className="flex flex-wrap justify-center gap-4">
-						<p>{userTargetData.fullname} no tiene publicaciones.</p>
+						<p>{userData.fullname} no tiene publicaciones.</p>
 					</div>
 				</section>
 			</main>
