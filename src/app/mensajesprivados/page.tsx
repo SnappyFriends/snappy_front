@@ -1,24 +1,51 @@
 "use client";
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import NavBar from "@/components/NavBar";
 import Conectados from "@/components/Conectados";
 import Sidebar from "@/components/Sidebar";
+import { Chats } from "@/interfaces/types";
+import { UserContext } from "@/context/UserContext";
+import { timeAgo } from "@/helpers/timeAgo";
 
-export default function MensajesPrivados() {
+const MensajesPrivados = () => {
+  const [chats, setChats] = useState<Chats[]>([]);
+  const { userData } = useContext(UserContext);
+
+  useEffect(() => {
+    const fetchChats = async () => {
+      if (!userData?.id) return;
+
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/chats/user-chats/${userData.id}`
+        );
+        const data = await response.json();
+        if (data?.length > 0) {
+          setChats(data);
+          console.log("Chats del usuario", data);
+        } else {
+          console.error("No se encontraron chats para este usuario");
+        }
+      } catch (error) {
+        console.error("Error al obtener los chats del usuario:", error);
+      }
+    };
+
+    fetchChats();
+  }, [userData]);
+
   return (
     <>
       <NavBar />
-      
+
       <div className="flex min-h-screen relative">
-        
         <div className="hidden md:flex flex-col w-64 bg-white p-6 space-y-10 fixed left-6 top-1/2 transform -translate-y-1/2">
           <Sidebar />
         </div>
 
         <div className="flex-1 flex justify-center mt-20">
           <div className="w-full md:w-2/4 p-6">
-            
             <nav className="h-16 flex justify-center items-center">
               <form className="w-full flex">
                 <input
@@ -42,21 +69,24 @@ export default function MensajesPrivados() {
                 </button>
               </form>
             </nav>
-            
+
             <main>
               <div>
                 <h2 className="text-center my-2 text-lg font-semibold text-gray-800">
                   Mensajes
                 </h2>
-                {Array.from({ length: 5 }).map((_, index) => (
+                {chats.map((chat) => (
                   <section
-                    key={index}
+                    key={chat.id}
                     className="h-20 flex justify-between items-center px-4 border-b border-[#EEEEEE]"
                   >
                     <div className="flex space-x-4 items-center">
                       <div>
                         <Image
-                          src="/taylorswift.jpg"
+                          src={
+                            chat.participants[0].profile_image ||
+                            "/agregarfoto.png"
+                          }
                           width={1000}
                           height={1000}
                           alt="fotodeperfil"
@@ -64,11 +94,19 @@ export default function MensajesPrivados() {
                         />
                       </div>
                       <div>
-                        <h2 className="font-bold text-sm text-gray-900">Sofia Black</h2>
-                        <p className="text-xs text-gray-500">Hola, ¿cómo estás?</p>
+                        <h2 className="font-bold text-sm text-gray-900">
+                          {chat.participants[0].username}
+                        </h2>
+                        <p className="text-xs text-gray-500">
+                          {chat.messages[chat.messages.length - 1].content}
+                        </p>
                       </div>
                     </div>
-                    <div className="text-sm text-gray-500">12:00</div>
+                    <div className="text-sm text-gray-500">
+                      {timeAgo(
+                        chat.messages[chat.messages.length - 1].send_date
+                      )}
+                    </div>
                   </section>
                 ))}
               </div>
@@ -76,10 +114,12 @@ export default function MensajesPrivados() {
           </div>
         </div>
 
-        <div className="hidden md:flex flex-col w-80 space-y-6 absolute right-20 top-40">
+        <div className="hidden md:flex flex-col w-80 space-y-6 absolute right-20 top-[45%] transform -translate-y-1/2">
           <Conectados />
         </div>
       </div>
     </>
   );
-}
+};
+
+export default MensajesPrivados;

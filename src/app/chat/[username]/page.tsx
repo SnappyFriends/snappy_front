@@ -196,6 +196,7 @@ const ChatWithUser = () => {
         send_date: sendDate,
         type: "text",
         is_anonymous: false,
+        chat_id: chat.id,
       };
       setMessages((prevMessages) => [...prevMessages, messagesData]);
 

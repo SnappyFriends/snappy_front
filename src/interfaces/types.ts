@@ -145,12 +145,20 @@ export interface IStoryCreate {
 }
 
 export interface Chats {
+  chat_id: string;
   id: string;
   key: string;
   messages: [IMessage];
+  user_id: string;
+  participants: {
+    id: string;
+    username: string;
+    profile_image: string;
+  }[];
 }
 
 export interface IMessage {
+  chat_id: string;
   username: string;
   sender_id: string;
   user_type: string;
@@ -193,4 +201,11 @@ export interface IUsernameData {
   // reactions: any[];
   // comments: any[];
   // groupMembers: any[];
+}
+
+export interface IUserChat {
+  chat_id: string;
+  user_id: string;
+  username: string;
+  profile_image: string;
 }
