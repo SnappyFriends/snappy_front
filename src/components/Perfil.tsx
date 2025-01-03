@@ -132,8 +132,12 @@ export default function PerfilComponent() {
             <p>Amigos</p>
           </article>
           <article className="text-center w-24 md:w-28">
-            <p className="text-lg font-bold md:text-xl">1000</p>
+            <p className="text-lg font-bold md:text-xl">{userData.followers.length}</p>
             <p>Seguidores</p>
+          </article>
+          <article className="text-center w-24 md:w-28">
+            <p className="text-lg font-bold md:text-xl">{userData.following.length}</p>
+            <p>Siguiendo</p>
           </article>
           <article className="text-center w-24 md:w-28">
             <p className="text-lg font-bold md:text-xl">1000</p>

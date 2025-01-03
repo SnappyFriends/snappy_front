@@ -65,6 +65,8 @@ export interface IUserData {
   user_type: "regular" | "admin" | string;
   status: "active" | "inactive" | string;
   interests: IInterest[] | undefined;
+  followers: string[];
+  following: string[];
 }
 
 export interface IUserSearch {
@@ -177,6 +179,8 @@ export interface IUsernameData {
     interest_id: string;
     name: string;
   }[];
+  followers: string[];
+  following: string[];
   // stories: any[];
   // privacy: any[];
   // responses: any[];
