@@ -6,6 +6,7 @@ import Link from "next/link";
 import React, { useContext, useEffect, useState } from "react";
 import { timeAgo } from "@/helpers/timeAgo";
 import VerifiedAccount from "./VerifiedAccount";
+import PostDetails from "./PostDetails";
 
 interface User {
   userId: string;
@@ -24,11 +25,33 @@ interface Story {
   content: string;
 }
 
+interface IPost {
+  post_id: string;
+  content: string;
+  creation_date: string;
+  fileUrl: string;
+  user: {
+    username: string;
+    profile_image: string;
+    user_type: string;
+  };
+  reactions: Array<{
+    id: string;
+    user: {
+      username: string;
+      profile_image: string;
+      user_type: string;
+    };
+  }>;
+  comments: Array<{ content: string; username: string }>;
+}
+
 export default function PerfilComponent() {
   const { userData } = useContext(UserContext);
   const [stories, setStories] = useState<Story[]>([]);
   const [selectedStory, setSelectedStory] = useState<Story | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [selectedPost, setSelectedPost] = useState<IPost | null>(null);
 
   useEffect(() => {
     if (userData) {
@@ -42,15 +65,15 @@ export default function PerfilComponent() {
         `${process.env.NEXT_PUBLIC_API_URL}/stories`
       );
       const data: Story[] = await response.json();
-  
+
       const currentTime = new Date().getTime();
-      const twentyFourHoursAgo = currentTime - 24 * 60 * 60 * 1000; 
-  
+      const twentyFourHoursAgo = currentTime - 24 * 60 * 60 * 1000;
+
       const userStories = data
         .filter(
           (story) =>
-            story.user.userId === userData?.id && 
-            new Date(story.creation_date).getTime() >= twentyFourHoursAgo 
+            story.user.userId === userData?.id &&
+            new Date(story.creation_date).getTime() >= twentyFourHoursAgo
         )
         .sort((a, b) => {
           return (
@@ -58,13 +81,12 @@ export default function PerfilComponent() {
             new Date(a.creation_date).getTime()
           );
         });
-  
+
       setStories(userStories);
     } catch (error) {
       console.error("Error fetching stories:", error);
     }
   };
-  
 
   const openModal = (story: Story): void => {
     setSelectedStory(story);
@@ -106,12 +128,31 @@ export default function PerfilComponent() {
     }
   };
 
+  const fetchPostDetails = async (postId: string) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/posts/${postId}`
+      );
+      if (!response.ok) {
+        throw new Error("Error al obtener el post");
+      }
+      const post = await response.json();
+      setSelectedPost(post);
+    } catch (error) {
+      console.error("Error fetching post details:", error);
+    }
+  };
+
+  const closePostDetails = () => {
+    setSelectedPost(null);
+  };
+
   if (!userData) {
     return <div>Cargando...</div>;
   }
 
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen flex flex-col justify-center items-center">
       <section className="flex flex-col justify-center items-center gap-3 md:gap-4 pt-3 md:pt-4 px-4">
         <div className="w-32 h-32 md:w-40 md:h-40 lg:w-60 lg:h-60 rounded-full overflow-hidden border-4 border-black shadow-md">
           <Image
@@ -128,15 +169,21 @@ export default function PerfilComponent() {
         </h1>
         <div className="flex flex-wrap justify-center gap-4">
           <article className="text-center w-24 md:w-28">
-            <p className="text-lg font-bold md:text-xl">1000</p>
+            <p className="text-lg font-bold md:text-xl">
+              {userData.following.length}
+            </p>
             <p>Amigos</p>
           </article>
           <article className="text-center w-24 md:w-28">
-            <p className="text-lg font-bold md:text-xl">1000</p>
+            <p className="text-lg font-bold md:text-xl">
+              {userData.followers.length}
+            </p>
             <p>Seguidores</p>
           </article>
           <article className="text-center w-24 md:w-28">
-            <p className="text-lg font-bold md:text-xl">1000</p>
+            <p className="text-lg font-bold md:text-xl">
+              {userData.posts.length}
+            </p>
             <p>Publicaciones</p>
           </article>
         </div>
@@ -175,7 +222,7 @@ export default function PerfilComponent() {
             </p>
           )}
         </div>
-        <div className="flex-1 flex flex-col items-center max-w-6xl px-4 md:px-8 mt-10 mx-auto">
+        <div className="flex-1 flex flex-col items-center max-w-6xl px-4 md:px-8 mx-auto">
           <div className="flex justify-center space-x-6 mb-6">
             <div className="relative w-16 h-16 md:w-20 md:h-20">
               <button title="Ver mis historias">
@@ -275,6 +322,34 @@ export default function PerfilComponent() {
           </div>
         </div>
       </section>
+
+      <section className="px-4 py-6">
+        {userData.posts.length > 0 ? (
+          <div className="flex flex-wrap justify-center gap-4 max-w-6xl">
+            {userData.posts.map((post) => (
+              <div
+                key={post.post_id}
+                className="relative w-[calc(50%-8px)] md:w-[calc(33.333%-12px)] lg:w-[calc(25%-16px)] aspect-square"
+              >
+                <Image
+                  src={post.fileUrl}
+                  alt={`Imagen del post ${post.post_id}`}
+                  width={500}
+                  height={500}
+                  className="object-cover rounded-md hover:opacity-80"
+                  onClick={() => fetchPostDetails(post.post_id)}
+                />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-500">No tienes publicaciones aún.</p>
+        )}
+      </section>
+
+      {selectedPost && (
+        <PostDetails post={selectedPost} close={closePostDetails} />
+      )}
     </main>
   );
 }
