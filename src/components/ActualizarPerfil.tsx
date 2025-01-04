@@ -10,6 +10,7 @@ import { showCustomToast } from "./Notificacion";
 import { useRouter } from "next/navigation";
 import FotoDePerfil from "./FotoDePerfil";
 import Intereses from "./Intereses";
+import { getLocation } from "@/helpers/location";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -17,6 +18,8 @@ export default function ActualizarPerfil() {
   const { userData, setUserData } = useContext(UserContext);
   const [loading, setLoading] = useState(true);
   const [showOtherGender, setShowOtherGender] = useState(false);
+  const [location, setLocation] = useState<{ latitude: number; longitude: number }|unknown>();
+
   const router = useRouter();
   const {
     register,
@@ -40,7 +43,18 @@ export default function ActualizarPerfil() {
           console.error("Error al cargar los datos del usuario", error);
         }
       };
+
+      const fetchLocation = async () => {
+        try {
+          const coords = await getLocation();
+          setLocation(coords);
+          console.log("Ubicación capturada: ", coords);
+        } catch (error) {
+          console.error("Error al obtener la ubicación:", error);
+        }
+      };
       fetchUserData();
+      fetchLocation();
     }
   }, [userData?.id, setValue]);
 
@@ -53,6 +67,12 @@ export default function ActualizarPerfil() {
       console.error("No se encontró el ID del usuario.");
       return;
     }
+    data.location = location;
+    console.log(data)
+    
+    const updatedData = {
+      ...data, 
+    };
 
     try {
       const response = await fetch(`${API_URL}/users/${userData.id}`, {
@@ -60,13 +80,11 @@ export default function ActualizarPerfil() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(updatedData),
       });
 
       if (!response.ok) {
-        throw new Error(
-          `Error al guardar los cambios: ${response.statusText} (${response.status})`
-        );
+        throw new Error(`Error al guardar los cambios: ${response.statusText} (${response.status})`);
       }
 
       setUserData({
@@ -76,15 +94,16 @@ export default function ActualizarPerfil() {
         description: data.description,
         birthdate: data.birthdate,
         genre: data.genre,
+        location: data.location,
       });
 
       showCustomToast("Snappy", "Datos guardados correctamente", "success");
-      router.push(`/miperfil`);
+      router.push("/miperfil");
     } catch (error) {
       console.error("Error al actualizar el perfil:", error);
       showCustomToast(
         "Snappy",
-        "Ocurrio un error al guardar los cambios",
+        "Ocurrió un error al guardar los cambios",
         "error"
       );
     }
@@ -98,6 +117,7 @@ export default function ActualizarPerfil() {
     );
   }
 
+  
   return (
     <main className="pt-4 min-h-screen flex flex-col items-center mb-4">
       <h2 className="font-bold text-2xl text-center mb-4">Editar perfil</h2>
@@ -109,13 +129,21 @@ export default function ActualizarPerfil() {
         onSubmit={handleSubmit(onSubmit)}
       >
         <div>
+          {/* <input
+            type="hidden"
+            {...register("location.latitude")}
+            value={location?.latitude || ""}
+          />
+          <input
+            type="hidden"
+            {...register("location.longitude")}
+            value={location?.longitude || ""}
+          /> */}
           <label className="block text-sm font-medium mb-1">
             Nombre de usuario
           </label>
           <input
-            className={`w-full h-12 border rounded-md p-2 ${
-              errors.username ? "border-red-600" : "border-gray-400"
-            }`}
+            className={`w-full h-12 border rounded-md p-2 ${errors.username ? "border-red-600" : "border-gray-400"}`}
             type="text"
             {...register("username", validacionInputs.username)}
           />
@@ -131,9 +159,7 @@ export default function ActualizarPerfil() {
             Nombre completo
           </label>
           <input
-            className={`w-full h-12 border rounded-md p-2 ${
-              errors.fullname ? "border-red-600" : "border-gray-400"
-            }`}
+            className={`w-full h-12 border rounded-md p-2 ${errors.fullname ? "border-red-600" : "border-gray-400"}`}
             type="text"
             {...register("fullname", validacionInputs.fullname)}
           />
@@ -147,9 +173,7 @@ export default function ActualizarPerfil() {
         <div>
           <label className="block text-sm font-medium mb-1">Presentación</label>
           <textarea
-            className={`w-full h-32 border rounded-md p-2 ${
-              errors.description ? "border-red-600" : "border-gray-400"
-            }`}
+            className={`w-full h-32 border rounded-md p-2 ${errors.description ? "border-red-600" : "border-gray-400"}`}
             placeholder="Escribe una breve descripción sobre ti"
             {...register("description", validacionInputs.description)}
           />
@@ -165,9 +189,7 @@ export default function ActualizarPerfil() {
             Fecha de nacimiento
           </label>
           <input
-            className={`w-full h-12 border rounded-md p-2 ${
-              errors.birthdate ? "border-red-600" : "border-gray-400"
-            }`}
+            className={`w-full h-12 border rounded-md p-2 ${errors.birthdate ? "border-red-600" : "border-gray-400"}`}
             type="date"
             {...register("birthdate", validacionInputs.birthdate)}
           />
@@ -227,9 +249,7 @@ export default function ActualizarPerfil() {
 
         <div className="flex flex-col gap-4">
           <button
-            className={`w-full h-12 bg-black text-white font-semibold rounded-md hover:bg-gray-800 ${
-              isSubmitting ? "opacity-50 cursor-not-allowed" : ""
-            }`}
+            className={`w-full h-12 bg-black text-white font-semibold rounded-md hover:bg-gray-800 ${isSubmitting ? "opacity-50 cursor-not-allowed" : ""}`}
             type="submit"
             disabled={isSubmitting}
           >
@@ -238,7 +258,7 @@ export default function ActualizarPerfil() {
           <button
             className="w-full h-12 bg-gray-600 text-white font-semibold rounded-md hover:bg-gray-500"
             type="button"
-            onClick={() => router.push(`/miperfil`)}
+            onClick={() => router.push("/miperfil")}
           >
             Cancelar
           </button>

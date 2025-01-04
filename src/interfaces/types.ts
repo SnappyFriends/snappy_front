@@ -59,7 +59,7 @@ export interface IUserData {
   genre: "hombre" | "mujer" | "otro" | string;
   description: string | null;
   profile_image: string;
-  location: string;
+  location: { latitude: number, longitude: number } | unknown;
   registration_date: string;
   last_login_date: string;
   user_type: "regular" | "admin" | string;
@@ -182,7 +182,7 @@ export interface IUsernameData {
   user_type: "regular" | "admin" | "premium";
   status: "active" | "inactive" | "banned";
   profile_image: string;
-  location: string;
+  location: { latitude: string, longitude: string };
   googleId: string | null;
   interests: {
     interest_id: string;
