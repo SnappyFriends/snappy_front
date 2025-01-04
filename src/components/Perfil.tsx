@@ -7,6 +7,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { timeAgo } from "@/helpers/timeAgo";
 import VerifiedAccount from "./VerifiedAccount";
 import PostDetails from "./PostDetails";
+import { showCustomToast } from "./Notificacion";
 
 interface User {
   userId: string;
@@ -15,6 +16,12 @@ interface User {
   profile_image: string;
   description?: string;
   interests?: { name: string }[];
+}
+interface IUserSeguidos {
+  id: string;
+  username: string;
+  profile_image: string;
+  user_type: string;
 }
 
 interface Story {
@@ -52,12 +59,14 @@ export default function PerfilComponent() {
   const [selectedStory, setSelectedStory] = useState<Story | null>(null);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [selectedPost, setSelectedPost] = useState<IPost | null>(null);
-  const [isFollowedModalOpen, setIsFollowedModalOpen] = useState<boolean>(false);
-  const [followed, setFollowed] = useState<User[]>([]);
-  
-  const [isFollowingModalOpen, setIsFollowingModalOpen] = useState<boolean>(false);
+  const [isFollowedModalOpen, setIsFollowedModalOpen] =
+    useState<boolean>(false);
+  const [followed, setFollowed] = useState<IUserSeguidos[]>([]);
+
+  const [isFollowingModalOpen, setIsFollowingModalOpen] =
+    useState<boolean>(false);
   const [following, setFollowing] = useState<User[]>([]);
-  
+
   const fetchFollowers = async () => {
     try {
       const response = await fetch(
@@ -82,18 +91,38 @@ export default function PerfilComponent() {
       if (!response.ok) {
         throw new Error("Error al obtener seguidos");
       }
-      const data: User[] = await response.json();
+      const data: IUserSeguidos[] = await response.json();
       setFollowed(data);
     } catch (error) {
       console.error("Error fetching friends:", error);
       alert("Hubo un problema al cargar tus seguidos");
     }
   };
+
+  const removeFollowed = async (followedId: string) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/follow/${userData?.id}/${followedId}`,
+        {
+          method: "DELETE",
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Error al eliminar al seguido");
+      }
+      await fetchFollowed();
+      showCustomToast("Snappy", "Usuario eliminado", "success");
+    } catch (error) {
+      console.error("Error removing followed user:", error);
+      showCustomToast("Snappy", "Hubo un problema al eliminar", "error");
+    }
+  };
+
   const openFriendsModal = async () => {
     await fetchFollowed();
     setIsFollowedModalOpen(true);
   };
-  
+
   const closeFriendsModal = () => {
     setIsFollowedModalOpen(false);
   };
@@ -102,11 +131,10 @@ export default function PerfilComponent() {
     await fetchFollowers();
     setIsFollowingModalOpen(true);
   };
-  
+
   const closeFollowingModal = () => {
     setIsFollowingModalOpen(false);
   };
-
 
   useEffect(() => {
     if (userData) {
@@ -223,22 +251,22 @@ export default function PerfilComponent() {
           {userData?.user_type === "premium" ? <VerifiedAccount /> : ""}
         </h1>
         <div className="flex flex-wrap justify-center gap-4">
-        <article className="text-center w-24 md:w-28">
-  <button onClick={openFriendsModal}>
-    <p className="text-lg font-bold md:text-xl">
-      {userData.following.length}
-    </p>
-    <p>Seguidos</p>
-  </button>
-</article>
-<article className="text-center w-24 md:w-28">
-  <button onClick={openFollowingModal}>
-    <p className="text-lg font-bold md:text-xl">
-      {userData.followers.length}
-    </p>
-    <p>Seguidos</p>
-  </button>
-</article>
+          <article className="text-center w-24 md:w-28">
+            <button onClick={openFriendsModal}>
+              <p className="text-lg font-bold md:text-xl">
+                {userData.following.length}
+              </p>
+              <p>Seguidos</p>
+            </button>
+          </article>
+          <article className="text-center w-24 md:w-28">
+            <button onClick={openFollowingModal}>
+              <p className="text-lg font-bold md:text-xl">
+                {userData.followers.length}
+              </p>
+              <p>Seguidores</p>
+            </button>
+          </article>
           <article className="text-center w-24 md:w-28">
             <p className="text-lg font-bold md:text-xl">
               {userData.posts.length}
@@ -409,84 +437,88 @@ export default function PerfilComponent() {
       {selectedPost && (
         <PostDetails post={selectedPost} close={closePostDetails} />
       )}
-      {isFollowedModalOpen && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-    <div className="bg-white rounded-lg p-6 w-full max-w-lg flex flex-col relative">
-      <button
-        className="absolute top-2 right-2 text-black font-bold"
-        onClick={closeFriendsModal}
-      >
-        X
-      </button>
-      <h2 className="text-lg font-bold mb-4">Tus Seguidos</h2>
-      {followed.length > 0 ? (
-        <div className="space-y-4">
-          {followed.map((followed) => (
-            <div
-              key={followed.userId}
-              className="flex justify-between items-center bg-gray-100 p-3 rounded-md"
-            >
-              <div className="flex items-center space-x-4">
-                <Image
-                  src={followed.profile_image}
-                  alt="Imagen de perfil"
-                  width={40}
-                  height={40}
-                  className="rounded-full"
-                />
-                <span className="font-medium">{followed.username}</span>
-              </div>
-              {/* <button
-                className="text-grey-600 hover:underline"
-              >
-                Dejar de seguir
-              </button> */}
-            </div>
-          ))}
-        </div>
-      ) : (
-        <p className="text-gray-500">No sigues a nadie aún.</p>
-      )}
-    </div>
-  </div>
-)}
-{isFollowingModalOpen && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-    <div className="bg-white rounded-lg p-6 w-full max-w-lg flex flex-col relative">
-      <button
-        className="absolute top-2 right-2 text-black font-bold"
-        onClick={closeFollowingModal}
-      >
-        X
-      </button>
-      <h2 className="text-lg font-bold mb-4">Tus Seguidos</h2>
-      {following.length > 0 ? (
-        <div className="space-y-4">
-          {following.map((following) => (
-            <div
-              key={following.userId}
-              className="flex justify-between items-center bg-gray-100 p-3 rounded-md"
-            >
-              <div className="flex items-center space-x-4">
-                <Image
-                  src={following.profile_image}
-                  alt="Imagen de perfil"
-                  width={40}
-                  height={40}
-                  className="rounded-full"
-                />
-                <span className="font-medium">{following.username}</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <p className="text-gray-500">Nadie te sigue aún.</p>
-      )}
-    </div>
-  </div>
-)}
 
+      {isFollowedModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-lg flex flex-col relative">
+            <button
+              className="absolute top-2 right-2 text-black font-bold"
+              onClick={closeFriendsModal}
+            >
+              X
+            </button>
+            <h2 className="text-lg font-bold mb-4">Tus Seguidos</h2>
+            {followed.length > 0 ? (
+              <div className="space-y-4">
+                {followed.map((followedUser) => (
+                  <div
+                    key={followedUser.id || followedUser.username}
+                    className="flex justify-between items-center bg-gray-100 p-3 rounded-md"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Image
+                        src={followedUser.profile_image}
+                        alt={followedUser.username}
+                        width={40}
+                        height={40}
+                        className="rounded-full"
+                      />
+                      <p>{followedUser.username}</p>
+                    </div>
+                    <button
+                      className="bg-red-500 text-white px-4 py-2 rounded-md"
+                      onClick={() => {
+                        removeFollowed(followedUser.id);
+                      }}
+                    >
+                      Eliminar
+                    </button>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-500">No sigues a nadie aún.</p>
+            )}
+          </div>
+        </div>
+      )}
+
+      {isFollowingModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-lg flex flex-col relative">
+            <button
+              className="absolute top-2 right-2 text-black font-bold"
+              onClick={closeFollowingModal}
+            >
+              X
+            </button>
+            <h2 className="text-lg font-bold mb-4">Tus Seguidores</h2>
+            {following.length > 0 ? (
+              <div className="space-y-4">
+                {following.map((follower) => (
+                  <div
+                    key={follower.userId || follower.username}
+                    className="flex justify-between items-center bg-gray-100 p-3 rounded-md"
+                  >
+                    <div className="flex items-center gap-3">
+                      <Image
+                        src={follower.profile_image}
+                        alt={follower.username}
+                        width={40}
+                        height={40}
+                        className="rounded-full"
+                      />
+                      <p>{follower.username}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-500">Aún no tienes seguidores.</p>
+            )}
+          </div>
+        </div>
+      )}
     </main>
   );
 }
