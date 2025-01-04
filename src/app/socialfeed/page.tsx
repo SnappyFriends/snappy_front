@@ -29,22 +29,35 @@ const SocialFeedView = () => {
   const [stories, setStories] = useState<Story[]>([]);
   const [selectedStory, setSelectedStory] = useState<Story | null>(null);
   const [myStories, setMyStories] = useState<Story[]>([]);
+  const [currentFeed, setCurrentFeed] = useState<"following" | "forYou">("forYou")
   
 
 useEffect(() => {
-    const fetchPosts = async () => {
+
+  const fetchFollowingUser = async (userId: string) => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/follow/${userId}/following`)
+    const followingUser = await response.json();
+    return followingUser.map((user: {id: string}) => user.id)
+  }
+
+    const fetchPosts = async (feedType: "following" | "forYou", userId: string) => {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/posts`);
-      const data = await response.json();
+      const allPosts = await response.json();
 
-      data.sort((a: Post, b: Post) => {
-        return (
-          new Date(b.creation_date).getTime() -
-          new Date(a.creation_date).getTime()
-        );
-      });
+        if(feedType === "following") {
+          const followingUserId = await fetchFollowingUser(userId)
+          const filterPosts = allPosts.filter((post: Post) => followingUserId.includes(post.user.id));
 
-      setPosts(data);
-    };
+          setPosts(filterPosts);
+        }
+        else {
+          setPosts(allPosts)
+        }
+      }
+
+      if(userData?.id) {
+        fetchPosts(currentFeed, userData.id)
+      }
 
     const fetchStories = async () => {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/stories`);
@@ -72,9 +85,8 @@ useEffect(() => {
       setStories(unexpiredStories);
     };
 
-    fetchPosts();
     fetchStories();
-  }, [reaction, userData]);
+  }, [reaction, userData, currentFeed]);
 
 
   const fetchMyStories = async () => {
@@ -254,14 +266,20 @@ useEffect(() => {
             ))}
           </div>
 		  <div className="flex justify-between w-full max-w-md mb-6 border-b">
-						<button className="flex-1 py-2 text-center text-gray-500 hover:text-black">
-							Siguiendo
+						<button 
+              className={`flex-1 py-2 text-center ${
+                currentFeed === "forYou" ? "text-black font-bold border-b-2 border-black" : "text-gray-500 hover:text-black"
+              }`}
+              onClick={() => setCurrentFeed("forYou")}
+              >
+                Para ti
 						</button>
-						<button className="flex-1 py-2 text-center text-black font-bold border-b-2 border-black">
-							Para ti
-						</button>
-						<button className="flex-1 py-2 text-center text-gray-500 hover:text-black">
-							Favoritos
+					<button 
+            className={`flex-1 py-2 text-center ${
+              currentFeed === "following" ? "text-black font-bold border-b-2 border-black" : "text-gray-500 hover:text-black"}`}
+              onClick={() => setCurrentFeed("following")}
+            >
+                Siguiendo
 						</button>
 					</div>
           <div className="w-full max-w-md space-y-4">
