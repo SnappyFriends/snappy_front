@@ -133,7 +133,7 @@ const ProfileView = ({
               <p className="text-lg font-bold md:text-xl">
                 {userTargetData.following.length}
               </p>
-              <p>Amigos</p>
+              <p>Seguidos</p>
             </article>
             <article className="text-center w-24 md:w-28">
               <p className="text-lg font-bold md:text-xl">
