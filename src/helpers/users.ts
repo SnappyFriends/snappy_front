@@ -3,7 +3,12 @@ export interface User {
   username: string;
   fullname: string;
   profile_image: string;
+  isOnline: boolean;
+  friends: [];
+
 }
+
+
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -36,23 +41,23 @@ export const getUsers = async (interest?: string): Promise<User[]> => {
 };
 
 export const getUsersByUsername = async (username: string) => {
-try {
-   const response = await fetch(`${API_URL}/users/username/${username}`, {
-    next: { revalidate: 1200 },
-    method: "GET",
-  });
+  try {
+    const response = await fetch(`${API_URL}/users/username/${username}`, {
+      next: { revalidate: 1200 },
+      method: "GET",
+    });
 
-  if (!response.ok) {
-    throw new Error("Error fetching users");
+    if (!response.ok) {
+      throw new Error("Error fetching users");
+    }
+    return response.json()
+  } catch (error) {
+    throw error;
+
   }
-  return response.json()
-} catch (error) {
-  throw error;
-
-}
 }
 
-export const getUsersSearchbar  = async (username: string, interest?: string) => {
+export const getUsersSearchbar = async (username: string, interest?: string) => {
   try {
     let users;
     if (interest) {
@@ -76,6 +81,20 @@ export const getUserById = async (id: string) => {
     const response = await fetch(`${API_URL}/users/${id}`);
     if (!response.ok) {
       throw new Error("Error fetching user");
+    }
+    const userData = await response.json();
+    return userData;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+export const fetchFriends = async (userId: string): Promise<User[]> => {
+  try {
+    const response = await fetch(`${API_URL}/follow/${userId}/friends`);
+    if (!response.ok) {
+      throw new Error("Error fetching friends");
     }
     const userData = await response.json();
     return userData;
