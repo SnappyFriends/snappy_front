@@ -24,13 +24,39 @@ interface Story {
 
 const SocialFeedView = () => {
   const [posts, setPosts] = useState<Post[]>([]);
-  const { userData } = useContext(UserContext);
+  const { userData, userId } = useContext(UserContext);
   const [reaction, setReaction] = useState(false);
   const [stories, setStories] = useState<Story[]>([]);
   const [selectedStory, setSelectedStory] = useState<Story | null>(null);
   const [myStories, setMyStories] = useState<Story[]>([]);
   const [currentFeed, setCurrentFeed] = useState<"following" | "forYou">("forYou")
+  const [followedUsers, setFollowedUsers] = useState<Set<string>>(new Set());
+
+
+  const handleFollow = async (userTarget:string) => {
+    const endpoint = `${process.env.NEXT_PUBLIC_API_URL}/follow/${userId}/${userTarget}`; 
+    try {
+      const response = followedUsers.has(userTarget)
+        ? await fetch(endpoint, { method: "DELETE" }) 
+        : await fetch(endpoint, { method: "POST" }); 
+
+      if (!response.ok) {
+        throw new Error("Hubo un error al cambiar el estado de seguir.");
+      }
   
+      setFollowedUsers(prevState => {
+        const newState = new Set(prevState);
+        if (newState.has(userTarget)) {
+          newState.delete(userTarget);
+        } else {
+          newState.add(userTarget);
+        }
+        return newState;
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
 useEffect(() => {
 
@@ -327,9 +353,14 @@ useEffect(() => {
                         </Link>
                       </div>
                     </div>
-                    <button className="bg-green-500 text-white px-4 py-1 rounded-full text-sm">
-                      Seguir
-                    </button>
+                    <button
+  onClick={() => handleFollow(post.user.id)}
+  className={`px-4 py-2 rounded-lg transition-colors ${followedUsers.has(post.user.id) ? "bg-gray-300 text-black" : "bg-blue-500 text-white" }`}
+>
+  {followedUsers.has(post.user.id) ? "Dejar de seguir" : "Seguir"}
+</button>
+
+
                   </div>
 
                   <Link href={`/publicacion/${post.post_id}`}>
