@@ -155,36 +155,6 @@ const ChatWithUser = () => {
     };
 
     try {
-      /* const responseMessage = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/messages`,
-        {
-          method: "POST",
-          body: JSON.stringify(newMessage),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (responseMessage.ok) {
-        const responseData = await responseMessage.json();
-        console.log("Mensaje guardado en backend:", responseData);
-
-        const messagesData = {
-          username: responseData.username,
-          sender_id: responseData.sender_id,
-          user_type: responseData.user_type,
-          profile_image: responseData.profile_image,
-          message_id: responseData.message_id,
-          content: responseData.content,
-          send_date: responseData.send_date,
-          type: responseData.type,
-          is_anonymous: responseData.is_anonymous,
-          
-          }; 
-          
-          */
-
       const sendDate = timeAgo(new Date().toISOString());
 
       const messagesData = {
@@ -208,14 +178,6 @@ const ChatWithUser = () => {
       }
 
       setMessage("");
-      /* } else {
-        const errorText = await responseMessage.text();
-        console.error(
-          "Error sending message:",
-          responseMessage.status,
-          errorText
-        );
-      } */
     } catch (error) {
       console.error("Error sending message:", error);
     }
@@ -231,8 +193,8 @@ const ChatWithUser = () => {
       <Sidebar />
       <div className="min-h-screen">
         <div className="flex flex-col lg:flex-row">
-          <div className="lg:w-3/5 md:w-full mx-auto mt-12 lg:mt-32">
-            <div className="flex flex-col w-full max-w-4xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
+          <div className="lg:w-1/2 md:w-full mx-auto mt-12 lg:mt-32">
+            <div className="flex flex-col w-full max-w-[900px] mx-auto bg-white rounded-lg shadow-md overflow-hidden">
               {/* Chat Header */}
               <div className="flex items-center p-4 border-b bg-gray-100">
                 <div className="relative w-12 h-12">
