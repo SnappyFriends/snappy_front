@@ -155,6 +155,36 @@ const ChatWithUser = () => {
     };
 
     try {
+      /* const responseMessage = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/messages`,
+        {
+          method: "POST",
+          body: JSON.stringify(newMessage),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (responseMessage.ok) {
+        const responseData = await responseMessage.json();
+        console.log("Mensaje guardado en backend:", responseData);
+
+        const messagesData = {
+          username: responseData.username,
+          sender_id: responseData.sender_id,
+          user_type: responseData.user_type,
+          profile_image: responseData.profile_image,
+          message_id: responseData.message_id,
+          content: responseData.content,
+          send_date: responseData.send_date,
+          type: responseData.type,
+          is_anonymous: responseData.is_anonymous,
+          
+          }; 
+          
+          */
+
       const sendDate = timeAgo(new Date().toISOString());
 
       const messagesData = {
@@ -178,6 +208,14 @@ const ChatWithUser = () => {
       }
 
       setMessage("");
+      /* } else {
+        const errorText = await responseMessage.text();
+        console.error(
+          "Error sending message:",
+          responseMessage.status,
+          errorText
+        );
+      } */
     } catch (error) {
       console.error("Error sending message:", error);
     }
