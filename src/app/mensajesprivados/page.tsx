@@ -75,40 +75,46 @@ const MensajesPrivados = () => {
                 <h2 className="text-center my-2 text-lg font-semibold text-gray-800">
                   Mensajes
                 </h2>
-                {chats.map((chat) => (
-                  <section
-                    key={chat.id}
-                    className="h-20 flex justify-between items-center px-4 border-b border-[#EEEEEE]"
-                  >
-                    <div className="flex space-x-4 items-center">
-                      <div>
-                        <Image
-                          src={
-                            chat.participants[0].profile_image ||
-                            "/agregarfoto.png"
-                          }
-                          width={1000}
-                          height={1000}
-                          alt="fotodeperfil"
-                          className="rounded-full w-16 h-16 object-cover"
-                        />
+                {chats.length === 0 ? (
+                  <p className="text-center text-gray-500 mt-4">
+                    No tienes mensajes aún
+                  </p>
+                ) : (
+                  chats.map((chat) => (
+                    <section
+                      key={chat.id}
+                      className="h-20 flex justify-between items-center px-4 border-b border-[#EEEEEE]"
+                    >
+                      <div className="flex space-x-4 items-center">
+                        <div>
+                          <Image
+                            src={
+                              chat.participants[0].profile_image ||
+                              "/agregarfoto.png"
+                            }
+                            width={1000}
+                            height={1000}
+                            alt="fotodeperfil"
+                            className="rounded-full w-16 h-16 object-cover"
+                          />
+                        </div>
+                        <div>
+                          <h2 className="font-bold text-sm text-gray-900">
+                            {chat.participants[0].username}
+                          </h2>
+                          <p className="text-xs text-gray-500">
+                            {chat.messages[chat.messages.length - 1].content}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <h2 className="font-bold text-sm text-gray-900">
-                          {chat.participants[0].username}
-                        </h2>
-                        <p className="text-xs text-gray-500">
-                          {chat.messages[chat.messages.length - 1].content}
-                        </p>
+                      <div className="text-sm text-gray-500">
+                        {timeAgo(
+                          chat.messages[chat.messages.length - 1].send_date
+                        )}
                       </div>
-                    </div>
-                    <div className="text-sm text-gray-500">
-                      {timeAgo(
-                        chat.messages[chat.messages.length - 1].send_date
-                      )}
-                    </div>
-                  </section>
-                ))}
+                    </section>
+                  ))
+                )}
               </div>
             </main>
           </div>
