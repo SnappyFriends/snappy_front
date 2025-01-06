@@ -70,22 +70,11 @@ const ChatRoomView = () => {
         );
         const response = await chatsQuantity.json();
         if (Array.isArray(response) && response.length > 0) {
-          if (!userData) {
-          console.error("userData no está disponible");
-          return;
-        }
-          const groupChats = response.filter((group) =>
-            group.members.some((member: { user_id: string }) => member.user_id === userData.id)
-          );
-          if (groupChats.length > 0) {
-            const group = groupChats[0]; 
-            setHasGroupChats(true);
-            setGroupDescription(group.description);
-            setGroupName(group.name);
-            setGroupId(group.group_id);
-        } else {
-          setHasGroupChats(false);
-        }
+          const group = response[0];
+          setHasGroupChats(true);
+          setGroupDescription(group.description);
+          setGroupName(group.name);
+          setGroupId(group.group_id);
         } else {
           setHasGroupChats(false);
         }
