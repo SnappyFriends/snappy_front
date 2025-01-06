@@ -113,7 +113,7 @@ const ChatRoomView = () => {
           .map((member: { user_id: string }) =>
             usersList.find((user) => user.id === member.user_id)
           )
-          .filter((user) => user !== undefined);
+          .filter((user: User) => user !== undefined);
 
         setMembers(membersData as User[]);
       } catch (error) {
