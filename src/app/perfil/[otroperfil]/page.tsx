@@ -16,9 +16,9 @@ import { showCustomToast } from "@/components/Notificacion";
 // import { formatDistanceToNow } from "date-fns";
 
 const ProfileView = ({
-	params,
+  params,
 }: {
-	params: Promise<{ otroperfil: string }>;
+  params: Promise<{ otroperfil: string }>;
 }) => {
   const [userTargetData, setUserTargetData] = useState<IUsernameData | null>(
     null
@@ -31,39 +31,39 @@ const ProfileView = ({
     null
   );
 
-	const handleFriendRequest = async () => {
-		if (!followingState) {
-			const response = await fetch(
-				`${process.env.NEXT_PUBLIC_API_URL}/follow/${userData?.id}/${userTargetData?.id}`,
-				{
-					method: "POST",
-				}
-			);
+  const handleFriendRequest = async () => {
+    if (!followingState) {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/follow/${userData?.id}/${userTargetData?.id}`,
+        {
+          method: "POST",
+        }
+      );
 
-			if (!response.ok)
-				throw new Error(`Ocurrió un error al intentar seguir a este usuario.`);
+      if (!response.ok)
+        throw new Error(`Ocurrió un error al intentar seguir a este usuario.`);
 
-			showCustomToast(
-				"Snappy",
-				"Comenzaste a seguir a este usuario.",
-				"success"
-			);
-		} else {
-			const response = await fetch(
-				`${process.env.NEXT_PUBLIC_API_URL}/follow/${userData?.id}/${userTargetData?.id}`,
-				{
-					method: "DELETE",
-				}
-			);
+      showCustomToast(
+        "Snappy",
+        "Comenzaste a seguir a este usuario.",
+        "success"
+      );
+    } else {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/follow/${userData?.id}/${userTargetData?.id}`,
+        {
+          method: "DELETE",
+        }
+      );
 
-			if (!response.ok)
-				throw new Error(`Ocurrió un error al intentar seguir a este usuario.`);
+      if (!response.ok)
+        throw new Error(`Ocurrió un error al intentar seguir a este usuario.`);
 
-			showCustomToast("Snappy", "Dejaste de seguir a este usuario.", "success");
-		}
+      showCustomToast("Snappy", "Dejaste de seguir a este usuario.", "success");
+    }
 
-		setFollowingState(!followingState);
-	};
+    setFollowingState(!followingState);
+  };
 
   const handleOpenModal = (type: "followers" | "following") => {
     setModalType(type);
@@ -74,57 +74,57 @@ const ProfileView = ({
     setShowModal(false);
     setModalType(null);
   };
-	useEffect(() => {
-		const fetchParams = async () => {
-			const resolvedParams = await params;
-			if (resolvedParams.otroperfil) {
-				setUsername(resolvedParams.otroperfil);
-			}
-		};
-		fetchParams();
-	}, [params]);
+  useEffect(() => {
+    const fetchParams = async () => {
+      const resolvedParams = await params;
+      if (resolvedParams.otroperfil) {
+        setUsername(resolvedParams.otroperfil);
+      }
+    };
+    fetchParams();
+  }, [params]);
 
-	useEffect(() => {
-		if (username) {
-			(async () => {
-				try {
-					const user = await getUsersByUsername(username);
-					if (user) {
-						setUserTargetData(user);
-					} else {
-						return <NotFound />;
-					}
-				} catch (error) {
-					console.error("Error al obtener los datos del usuario:", error);
-				}
-			})();
-		}
-	}, [username]);
+  useEffect(() => {
+    if (username) {
+      (async () => {
+        try {
+          const user = await getUsersByUsername(username);
+          if (user) {
+            setUserTargetData(user);
+          } else {
+            return <NotFound />;
+          }
+        } catch (error) {
+          console.error("Error al obtener los datos del usuario:", error);
+        }
+      })();
+    }
+  }, [username]);
 
-	useEffect(() => {
-		if (userTargetData) {
-			if (userTargetData.followers && userTargetData.followers.length > 0) {
-				const isFollowing = userTargetData.followers.map(
-					(follower: {follower: {id:string}}) => {
-						if (follower.follower.id == userTargetData.id) return true;
-						else return false;
-					}
-				);
+  useEffect(() => {
+    if (userTargetData) {
+      if (userTargetData.followers && userTargetData.followers.length > 0) {
+        const isFollowing = userTargetData.followers.map(
+          (follower: { follower: { id: string } }) => {
+            if (follower.follower.id == userTargetData.id) return true;
+            else return false;
+          }
+        );
 
-				if (isFollowing) setFollowingState(true);
-			}
-		}
-	}, [userTargetData]);
+        if (isFollowing) setFollowingState(true);
+      }
+    }
+  }, [userTargetData]);
 
-	if (!userTargetData) return "Cargando...";
+  if (!userTargetData) return "Cargando...";
 
-	// const lastLoginDate = userTargetData.last_login_date
-	//   ? new Date(userTargetData.last_login_date)
-	//   : null;
+  // const lastLoginDate = userTargetData.last_login_date
+  //   ? new Date(userTargetData.last_login_date)
+  //   : null;
 
-	// const timeAgo = lastLoginDate
-	//   ? formatDistanceToNow(lastLoginDate, { addSuffix: true })
-	//   : "Fecha no disponible";
+  // const timeAgo = lastLoginDate
+  //   ? formatDistanceToNow(lastLoginDate, { addSuffix: true })
+  //   : "Fecha no disponible";
 
   return (
     <>
@@ -146,24 +146,24 @@ const ProfileView = ({
             {userTargetData?.user_type === "premium" ? <VerifiedAccount /> : ""}
           </h1>
           <div className="flex flex-wrap justify-center gap-4">
-          <article
-            onClick={() => handleOpenModal("following")}
-            className="text-center w-24 md:w-28 cursor-pointer"
-          >
-            <p className="text-lg font-bold md:text-xl">
-              {userTargetData.following.length}
-            </p>
-            <p>Seguidos</p>
-          </article>
-          <article
-            onClick={() => handleOpenModal("followers")}
-            className="text-center w-24 md:w-28 cursor-pointer"
-          >
-            <p className="text-lg font-bold md:text-xl">
-              {userTargetData.followers.length}
-            </p>
-            <p>Seguidores</p>
-          </article>
+            <article
+              onClick={() => handleOpenModal("following")}
+              className="text-center w-24 md:w-28 cursor-pointer"
+            >
+              <p className="text-lg font-bold md:text-xl">
+                {userTargetData.following.length}
+              </p>
+              <p>Seguidos</p>
+            </article>
+            <article
+              onClick={() => handleOpenModal("followers")}
+              className="text-center w-24 md:w-28 cursor-pointer"
+            >
+              <p className="text-lg font-bold md:text-xl">
+                {userTargetData.followers.length}
+              </p>
+              <p>Seguidores</p>
+            </article>
             <article className="text-center w-24 md:w-28">
               <p className="text-lg font-bold md:text-xl">
                 {userTargetData.posts.length}
@@ -175,42 +175,42 @@ const ProfileView = ({
             <p>{userTargetData.description}</p>
           </div>
 
-					<div className="flex flex-wrap justify-center gap-4">
-						<button
-							onClick={handleFriendRequest}
-							className={`px-4 py-2 text-white rounded-md ${
-								followingState
-									? "bg-gray-500 hover:bg-gray-600"
-									: "bg-blue-500 hover:bg-blue-600"
-							}`}
-						>
-							{followingState ? "Siguiendo" : "Seguir"}
-						</button>
-						<Link
-							href={`/chat/${userTargetData.username}`}
-							className="px-4 py-2 text-white bg-green-500 hover:bg-green-600 rounded-md"
-						>
-							Enviar mensaje
-						</Link>
-						<Link
-							href="/inprogress"
-							className="px-4 py-2 text-white bg-black hover:bg-gray-800 rounded-md"
-						>
-							Pregunta anónima
-						</Link>
-					</div>
-					<div className="w-full px-2 text-center">
-						{userTargetData.interests &&
-							userTargetData.interests.length > 0 && (
-								<p>
-									<span className="font-bold">Intereses: </span>
-									{userTargetData.interests
-										.map((interest) => interest.name)
-										.join(", ")}
-								</p>
-							)}
-					</div>
-					{/* <div className="flex-1 flex flex-col items-center max-w-6xl px-4 md:px-8 mt-10 mx-auto">
+          <div className="flex flex-wrap justify-center gap-4">
+            <button
+              onClick={handleFriendRequest}
+              className={`px-4 py-2 text-white rounded-md ${
+                followingState
+                  ? "bg-gray-500 hover:bg-gray-600"
+                  : "bg-blue-500 hover:bg-blue-600"
+              }`}
+            >
+              {followingState ? "Siguiendo" : "Seguir"}
+            </button>
+            <Link
+              href={`/chat/${userTargetData.username}`}
+              className="px-4 py-2 text-white bg-green-500 hover:bg-green-600 rounded-md"
+            >
+              Enviar mensaje
+            </Link>
+            <Link
+              href="/inprogress"
+              className="px-4 py-2 text-white bg-black hover:bg-gray-800 rounded-md"
+            >
+              Pregunta anónima
+            </Link>
+          </div>
+          <div className="w-full px-2 text-center">
+            {userTargetData.interests &&
+              userTargetData.interests.length > 0 && (
+                <p>
+                  <span className="font-bold">Intereses: </span>
+                  {userTargetData.interests
+                    .map((interest) => interest.name)
+                    .join(", ")}
+                </p>
+              )}
+          </div>
+          {/* <div className="flex-1 flex flex-col items-center max-w-6xl px-4 md:px-8 mt-10 mx-auto">
             <div className="flex justify-center space-x-6 mb-6">
               <div className="relative w-16 h-16 md:w-20 md:h-20">
                 <button title="Ver mis historias">
@@ -243,7 +243,6 @@ const ProfileView = ({
           </div>
         </section>
 
-              
         {showModal && modalType && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
             <div className="bg-white rounded-lg p-6 w-full max-w-lg flex flex-col relative">
@@ -262,32 +261,35 @@ const ProfileView = ({
               ).length > 0 ? (
                 <div className="space-y-4">
                   {userTargetData.followers.length > 0 &&
-  userTargetData.followers.map((user) => {
-    const follower = 'follower' in user ? user.follower : null;
+                    userTargetData.followers.map((user) => {
+                      const follower =
+                        "follower" in user ? user.follower : null;
 
-    return (
-      <div key={follower?.id} className="flex justify-between items-center bg-gray-100 p-3 rounded-md">
-        {follower && (
-          <div className="flex items-center gap-3">
-            <Image
-              src={follower.profile_image}
-              alt={follower.username}
-              width={40}
-              height={40}
-              className="rounded-full"
-            />
-            <p>{follower.username}</p>
-          </div>
-        )}
-      </div>
-    );
-  })}
-
-
+                      return (
+                        <div
+                          key={follower?.id}
+                          className="flex justify-between items-center bg-gray-100 p-3 rounded-md"
+                        >
+                          {follower && (
+                            <div className="flex items-center gap-3">
+                              <Image
+                                src={follower.profile_image}
+                                alt={follower.username}
+                                width={40}
+                                height={40}
+                                className="rounded-full"
+                              />
+                              <p>{follower.username}</p>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
                 </div>
               ) : (
                 <p className="text-gray-500">
-                  No tienes {modalType === "following" ? "seguidos" : "seguidores"}.
+                  No tienes{" "}
+                  {modalType === "following" ? "seguidos" : "seguidores"}.
                 </p>
               )}
             </div>
@@ -300,6 +302,5 @@ const ProfileView = ({
     </>
   );
 };
-
 
 export default ProfileView;

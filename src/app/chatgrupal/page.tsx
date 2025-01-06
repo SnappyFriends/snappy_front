@@ -28,6 +28,7 @@ const ChatRoomView = () => {
   const [groupName, setGroupName] = useState("");
   const [groupDescription, setGroupDescription] = useState("");
   const [groupId, setGroupId] = useState();
+  const [isLoading, setIsLoading] = useState(true);
 
   // const {socket} = useSocket()
 
@@ -88,6 +89,8 @@ const ChatRoomView = () => {
         }
       } catch {
         setHasGroupChats(false);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchGroupChats();
@@ -144,6 +147,10 @@ const ChatRoomView = () => {
       setIsAdding(false);
     }
   };
+
+  if (isLoading) {
+    return <div>Cargando...</div>;
+  }
 
   return (
     <div className="min-h-screen">
