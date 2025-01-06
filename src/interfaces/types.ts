@@ -189,8 +189,8 @@ export interface IUsernameData {
     name: string;
   }[];
   posts: { post_id: string; fileUrl: string }[];
-  following: { id: string; username: string; profile_image: string }[];
-  followers: { id: string; username: string; profile_image: string }[];
+  following: { following: { id: string; username: string; profile_image: string } }[];
+  followers: { follower: { id: string; username: string; profile_image: string } }[];
   // stories: any[];
   // privacy: any[];
   // responses: any[];

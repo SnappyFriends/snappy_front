@@ -105,8 +105,8 @@ const ProfileView = ({
 		if (userTargetData) {
 			if (userTargetData.followers && userTargetData.followers.length > 0) {
 				const isFollowing = userTargetData.followers.map(
-					(follower: { id: string }) => {
-						if (follower.id == userTargetData.id) return true;
+					(follower: {follower: {id:string}}) => {
+						if (follower.follower.id == userTargetData.id) return true;
 						else return false;
 					}
 				);
@@ -261,30 +261,33 @@ const ProfileView = ({
                 : userTargetData.followers
               ).length > 0 ? (
                 <div className="space-y-4">
-                  {(modalType === "following"
-                    ? userTargetData.following
-                    : userTargetData.followers
-                  ).map((user) => (
-                    <div
-                      key={user.id}
-                      className="flex justify-between items-center bg-gray-100 p-3 rounded-md"
-                    >
-                      <div className="flex items-center gap-3">
-                        <Image
-                          src={userTargetData.profile_image}
-                          alt={userTargetData.username}
-                          width={40}
-                          height={40}
-                          className="rounded-full"
-                        />
-                        <p>{userTargetData.username}</p>
-                      </div>
-                    </div>
-                  ))}
+                  {userTargetData.followers.length > 0 &&
+  userTargetData.followers.map((user) => {
+    const follower = 'follower' in user ? user.follower : null;
+
+    return (
+      <div key={follower?.id} className="flex justify-between items-center bg-gray-100 p-3 rounded-md">
+        {follower && (
+          <div className="flex items-center gap-3">
+            <Image
+              src={follower.profile_image}
+              alt={follower.username}
+              width={40}
+              height={40}
+              className="rounded-full"
+            />
+            <p>{follower.username}</p>
+          </div>
+        )}
+      </div>
+    );
+  })}
+
+
                 </div>
               ) : (
                 <p className="text-gray-500">
-                  No tiene {modalType === "following" ? "seguidos" : "seguidores"}.
+                  No tienes {modalType === "following" ? "seguidos" : "seguidores"}.
                 </p>
               )}
             </div>
