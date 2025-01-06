@@ -37,6 +37,8 @@ const MensajesPrivados = () => {
   }, [userData]);
   console.log("chatss", chats);
 
+  if(!chats) return "Cargando...";
+
   return (
     <>
       <NavBar />
