@@ -59,7 +59,7 @@ export interface IUserData {
   genre: "hombre" | "mujer" | "otro" | string;
   description: string | null;
   profile_image: string;
-  location: { latitude: number, longitude: number } | unknown;
+  location: { latitude: number; longitude: number } | unknown;
   registration_date: string;
   last_login_date: string;
   user_type: "regular" | "admin" | string;
@@ -157,8 +157,34 @@ export interface Chats {
   }[];
 }
 
+export interface GroupChats {
+  group_id: string;
+  name: string;
+  description: string;
+  creation_date: string;
+  privacy: string;
+  group_members: {
+    group_id: string;
+    user_id: string;
+    role: string;
+    join_date: string;
+  }[];
+  messages: [IGroupMessage];
+}
+
 export interface IMessage {
   chat_id: string;
+  username: string;
+  sender_id: string;
+  user_type: string;
+  profile_image: string;
+  content: string;
+  send_date: string;
+  type: string;
+  is_anonymous: boolean;
+}
+
+export interface IGroupMessage {
   username: string;
   sender_id: string;
   user_type: string;
@@ -182,15 +208,19 @@ export interface IUsernameData {
   user_type: "regular" | "admin" | "premium";
   status: "active" | "inactive" | "banned";
   profile_image: string;
-  location: { latitude: string, longitude: string };
+  location: { latitude: string; longitude: string };
   googleId: string | null;
   interests: {
     interest_id: string;
     name: string;
   }[];
   posts: { post_id: string; fileUrl: string }[];
-  following: { following: { id: string; username: string; profile_image: string } }[];
-  followers: { follower: { id: string; username: string; profile_image: string } }[];
+  following: {
+    following: { id: string; username: string; profile_image: string };
+  }[];
+  followers: {
+    follower: { id: string; username: string; profile_image: string };
+  }[];
   // stories: any[];
   // privacy: any[];
   // responses: any[];

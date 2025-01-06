@@ -1,12 +1,19 @@
 "use client";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { getUsers } from "@/helpers/users";
 import Image from "next/image";
 import Sidebar from "@/components/Sidebar";
 import Conectados from "@/components/Conectados";
 import NavBar from "@/components/NavBar";
 import CreateChat from "../crearchatgrupal/page";
+import { UserContext } from "@/context/UserContext";
+import { GroupChats, IGroupMessage } from "@/interfaces/types";
+import Cookies from "js-cookie";
+import io, { Socket } from "socket.io-client";
+import { timeAgo } from "@/helpers/timeAgo";
+
 // import { useSocket } from "@/helpers/useSocket";
 
 interface User {
@@ -28,25 +35,11 @@ const ChatRoomView = () => {
   const [groupName, setGroupName] = useState("");
   const [groupDescription, setGroupDescription] = useState("");
   const [groupId, setGroupId] = useState();
-
-  // const {socket} = useSocket()
-
-  const fetchUsers = async () => {
-    try {
-      const users = await getUsers();
-      console.log(users);
-      setUsersList(users);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchUsers();
-    // socket.on('receiveGroupMessage', (message) => {
-    //   console.log('Mensaje de grupo recibido:', message);
-    // });
-  }, []);
+  const { userData } = useContext(UserContext);
+  const [chat, setChat] = useState<GroupChats | null>(null);
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState<IGroupMessage[]>([]);
+  const socket = useRef<Socket | null>(null);
 
   const filterUsers = (query: string) => {
     if (!query) {
@@ -68,6 +61,7 @@ const ChatRoomView = () => {
     filterUsers(searchQuery);
   }, [searchQuery, usersList]);
 
+  //useEffect para hacer un fetch a la cantidad de Chats Grupales
   useEffect(() => {
     const fetchGroupChats = async () => {
       try {
@@ -75,14 +69,12 @@ const ChatRoomView = () => {
           `${process.env.NEXT_PUBLIC_API_URL}/chat-groups`
         );
         const response = await chatsQuantity.json();
-        console.log("data", response);
         if (Array.isArray(response) && response.length > 0) {
           const group = response[0];
           setHasGroupChats(true);
           setGroupDescription(group.description);
           setGroupName(group.name);
           setGroupId(group.group_id);
-          console.log(groupId);
         } else {
           setHasGroupChats(false);
         }
@@ -93,6 +85,7 @@ const ChatRoomView = () => {
     fetchGroupChats();
   }, [groupId]);
 
+  //useEffect para hacer un fetch a los miembros de un grupo.
   useEffect(() => {
     if (!groupId) return;
 
@@ -124,10 +117,49 @@ const ChatRoomView = () => {
     fetchGroupMembers();
   }, [groupId, usersList]);
 
+  const fetchUsers = async () => {
+    try {
+      const users = await getUsers();
+      setUsersList(users);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+    (async (groupId) => {
+      if (!groupId || !userData) {
+        console.log(
+          "Esperando a que groupId y userData tengan valores válidos..."
+        );
+        return;
+      }
+
+      try {
+        const responseGroupChats = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/chat-groups/chats/${groupId}`
+        );
+        if (responseGroupChats.ok) {
+          const groupChatData = await responseGroupChats.json();
+          setChat(groupChatData);
+          console.log("DATA", groupChatData);
+
+          const messagesData = groupChatData.map((message: any) => {
+            return message.messages;
+          });
+
+          setMessages(messagesData);
+        }
+      } catch {
+        console.log("Hubo un error al traer la información del Chat Grupal");
+      }
+    })(groupId);
+  }, [groupId, userData]);
+
   const addMemberToRoom = async (user: User) => {
     if (!members.some((m) => m.id === user.id)) {
       const responseObject = { user_id: user.id, group_id: groupId };
-      console.log(responseObject);
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/group-members`,
         {
@@ -142,6 +174,98 @@ const ChatRoomView = () => {
       setMembers([...members, user]);
       setSearchQuery("");
       setIsAdding(false);
+    }
+  };
+
+  useEffect(() => {
+    const authToken = Cookies.get("auth_token");
+    if (!authToken) {
+      console.error("No auth token found in cookies");
+      return;
+    }
+
+    socket.current = io(
+      `${process.env.NEXT_PUBLIC_API_URL}/chat?token=${authToken}`,
+      {
+        auth: {
+          token: authToken,
+        },
+        withCredentials: true,
+        transports: ["websocket"],
+      }
+    );
+
+    socket.current.on("connect", () => {
+      console.log("Conexión WebSocket establecida.");
+    });
+
+    socket.current.on("connect_error", (error) => {
+      console.error("Error de conexión al WebSocket:", error);
+    });
+
+    socket.current.on("message", (newMessage) => {
+      console.log("Mensaje recibido en WebSocket:", newMessage);
+
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+    });
+
+    if (chat) {
+      socket.current.emit("join_group_chat", chat);
+    } else console.log("el objeto chat no está definido");
+
+    return () => {
+      if (socket.current) {
+        socket.current.disconnect();
+        console.log("Conexión WebSocket desconectada.");
+      }
+    };
+  }, [chat]);
+
+  const handleSendMessage = () => {
+    if (!message.trim()) return;
+    if (!chat) {
+      console.error("No chatId available");
+      return;
+    }
+
+    if (!userData) {
+      return;
+    }
+
+    const newMessage = {
+      content: message,
+      groupId: groupId,
+      sender_id: userData.id,
+      type: "text",
+      is_anonymous: false,
+    };
+    console.log("group_id", groupId);
+
+    try {
+      const sendDate = timeAgo(new Date().toISOString());
+      const messageData = {
+        username: userData.username,
+        sender_id: userData.id,
+        user_type: userData.user_type,
+        profile_image: userData.profile_image,
+        content: message,
+        send_date: sendDate,
+        type: "text",
+        is_anonymous: false,
+        group_id: groupId,
+      };
+      setMessages((prevMessages) => [...prevMessages, messageData]);
+
+      if (socket.current) {
+        socket.current.emit("message", newMessage);
+        console.log("Enviando evento 'message' al servidor:", newMessage);
+      } else {
+        console.error("Socket no está disponible");
+      }
+
+      setMessage("");
+    } catch (error) {
+      console.error("Error sending message:", error);
     }
   };
 
@@ -255,11 +379,12 @@ const ChatRoomView = () => {
                     <input
                       type="text"
                       placeholder="Escribe un mensaje..."
+                      onChange={(e) => setMessage(e.target.value)}
                       className="flex-1 border border-gray-300 rounded-full px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
                     />
                     <button
                       className="bg-blue-500 text-white px-4 py-2 rounded-full text-sm hover:bg-blue-600 transition"
-                      onClick={() => console.log("Mensaje enviado")}
+                      onClick={handleSendMessage}
                     >
                       Enviar
                     </button>
