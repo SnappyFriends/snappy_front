@@ -7,6 +7,7 @@ import Sidebar from "@/components/Sidebar";
 import { Chats } from "@/interfaces/types";
 import { UserContext } from "@/context/UserContext";
 import { timeAgo } from "@/helpers/timeAgo";
+import Link from "next/link";
 
 const MensajesPrivados = () => {
   const [chats, setChats] = useState<Chats[]>([]);
@@ -80,33 +81,40 @@ const MensajesPrivados = () => {
                     key={chat.id}
                     className="h-20 flex justify-between items-center px-4 border-b border-[#EEEEEE]"
                   >
-                    <div className="flex space-x-4 items-center">
-                      <div>
-                        <Image
-                          src={
-                            chat.participants[0].profile_image ||
-                            "/agregarfoto.png"
-                          }
-                          width={1000}
-                          height={1000}
-                          alt="fotodeperfil"
-                          className="rounded-full w-16 h-16 object-cover"
-                        />
+                    <Link
+                      href={`/chat/${chat.participants[0].username}`}
+                      className="flex  items-center "
+                    >
+                      <div className="flex space-x-4 items-center">
+                        <div>
+                          <Image
+                            src={
+                              chat.participants[0].profile_image ||
+                              "/agregarfoto.png"
+                            }
+                            width={1000}
+                            height={1000}
+                            alt="fotodeperfil"
+                            className="rounded-full w-16 h-16 object-cover"
+                          />
+                        </div>
+                        <div>
+                          <h2 className="font-bold text-sm text-gray-900">
+                            {chat.participants[0].username}
+                          </h2>
+                          <p className="text-xs text-gray-500">
+                            {chat.messages[chat.messages.length - 1].content}
+                          </p>
+                        </div>
                       </div>
-                      <div>
-                        <h2 className="font-bold text-sm text-gray-900">
-                          {chat.participants[0].username}
-                        </h2>
-                        <p className="text-xs text-gray-500">
-                          {chat.messages[chat.messages.length - 1].content}
-                        </p>
+                    </Link>
+                    <Link href={`/chat/${chat.participants[0].username}`}>
+                      <div className="text-sm text-gray-500">
+                        {timeAgo(
+                          chat.messages[chat.messages.length - 1].send_date
+                        )}
                       </div>
-                    </div>
-                    <div className="text-sm text-gray-500">
-                      {timeAgo(
-                        chat.messages[chat.messages.length - 1].send_date
-                      )}
-                    </div>
+                    </Link>
                   </section>
                 ))}
               </div>
