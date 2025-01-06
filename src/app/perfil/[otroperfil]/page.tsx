@@ -271,20 +271,20 @@ const ProfileView = ({
                     >
                       <div className="flex items-center gap-3">
                         <Image
-                          src={user.profile_image}
-                          alt={user.username}
+                          src={userTargetData.profile_image}
+                          alt={userTargetData.username}
                           width={40}
                           height={40}
                           className="rounded-full"
                         />
-                        <p>{user.username}</p>
+                        <p>{userTargetData.username}</p>
                       </div>
                     </div>
                   ))}
                 </div>
               ) : (
                 <p className="text-gray-500">
-                  No tienes {modalType === "following" ? "seguidos" : "seguidores"}.
+                  No tiene {modalType === "following" ? "seguidos" : "seguidores"}.
                 </p>
               )}
             </div>
