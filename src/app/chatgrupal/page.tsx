@@ -70,6 +70,10 @@ const ChatRoomView = () => {
         );
         const response = await chatsQuantity.json();
         if (Array.isArray(response) && response.length > 0) {
+          if (!userData) {
+          console.error("userData no está disponible");
+          return;
+        }
           const groupChats = response.filter((group) =>
             group.members.some((member: { user_id: string }) => member.user_id === userData.id)
           );
