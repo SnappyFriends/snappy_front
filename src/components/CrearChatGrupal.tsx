@@ -11,8 +11,7 @@ const CreateChatGroupForm = () => {
   const { userData } = useContext(UserContext);
   const router = useRouter();
 
-  const createGroupChat = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const createGroupChat = async () => {
     if (!userData) return;
 
     const responseObject = { name, description, creator_id: userData.id };
