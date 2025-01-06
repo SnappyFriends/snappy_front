@@ -73,11 +73,15 @@ const ChatRoomView = () => {
           const groupChats = response.filter((group) =>
             group.members.some((member: { user_id: string }) => member.user_id === userData.id)
           );
-          const group = response[0];
-          setHasGroupChats(true);
-          setGroupDescription(group.description);
-          setGroupName(group.name);
-          setGroupId(group.group_id);
+          if (groupChats.length > 0) {
+            const group = groupChats[0]; 
+            setHasGroupChats(true);
+            setGroupDescription(group.description);
+            setGroupName(group.name);
+            setGroupId(group.group_id);
+        } else {
+          setHasGroupChats(false);
+        }
         } else {
           setHasGroupChats(false);
         }
