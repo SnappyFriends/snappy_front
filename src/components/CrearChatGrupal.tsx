@@ -15,7 +15,7 @@ const CreateChatGroupForm = () => {
     if (!userData) return;
 
     const responseObject = { name, description, creator_id: userData.id };
-    console.log(responseObject);
+    console.log("data", responseObject);
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/chat-groups`,
