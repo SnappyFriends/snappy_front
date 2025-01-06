@@ -369,10 +369,48 @@ const ChatRoomView = () => {
                     </div>
                   </div>
 
-                  <div className="flex-1 overflow-y-auto mt-4 px-4 py-3 bg-white rounded-lg">
-                    <p className="text-center text-gray-400">
-                      Inicia tu conversación en el chat
-                    </p>
+                  <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
+                    {chat ? (
+                      messages.length > 0 ? (
+                        messages.map((uniqueMsg, index) => {
+                          const isSender = uniqueMsg.sender_id === userData?.id;
+
+                          const divContainer = isSender ? (
+                            <div
+                              className="text-right"
+                              key={`${uniqueMsg.sender_id}-${index}`}
+                            >
+                              <div className="p-2 bg-blue-100 rounded-lg my-2">
+                                <p>{uniqueMsg.username}</p>
+                                <p>{uniqueMsg.content}</p>
+                              </div>
+                            </div>
+                          ) : (
+                            <div
+                              className="text-left"
+                              key={`${uniqueMsg.sender_id}-${index}`}
+                            >
+                              <div className="p-2 bg-blue-100 rounded-lg my-2">
+                                <p>{uniqueMsg.username}</p>
+                                <p>{uniqueMsg.content}</p>
+                              </div>
+                            </div>
+                          );
+
+                          return divContainer;
+                        })
+                      ) : (
+                        <p className="text-gray-400 text-center">
+                          Aún no hay mensajes...
+                        </p>
+                      )
+                    ) : (
+                      <div className="flex-1 overflow-y-auto mt-4 px-4 py-3 bg-white rounded-lg">
+                        <p className="text-center text-gray-400">
+                          Inicia tu conversación en el chat
+                        </p>
+                      </div>
+                    )}
                   </div>
 
                   <div className="px-4 py-3 border-t flex items-center space-x-3">

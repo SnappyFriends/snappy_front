@@ -24,7 +24,6 @@ const Conectados: React.FC = () => {
 
   useEffect(() => {
     if (!userId) {
-      console.log("Esperando a que userId tenga un valor válido...");
       return;
     }
 
@@ -60,8 +59,6 @@ const Conectados: React.FC = () => {
     fetchUserFriends();
 
     socket.on("onlineUsers", (onlineUsersList) => {
-      console.log("Usuarios en línea recibidos:", onlineUsersList);
-
       setOnlineUsers(onlineUsersList.map((user: any) => user.id));
     });
 
@@ -82,9 +79,6 @@ const Conectados: React.FC = () => {
     if (a.isOnline === b.isOnline) return 0;
     return a.isOnline ? -1 : 1;
   });
-
-  console.log("friendsWithOnlineStatus:", friendsWithOnlineStatus);
-  console.log("sortedFriends:", sortedFriends);
 
   return (
     <div className="space-y-4 rounded-lg ml-24 mt-40">
