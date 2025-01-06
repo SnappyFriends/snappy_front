@@ -24,7 +24,6 @@ const MensajesPrivados = () => {
 				const data = await response.json();
 				if (data?.length > 0) {
 					setChats(data);
-					console.log("Chats del usuario", data);
 				} else {
 					console.error("No se encontraron chats para este usuario");
 				}
@@ -35,7 +34,6 @@ const MensajesPrivados = () => {
 
 		fetchChats();
 	}, [userData]);
-	console.log("chatss", chats);
 
 	if (!chats) return "Cargando...";
 
