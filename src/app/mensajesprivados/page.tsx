@@ -35,6 +35,7 @@ const MensajesPrivados = () => {
 
     fetchChats();
   }, [userData]);
+  console.log("chatss", chats);
 
   return (
     <>
@@ -81,47 +82,59 @@ const MensajesPrivados = () => {
                     No tienes mensajes aún
                   </p>
                 ) : (
-                  chats.map((chat) => (
-                    <section
-                      key={chat.id}
-                      className="h-20 flex justify-between items-center px-4 border-b border-[#EEEEEE]"
-                    >
-                      <Link
-                        href={`/chat/${chat.participants[0].username}`}
-                        className="flex  items-center "
+                  chats.map((chat) => {
+                    const currentUserId = userData?.id;
+
+                    const receiver = chat.participants.find(
+                      (participant) => participant.id !== currentUserId
+                    );
+
+                    if (!receiver) return null;
+
+                    return (
+                      <section
+                        key={chat.id}
+                        className="h-20 flex justify-between items-center px-4 border-b border-[#EEEEEE]"
                       >
-                        <div className="flex space-x-4 items-center">
-                          <div>
-                            <Image
-                              src={
-                                chat.participants[0].profile_image ||
-                                "/agregarfoto.png"
-                              }
-                              width={1000}
-                              height={1000}
-                              alt="fotodeperfil"
-                              className="rounded-full w-16 h-16 object-cover"
-                            />
+                        <Link
+                          href={`/chat/${receiver.username}`}
+                          className="flex items-center"
+                        >
+                          <div className="flex space-x-4 items-center">
+                            <div>
+                              <Image
+                                src={
+                                  receiver.profile_image || "/agregarfoto.png"
+                                }
+                                width={1000}
+                                height={1000}
+                                alt="fotodeperfil"
+                                className="rounded-full w-16 h-16 object-cover"
+                              />
+                            </div>
+                            <div>
+                              <h2 className="font-bold text-sm text-gray-900">
+                                {receiver.username}
+                              </h2>
+                              <p className="text-xs text-gray-500">
+                                {
+                                  chat.messages[chat.messages.length - 1]
+                                    .content
+                                }
+                              </p>
+                            </div>
                           </div>
-                          <div>
-                            <h2 className="font-bold text-sm text-gray-900">
-                              {chat.participants[0].username}
-                            </h2>
-                            <p className="text-xs text-gray-500">
-                              {chat.messages[chat.messages.length - 1].content}
-                            </p>
+                        </Link>
+                        <Link href={`/chat/${receiver.username}`}>
+                          <div className="text-sm text-gray-500">
+                            {timeAgo(
+                              chat.messages[chat.messages.length - 1].send_date
+                            )}
                           </div>
-                        </div>
-                      </Link>
-                      <Link href={`/chat/${chat.participants[0].username}`}>
-                        <div className="text-sm text-gray-500">
-                          {timeAgo(
-                            chat.messages[chat.messages.length - 1].send_date
-                          )}
-                        </div>
-                      </Link>
-                    </section>
-                  ))
+                        </Link>
+                      </section>
+                    );
+                  })
                 )}
               </div>
             </main>
