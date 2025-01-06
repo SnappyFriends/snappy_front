@@ -12,8 +12,28 @@ import VerifiedAccount from "@/components/VerifiedAccount";
 import NavBar from "@/components/NavBar";
 import { UserContext } from "@/context/UserContext";
 import { showCustomToast } from "@/components/Notificacion";
-
+import PostDetails from "@/components/PostDetails";
 // import { formatDistanceToNow } from "date-fns";
+interface IPost {
+  post_id: string;
+  content: string;
+  creation_date: string;
+  fileUrl: string;
+  user: {
+    username: string;
+    profile_image: string;
+    user_type: string;
+  };
+  reactions: Array<{
+    id: string;
+    user: {
+      username: string;
+      profile_image: string;
+      user_type: string;
+    };
+  }>;
+  comments: Array<{ content: string; username: string }>;
+}
 
 const ProfileView = ({
 	params,
@@ -30,6 +50,8 @@ const ProfileView = ({
   const [modalType, setModalType] = useState<"followers" | "following" | null>(
     null
   );
+
+  const [selectedPost, setSelectedPost] = useState<IPost | null>(null);
 
 	const handleFriendRequest = async () => {
 		if (!followingState) {
@@ -118,6 +140,25 @@ const ProfileView = ({
 
 	if (!userTargetData) return "Cargando...";
 
+  const fetchPostDetails = async (postId: string) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/posts/${postId}`
+      );
+      if (!response.ok) {
+        throw new Error("Error al obtener el post");
+      }
+      const post = await response.json();
+      setSelectedPost(post);
+    } catch (error) {
+      console.error("Error fetching post details:", error);
+    }
+  };
+
+  const closePostDetails = () => {
+    setSelectedPost(null);
+  };
+
 	// const lastLoginDate = userTargetData.last_login_date
 	//   ? new Date(userTargetData.last_login_date)
 	//   : null;
@@ -142,7 +183,8 @@ const ProfileView = ({
             />
           </div>
           <h1 className="text-lg font-bold md:text-xl lg:text-2xl">
-            {userTargetData.fullname} {userTargetData.user_type === "premium" && <VerifiedAccount />}
+          {userTargetData.fullname}{" "}
+          {userTargetData?.user_type === "premium" ? <VerifiedAccount /> : ""}
           </h1>
           <div className="flex flex-wrap justify-center gap-4">
             <article
@@ -199,11 +241,18 @@ const ProfileView = ({
             </Link>
           </div>
           {userTargetData.interests?.length > 0 && (
-            <div className="w-full px-2 text-center">
-              <p>
-                <span className="font-bold">Intereses: </span>
-                {userTargetData.interests.map((interest) => interest.name).join(", ")}
-              </p>
+             <div className="w-full px-2 text-center">
+             {userTargetData.interests &&
+               userTargetData.interests.length > 0 && (
+                 <p>
+                   <span className="font-bold">Intereses: </span>
+                   {userTargetData.interests
+                     .map((interest) => interest.name)
+                     .join(", ")}
+                 </p>
+               )}
+           </div>
+          )}
               {/* <div className="flex-1 flex flex-col items-center max-w-6xl px-4 md:px-8 mt-10 mx-auto">
             <div className="flex justify-center space-x-6 mb-6">
               <div className="relative w-16 h-16 md:w-20 md:h-20">
@@ -232,10 +281,37 @@ const ProfileView = ({
               </div>
             </div>
           </div> */}
-                      </div>
+                     
+          
+        </section>
+<section className="px-4 py-6">
+          {userTargetData.posts.length > 0 ? (
+            <div className="flex flex-wrap justify-center gap-4 max-w-6xl">
+              {userTargetData.posts.map((post) => (
+                <div
+                  key={post.post_id}
+                  className="relative w-[calc(50%-8px)] md:w-[calc(33.333%-12px)] lg:w-[calc(25%-16px)] aspect-square"
+                >
+                  <Image
+                    src={post.fileUrl}
+                    alt={`Imagen del post ${post.post_id}`}
+                    width={500}
+                    height={500}
+                    className="object-cover rounded-md hover:opacity-80 cursor-pointer"
+                    onClick={() => fetchPostDetails(post.post_id)}
+                  />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500">
+              {userTargetData.fullname} no tiene publicaciones.
+            </p>
           )}
         </section>
-
+        {selectedPost && (
+          <PostDetails post={selectedPost} close={closePostDetails} />
+        )}
         {showModal && modalType && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
             <div className="bg-white rounded-lg p-6 w-full max-w-lg flex flex-col relative">
