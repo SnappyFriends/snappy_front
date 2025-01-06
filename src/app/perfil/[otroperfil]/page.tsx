@@ -12,8 +12,29 @@ import VerifiedAccount from "@/components/VerifiedAccount";
 import NavBar from "@/components/NavBar";
 import { UserContext } from "@/context/UserContext";
 import { showCustomToast } from "@/components/Notificacion";
-
+import PostDetails from "@/components/PostDetails";
 // import { formatDistanceToNow } from "date-fns";
+
+interface IPost {
+  post_id: string;
+  content: string;
+  creation_date: string;
+  fileUrl: string;
+  user: {
+    username: string;
+    profile_image: string;
+    user_type: string;
+  };
+  reactions: Array<{
+    id: string;
+    user: {
+      username: string;
+      profile_image: string;
+      user_type: string;
+    };
+  }>;
+  comments: Array<{ content: string; username: string }>;
+}
 
 const ProfileView = ({
   params,
@@ -30,6 +51,7 @@ const ProfileView = ({
   const [modalType, setModalType] = useState<"followers" | "following" | null>(
     null
   );
+  const [selectedPost, setSelectedPost] = useState<IPost | null>(null);
 
   const handleFriendRequest = async () => {
     if (!followingState) {
@@ -117,6 +139,25 @@ const ProfileView = ({
   }, [userTargetData]);
 
   if (!userTargetData) return "Cargando...";
+
+  const fetchPostDetails = async (postId: string) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/posts/${postId}`
+      );
+      if (!response.ok) {
+        throw new Error("Error al obtener el post");
+      }
+      const post = await response.json();
+      setSelectedPost(post);
+    } catch (error) {
+      console.error("Error fetching post details:", error);
+    }
+  };
+
+  const closePostDetails = () => {
+    setSelectedPost(null);
+  };
 
   // const lastLoginDate = userTargetData.last_login_date
   //   ? new Date(userTargetData.last_login_date)
@@ -238,11 +279,39 @@ const ProfileView = ({
               </div>
             </div>
           </div> */}
-          <div className="flex flex-wrap justify-center gap-4">
+          {/* <div className="flex flex-wrap justify-center gap-4">
             <p>{userTargetData.fullname} no tiene publicaciones.</p>
-          </div>
+          </div> */}
         </section>
 
+        <section className="px-4 py-6">
+          {userTargetData.posts.length > 0 ? (
+            <div className="flex flex-wrap justify-center gap-4 max-w-6xl">
+              {userTargetData.posts.map((post) => (
+                <div
+                  key={post.post_id}
+                  className="relative w-[calc(50%-8px)] md:w-[calc(33.333%-12px)] lg:w-[calc(25%-16px)] aspect-square"
+                >
+                  <Image
+                    src={post.fileUrl}
+                    alt={`Imagen del post ${post.post_id}`}
+                    width={500}
+                    height={500}
+                    className="object-cover rounded-md hover:opacity-80 cursor-pointer"
+                    onClick={() => fetchPostDetails(post.post_id)}
+                  />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500">
+              {userTargetData.fullname} no tiene publicaciones.
+            </p>
+          )}
+        </section>
+        {selectedPost && (
+          <PostDetails post={selectedPost} close={closePostDetails} />
+        )}
         {showModal && modalType && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
             <div className="bg-white rounded-lg p-6 w-full max-w-lg flex flex-col relative">
