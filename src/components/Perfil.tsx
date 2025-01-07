@@ -8,6 +8,7 @@ import { timeAgo } from "@/helpers/timeAgo";
 import VerifiedAccount from "./VerifiedAccount";
 import PostDetails from "./PostDetails";
 import { showCustomToast } from "./Notificacion";
+import {useRouter} from "next/navigation";
 
 interface User {
   userId: string;
@@ -54,6 +55,7 @@ interface IPost {
 }
 
 export default function PerfilComponent() {
+  
   const { userData } = useContext(UserContext);
   const [stories, setStories] = useState<Story[]>([]);
   const [selectedStory, setSelectedStory] = useState<Story | null>(null);
@@ -66,6 +68,7 @@ export default function PerfilComponent() {
   const [isFollowingModalOpen, setIsFollowingModalOpen] =
     useState<boolean>(false);
   const [following, setFollowing] = useState<User[]>([]);
+ const router = useRouter();
 
   const fetchFollowers = async () => {
     try {
@@ -99,7 +102,9 @@ export default function PerfilComponent() {
     }
   };
 
-  const removeFollowed = async (followedId: string) => {
+
+
+  const removeFollowed = async (followedId: string ) => {
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/follow/${userData?.id}/${followedId}`,
@@ -114,6 +119,26 @@ export default function PerfilComponent() {
       showCustomToast("Snappy", "Usuario eliminado", "success");
     } catch (error) {
       console.error("Error removing followed user:", error);
+      showCustomToast("Snappy", "Hubo un problema al eliminar", "error");
+    }
+  };
+
+  const removeFollower = async (id:string) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/follow/${id}/${userData?.id}`,
+        {
+          method: "DELETE",
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Error al eliminar al seguidor");
+      }
+      await fetchFollowers();
+      showCustomToast("Snappy", "Seguidor eliminado", "success");
+      router.push("/miperfil");
+    } catch (error) {
+      console.error("Error removing follower user:", error);
       showCustomToast("Snappy", "Hubo un problema al eliminar", "error");
     }
   };
@@ -521,6 +546,15 @@ export default function PerfilComponent() {
                       <p>{follower.username}</p>
                       </div>
                       </Link>
+                      <button
+                      className="bg-red-500 text-white px-4 py-2 rounded-md"
+                      onClick={() => {
+                        removeFollower(follower.id);
+                        console.log(follower.id);
+                      }}
+                    >
+                      Eliminar
+                    </button>
                   </div>
                 ))}
               </div>
