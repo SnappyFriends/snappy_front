@@ -7,6 +7,7 @@ import Sidebar from "@/components/Sidebar";
 import NavBar from "@/components/NavBar";
 import { UserContext } from "@/context/UserContext";
 import { INotification } from "@/interfaces/types";
+import { timeAgo } from "@/helpers/timeAgo";
 
 enum NotificationType {
 	FRIEND_REQUEST = "friend_request",
@@ -82,9 +83,6 @@ const ActivityView = () => {
 									status,
 									creation_date,
 								} = notification;
-								const formattedDate = new Date(
-									creation_date
-								).toLocaleDateString();
 
 								return (
 									<div
@@ -103,7 +101,7 @@ const ActivityView = () => {
 											<div className="ml-3">
 												<h2 className="text-sm font-semibold">{content}</h2>
 												<p className="text-xs text-gray-500">
-													{type.replace(/_/g, " ")} • {formattedDate}
+													{timeAgo(creation_date)}
 												</p>
 											</div>
 										</div>
