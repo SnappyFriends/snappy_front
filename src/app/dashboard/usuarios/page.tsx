@@ -6,23 +6,40 @@ import Image from "next/image";
 
 export default function Usuarios() {
   const [users, setUsers] = useState<User[]>();
+  const [filter, setFilter] = useState<string>(""); 
 
   useEffect(() => {
     const fetchUsers = async () => {
       const fetchedUsers = await getUsers();
-      setUsers(fetchedUsers);
+      
+      const sortedUsers = fetchedUsers.sort((a, b) => a.username.localeCompare(b.username));
+      setUsers(sortedUsers);
     };
 
     fetchUsers();
   }, []); 
-  
+
   const handleBan = (userId: string) => {
     console.log(`Usuario con ID ${userId} baneado`);
   };
 
+ 
+  const filteredUsers = users?.filter(user => 
+    user.username.toLowerCase().includes(filter.toLowerCase())
+  );
+
   return (
     <div className="flex flex-col items-center w-full ml-20">
       <h1 className="text-center text-3xl font-bold mb-5">Usuarios</h1>
+      
+      <input
+        type="text"
+        placeholder="Nombre de usuario"
+        value={filter}
+        onChange={(e) => setFilter(e.target.value)}
+        className="p-2 mb-5 rounded-md border w-auto text-center"
+      />
+
       <table className="w-full h-full text-sm mb-40">
         <thead>
           <tr>
@@ -36,7 +53,7 @@ export default function Usuarios() {
           </tr>
         </thead>
         <tbody>
-          {users?.map((user) => (
+          {filteredUsers?.map((user) => (
             <tr key={user.id} className=" border-b">
               <td className="p-3 gn">
                 <Image
