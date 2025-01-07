@@ -333,6 +333,10 @@ const ProfileView = ({
                         className="flex justify-between items-center bg-gray-100 p-3 rounded-md"
                       >
                         {profileData && (
+                          <Link
+                          href={`/perfil/${profileData.username}`}
+                          className="text-black hover:underline"
+                        >
                           <div className="flex items-center gap-3">
                             <Image
                               src={profileData.profile_image}
@@ -343,6 +347,7 @@ const ProfileView = ({
                             />
                             <p>{profileData.username}</p>
                           </div>
+                          </Link>
                         )}
                       </div>
                     );
@@ -356,6 +361,10 @@ const ProfileView = ({
                         className="flex justify-between items-center bg-gray-100 p-3 rounded-md"
                       >
                         {profileData && (
+                           <Link
+                           href={`/perfil/${profileData.username}`}
+                           className="text-black hover:underline"
+                         >
                           <div className="flex items-center gap-3">
                             <Image
                               src={profileData.profile_image}
@@ -366,6 +375,7 @@ const ProfileView = ({
                             />
                             <p>{profileData.username}</p>
                           </div>
+                          </Link>
                         )}
                       </div>
                     );
