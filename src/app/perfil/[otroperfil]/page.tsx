@@ -15,245 +15,245 @@ import { showCustomToast } from "@/components/Notificacion";
 import PostDetails from "@/components/PostDetails";
 // import { formatDistanceToNow } from "date-fns";
 interface IPost {
-	post_id: string;
-	content: string;
-	creation_date: string;
-	fileUrl: string;
-	user: {
-		username: string;
-		profile_image: string;
-		user_type: string;
-	};
-	reactions: Array<{
-		id: string;
-		user: {
-			username: string;
-			profile_image: string;
-			user_type: string;
-		};
-	}>;
-	comments: Array<{ content: string; username: string }>;
+  post_id: string;
+  content: string;
+  creation_date: string;
+  fileUrl: string;
+  user: {
+    username: string;
+    profile_image: string;
+    user_type: string;
+  };
+  reactions: Array<{
+    id: string;
+    user: {
+      username: string;
+      profile_image: string;
+      user_type: string;
+    };
+  }>;
+  comments: Array<{ content: string; username: string }>;
 }
 
 const ProfileView = ({
-	params,
+  params,
 }: {
-	params: Promise<{ otroperfil: string }>;
+  params: Promise<{ otroperfil: string }>;
 }) => {
-	const [userTargetData, setUserTargetData] = useState<IUsernameData | null>(
-		null
-	);
-	const [username, setUsername] = useState<string | null>(null);
-	const { userData } = useContext(UserContext);
-	const [followingState, setFollowingState] = useState(false);
-	const [showModal, setShowModal] = useState(false);
-	const [modalType, setModalType] = useState<"followers" | "following" | null>(
-		null
-	);
+  const [userTargetData, setUserTargetData] = useState<IUsernameData | null>(
+    null
+  );
+  const [username, setUsername] = useState<string | null>(null);
+  const { userData } = useContext(UserContext);
+  const [followingState, setFollowingState] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [modalType, setModalType] = useState<"followers" | "following" | null>(
+    null
+  );
 
-	const [selectedPost, setSelectedPost] = useState<IPost | null>(null);
+  const [selectedPost, setSelectedPost] = useState<IPost | null>(null);
 
-	const handleFriendRequest = async () => {
-		if (!followingState) {
-			const response = await fetch(
-				`${process.env.NEXT_PUBLIC_API_URL}/follow/${userData?.id}/${userTargetData?.id}`,
-				{
-					method: "POST",
-				}
-			);
+  const handleFriendRequest = async () => {
+    if (!followingState) {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/follow/${userData?.id}/${userTargetData?.id}`,
+        {
+          method: "POST",
+        }
+      );
 
-			if (!response.ok)
-				throw new Error(`Ocurrió un error al intentar seguir a este usuario.`);
+      if (!response.ok)
+        throw new Error(`Ocurrió un error al intentar seguir a este usuario.`);
 
-			showCustomToast(
-				"Snappy",
-				"Comenzaste a seguir a este usuario.",
-				"success"
-			);
-		} else {
-			const response = await fetch(
-				`${process.env.NEXT_PUBLIC_API_URL}/follow/${userData?.id}/${userTargetData?.id}`,
-				{
-					method: "DELETE",
-				}
-			);
+      showCustomToast(
+        "Snappy",
+        "Comenzaste a seguir a este usuario.",
+        "success"
+      );
+    } else {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/follow/${userData?.id}/${userTargetData?.id}`,
+        {
+          method: "DELETE",
+        }
+      );
 
-			if (!response.ok)
-				throw new Error(`Ocurrió un error al intentar seguir a este usuario.`);
+      if (!response.ok)
+        throw new Error(`Ocurrió un error al intentar seguir a este usuario.`);
 
-			showCustomToast("Snappy", "Dejaste de seguir a este usuario.", "success");
-		}
+      showCustomToast("Snappy", "Dejaste de seguir a este usuario.", "success");
+    }
 
-		setFollowingState(!followingState);
-	};
+    setFollowingState(!followingState);
+  };
 
-	const handleOpenModal = (type: "followers" | "following") => {
-		setModalType(type);
-		setShowModal(true);
-	};
+  const handleOpenModal = (type: "followers" | "following") => {
+    setModalType(type);
+    setShowModal(true);
+  };
 
-	const handleCloseModal = () => {
-		setShowModal(false);
-		setModalType(null);
-	};
-	useEffect(() => {
-		const fetchParams = async () => {
-			const resolvedParams = await params;
-			if (resolvedParams.otroperfil) {
-				setUsername(resolvedParams.otroperfil);
-			}
-		};
-		fetchParams();
-	}, [params]);
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setModalType(null);
+  };
+  useEffect(() => {
+    const fetchParams = async () => {
+      const resolvedParams = await params;
+      if (resolvedParams.otroperfil) {
+        setUsername(resolvedParams.otroperfil);
+      }
+    };
+    fetchParams();
+  }, [params]);
 
-	useEffect(() => {
-		if (username) {
-			(async () => {
-				try {
-					const user = await getUsersByUsername(username);
-					if (user) {
-						setUserTargetData(user);
-					} else {
-						return <NotFound />;
-					}
-				} catch (error) {
-					console.error("Error al obtener los datos del usuario:", error);
-				}
-			})();
-		}
-	}, [username]);
+  useEffect(() => {
+    if (username) {
+      (async () => {
+        try {
+          const user = await getUsersByUsername(username);
+          if (user) {
+            setUserTargetData(user);
+          } else {
+            return <NotFound />;
+          }
+        } catch (error) {
+          console.error("Error al obtener los datos del usuario:", error);
+        }
+      })();
+    }
+  }, [username]);
 
-	useEffect(() => {
-		if (userTargetData) {
-			if (userTargetData.followers && userTargetData.followers.length > 0) {
-				const isFollowing = userTargetData.followers.map(
-					(follower: { follower: { id: string } }) => {
-						if (follower.follower.id == userTargetData.id) return true;
-						else return false;
-					}
-				);
+  useEffect(() => {
+    if (userTargetData) {
+      if (userTargetData.followers && userTargetData.followers.length > 0) {
+        const isFollowing = userTargetData.followers.map(
+          (follower: { follower: { id: string } }) => {
+            if (follower.follower.id == userTargetData.id) return true;
+            else return false;
+          }
+        );
 
-				if (isFollowing) setFollowingState(true);
-			}
-		}
-	}, [userTargetData]);
+        if (isFollowing) setFollowingState(true);
+      }
+    }
+  }, [userTargetData]);
 
-	if (!userTargetData) return "Cargando...";
+  if (!userTargetData) return "Cargando...";
 
-	const fetchPostDetails = async (postId: string) => {
-		try {
-			const response = await fetch(
-				`${process.env.NEXT_PUBLIC_API_URL}/posts/${postId}`
-			);
-			if (!response.ok) {
-				throw new Error("Error al obtener el post");
-			}
-			const post = await response.json();
-			setSelectedPost(post);
-		} catch (error) {
-			console.error("Error fetching post details:", error);
-		}
-	};
+  const fetchPostDetails = async (postId: string) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/posts/${postId}`
+      );
+      if (!response.ok) {
+        throw new Error("Error al obtener el post");
+      }
+      const post = await response.json();
+      setSelectedPost(post);
+    } catch (error) {
+      console.error("Error fetching post details:", error);
+    }
+  };
 
-	const closePostDetails = () => {
-		setSelectedPost(null);
-	};
+  const closePostDetails = () => {
+    setSelectedPost(null);
+  };
 
-	// const lastLoginDate = userTargetData.last_login_date
-	//   ? new Date(userTargetData.last_login_date)
-	//   : null;
+  // const lastLoginDate = userTargetData.last_login_date
+  //   ? new Date(userTargetData.last_login_date)
+  //   : null;
 
-	// const timeAgo = lastLoginDate
-	//   ? formatDistanceToNow(lastLoginDate, { addSuffix: true })
-	//   : "Fecha no disponible";
+  // const timeAgo = lastLoginDate
+  //   ? formatDistanceToNow(lastLoginDate, { addSuffix: true })
+  //   : "Fecha no disponible";
 
-	return (
-		<>
-			<Sidebar />
-			<NavBar />
-			<main className="min-h-screen">
-				<section className="flex flex-col justify-center items-center gap-3 md:gap-4 pt-3 md:pt-4 px-4">
-					<div className="w-32 h-32 md:w-40 md:h-40 lg:w-60 lg:h-60 rounded-full overflow-hidden border-4 border-black shadow-md">
-						<Image
-							src={userTargetData.profile_image}
-							alt="Foto de perfil"
-							width={600}
-							height={600}
-							className="object-cover w-full h-full"
-						/>
-					</div>
-					<h1 className="text-lg font-bold md:text-xl lg:text-2xl">
-						{userTargetData.fullname}{" "}
-						{userTargetData?.user_type === "premium" ? <VerifiedAccount /> : ""}
-					</h1>
-					<div className="flex flex-wrap justify-center gap-4">
-						<article
-							onClick={() => handleOpenModal("following")}
-							className="text-center w-24 md:w-28 cursor-pointer"
-						>
-							<p className="text-lg font-bold md:text-xl">
-								{userTargetData.following.length}
-							</p>
-							<p>Seguidos</p>
-						</article>
-						<article
-							onClick={() => handleOpenModal("followers")}
-							className="text-center w-24 md:w-28 cursor-pointer"
-						>
-							<p className="text-lg font-bold md:text-xl">
-								{userTargetData.followers.length}
-							</p>
-							<p>Seguidores</p>
-						</article>
-						<article className="text-center w-24 md:w-28">
-							<p className="text-lg font-bold md:text-xl">
-								{userTargetData.posts.length}
-							</p>
-							<p>Publicaciones</p>
-						</article>
-					</div>
-					<div className="px-2 text-center">
-						<p>{userTargetData.description}</p>
-					</div>
+  return (
+    <>
+      <Sidebar />
+      <NavBar />
+      <main className="min-h-screen">
+        <section className="flex flex-col justify-center items-center gap-3 md:gap-4 pt-3 md:pt-4 px-4">
+          <div className="w-32 h-32 md:w-40 md:h-40 lg:w-60 lg:h-60 rounded-full overflow-hidden border-4 border-black shadow-md">
+            <Image
+              src={userTargetData.profile_image}
+              alt="Foto de perfil"
+              width={600}
+              height={600}
+              className="object-cover w-full h-full"
+            />
+          </div>
+          <h1 className="text-lg font-bold md:text-xl lg:text-2xl">
+            {userTargetData.fullname}{" "}
+            {userTargetData?.user_type === "premium" ? <VerifiedAccount /> : ""}
+          </h1>
+          <div className="flex flex-wrap justify-center gap-4">
+            <article
+              onClick={() => handleOpenModal("following")}
+              className="text-center w-24 md:w-28 cursor-pointer"
+            >
+              <p className="text-lg font-bold md:text-xl">
+                {userTargetData.following.length}
+              </p>
+              <p>Seguidos</p>
+            </article>
+            <article
+              onClick={() => handleOpenModal("followers")}
+              className="text-center w-24 md:w-28 cursor-pointer"
+            >
+              <p className="text-lg font-bold md:text-xl">
+                {userTargetData.followers.length}
+              </p>
+              <p>Seguidores</p>
+            </article>
+            <article className="text-center w-24 md:w-28">
+              <p className="text-lg font-bold md:text-xl">
+                {userTargetData.posts.length}
+              </p>
+              <p>Publicaciones</p>
+            </article>
+          </div>
+          <div className="px-2 text-center">
+            <p>{userTargetData.description}</p>
+          </div>
 
-					<div className="flex flex-wrap justify-center gap-4">
-						<button
-							onClick={handleFriendRequest}
-							className={`px-4 py-2 text-white rounded-md ${
-								followingState
-									? "bg-gray-500 hover:bg-gray-600"
-									: "bg-blue-500 hover:bg-blue-600"
-							}`}
-						>
-							{followingState ? "Siguiendo" : "Seguir"}
-						</button>
-						<Link
-							href={`/chat/${userTargetData.username}`}
-							className="px-4 py-2 text-white bg-green-500 hover:bg-green-600 rounded-md"
-						>
-							Enviar mensaje
-						</Link>
-						<Link
-							href="/inprogress"
-							className="px-4 py-2 text-white bg-black hover:bg-gray-800 rounded-md"
-						>
-							Pregunta anónima
-						</Link>
-					</div>
-					{userTargetData.interests?.length > 0 && (
-						<div className="w-full px-2 text-center">
-							{userTargetData.interests &&
-								userTargetData.interests.length > 0 && (
-									<p>
-										<span className="font-bold">Intereses: </span>
-										{userTargetData.interests
-											.map((interest) => interest.name)
-											.join(", ")}
-									</p>
-								)}
-						</div>
-					)}
-					{/* <div className="flex-1 flex flex-col items-center max-w-6xl px-4 md:px-8 mt-10 mx-auto">
+          <div className="flex flex-wrap justify-center gap-4">
+            <button
+              onClick={handleFriendRequest}
+              className={`px-4 py-2 text-white rounded-md ${
+                followingState
+                  ? "bg-gray-500 hover:bg-gray-600"
+                  : "bg-blue-500 hover:bg-blue-600"
+              }`}
+            >
+              {followingState ? "Siguiendo" : "Seguir"}
+            </button>
+            <Link
+              href={`/chat/${userTargetData.username}`}
+              className="px-4 py-2 text-white bg-green-500 hover:bg-green-600 rounded-md"
+            >
+              Enviar mensaje
+            </Link>
+            <Link
+              href="/inprogress"
+              className="px-4 py-2 text-white bg-black hover:bg-gray-800 rounded-md"
+            >
+              Pregunta anónima
+            </Link>
+          </div>
+          {userTargetData.interests?.length > 0 && (
+            <div className="w-full px-2 text-center">
+              {userTargetData.interests &&
+                userTargetData.interests.length > 0 && (
+                  <p>
+                    <span className="font-bold">Intereses: </span>
+                    {userTargetData.interests
+                      .map((interest) => interest.name)
+                      .join(", ")}
+                  </p>
+                )}
+            </div>
+          )}
+          {/* <div className="flex-1 flex flex-col items-center max-w-6xl px-4 md:px-8 mt-10 mx-auto">
             <div className="flex justify-center space-x-6 mb-6">
               <div className="relative w-16 h-16 md:w-20 md:h-20">
                 <button title="Ver mis historias">
@@ -281,112 +281,113 @@ const ProfileView = ({
               </div>
             </div>
           </div> */}
-				</section>
-				<section className="px-4 py-6">
-					{userTargetData.posts.length > 0 ? (
-						<div className="flex flex-wrap justify-center gap-4 max-w-6xl">
-							{userTargetData.posts.map((post) => (
-								<div
-									key={post.post_id}
-									className="relative w-[calc(50%-8px)] md:w-[calc(33.333%-12px)] lg:w-[calc(25%-16px)] aspect-square"
-								>
-									<Image
-										src={post.fileUrl}
-										alt={`Imagen del post ${post.post_id}`}
-										width={500}
-										height={500}
-										className="object-cover rounded-md hover:opacity-80 cursor-pointer"
-										onClick={() => fetchPostDetails(post.post_id)}
-									/>
-								</div>
-							))}
-						</div>
-					) : (
-						<p className="text-gray-500">
-							{userTargetData.fullname} no tiene publicaciones.
-						</p>
-					)}
-				</section>
-				{selectedPost && (
-					<PostDetails post={selectedPost} close={closePostDetails} />
-				)}
-				{showModal && modalType && (
-					<div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-						<div className="bg-white rounded-lg p-6 w-full max-w-lg flex flex-col relative">
-							<button
-								className="absolute top-2 right-2 text-black font-bold"
-								onClick={handleCloseModal}
-							>
-								X
-							</button>
-							<h2 className="text-lg font-bold mb-4">
-								{modalType === "following" ? "Seguidos" : "Seguidores"}
-							</h2>
-							{modalType === "following"
-								? userTargetData.following.map((user) => {
-										const profileData = user.following;
+          <section className="px-4 py-6">
+            {userTargetData.posts.length > 0 ? (
+              <div className="flex flex-wrap justify-center gap-4 max-w-6xl">
+                {userTargetData.posts.map((post) => (
+                  <div
+                    key={post.post_id}
+                    className="relative w-[calc(50%-8px)] md:w-[calc(33.333%-12px)] lg:w-[calc(25%-16px)] aspect-square"
+                  >
+                    <Image
+                      src={post.fileUrl}
+                      alt={`Imagen del post ${post.post_id}`}
+                      width={500}
+                      height={500}
+                      className="object-cover rounded-md hover:opacity-80 cursor-pointer"
+                      onClick={() => fetchPostDetails(post.post_id)}
+                    />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-gray-500">
+                {userTargetData.fullname} no tiene publicaciones.
+              </p>
+            )}
+          </section>
+          {selectedPost && (
+            <PostDetails post={selectedPost} close={closePostDetails} />
+          )}
+        </section>
 
-										return (
-											<div
-												key={profileData.id}
-												className="flex justify-between items-center bg-gray-100 p-3 rounded-md"
-											>
-												{profileData && (
-													<div className="flex items-center gap-3">
-														<Image
-															src={profileData.profile_image}
-															alt={profileData.username}
-															width={40}
-															height={40}
-															className="rounded-full"
-														/>
-														<p>{profileData.username}</p>
-													</div>
-												)}
-											</div>
-										);
-								  })
-								: userTargetData.followers.map((user) => {
-										const profileData = user.follower;
+        {showModal && modalType && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+            <div className="bg-white rounded-lg p-6 w-full max-w-lg flex flex-col relative">
+              <button
+                className="absolute top-2 right-2 text-black font-bold"
+                onClick={handleCloseModal}
+              >
+                X
+              </button>
+              <h2 className="text-lg font-bold mb-4">
+                {modalType === "following" ? "Seguidos" : "Seguidores"}
+              </h2>
+              {modalType === "following"
+                ? userTargetData.following.map((user) => {
+                    const profileData = user.following;
 
-										return (
-											<div
-												key={profileData.id}
-												className="flex justify-between items-center bg-gray-100 p-3 rounded-md"
-											>
-												{profileData && (
-													<div className="flex items-center gap-3">
-														<Image
-															src={profileData.profile_image}
-															alt={profileData.username}
-															width={40}
-															height={40}
-															className="rounded-full"
-														/>
-														<p>{profileData.username}</p>
-													</div>
-												)}
-											</div>
-										);
-								  })}
-							{(modalType === "following"
-								? userTargetData.following
-								: userTargetData.followers
-							).length === 0 && (
-								<p className="text-gray-500">
-									No tienes{" "}
-									{modalType === "following" ? "seguidos" : "seguidores"}.
-								</p>
-							)}
-						</div>
-					</div>
-				)}
-			</main>
-			<div className="hidden md:flex flex-col w-80 space-y-6 absolute right-20 top-1/2 transform -translate-y-1/2">
-				<Conectados />
-			</div>
-		</>
-	);
+                    return (
+                      <div
+                        key={profileData.id}
+                        className="flex justify-between items-center bg-gray-100 p-3 rounded-md"
+                      >
+                        {profileData && (
+                          <div className="flex items-center gap-3">
+                            <Image
+                              src={profileData.profile_image}
+                              alt={profileData.username}
+                              width={40}
+                              height={40}
+                              className="rounded-full"
+                            />
+                            <p>{profileData.username}</p>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })
+                : userTargetData.followers.map((user) => {
+                    const profileData = user.follower;
+
+                    return (
+                      <div
+                        key={profileData.id}
+                        className="flex justify-between items-center bg-gray-100 p-3 rounded-md"
+                      >
+                        {profileData && (
+                          <div className="flex items-center gap-3">
+                            <Image
+                              src={profileData.profile_image}
+                              alt={profileData.username}
+                              width={40}
+                              height={40}
+                              className="rounded-full"
+                            />
+                            <p>{profileData.username}</p>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+              {(modalType === "following"
+                ? userTargetData.following
+                : userTargetData.followers
+              ).length === 0 && (
+                <p className="text-gray-500">
+                  No tienes{" "}
+                  {modalType === "following" ? "seguidos" : "seguidores"}.
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+      </main>
+      <div className="hidden md:flex flex-col w-80 space-y-6 absolute right-20 top-1/2 transform -translate-y-1/2">
+        <Conectados />
+      </div>
+    </>
+  );
 };
 
 export default ProfileView;
