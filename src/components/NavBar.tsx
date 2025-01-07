@@ -156,13 +156,28 @@ export default function NavBar() {
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
                         <Image
-                          src="/add.png"
+                          src="/mas.jpg"
                           alt="Crear publicación"
                           width={15}
                           height={5}
                           className="mr-2"
                         />
-                        Crear publicación
+                        Crear Snappy Post
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/crear-story"
+                        className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      >
+                        <Image
+                          src="/reloj.png"
+                          alt="CrearStory"
+                          width={15}
+                          height={15}
+                          className="mr-2"
+                        />
+                        Crear Snappy Moment
                       </Link>
                     </li>
                     <li>

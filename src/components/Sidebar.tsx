@@ -15,11 +15,11 @@ const Sidebar = () => {
         </Link>
         <Link href="/crearpublicacion" className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
           <Image src="/mas.jpg" alt="Crear publicación" width={24} height={24} />
-          <span>Crear publicación</span>
+          <span>Snappy Post</span>
         </Link>
         <Link href="/crear-story" className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
-          <Image src="/mas.jpg" alt="Crear story" width={24} height={24} />
-          <span>Crear story</span>
+          <Image src="/reloj.png" alt="Crear story" width={24} height={24} />
+          <span>Snappy Moment</span>
         </Link>
         <Link href="/mensajesprivados" className="flex items-center space-x-4 cursor-pointer hover:text-blue-500">
           <Image src="/mensajes.png" alt="Mensajes" width={24} height={24} />
