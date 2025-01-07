@@ -42,6 +42,7 @@ export interface IUserDataGoogle {
   username?: string;
   profile_image?: string;
   birthdate?: string;
+  description?: string;
   genre?: "hombre" | "mujer" | "otro" | string;
 }
 

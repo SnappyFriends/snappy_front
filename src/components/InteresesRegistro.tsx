@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useState, useEffect, useContext } from "react";
 import {
@@ -8,11 +8,13 @@ import {
 } from "../services/interestService";
 import { UserContext } from "@/context/UserContext";
 import { IInterest } from "@/interfaces/types";
+import { useRouter } from "next/navigation";
 
-const Interests = () => {
+const InteresesRegistro = () => {
   const { userId, userData, setUserData } = useContext(UserContext);
   const [allInterests, setAllInterests] = useState<IInterest[]>([]);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchInterests = async () => {
@@ -64,6 +66,10 @@ const Interests = () => {
     }
   };
 
+  const handleNextPage = () => {
+    router.push("/miperfil");
+  };
+
   return (
     <div className="py-6">
       <h1 className="text-2xl font-bold mb-2 text-center text-gray-800">
@@ -71,7 +77,7 @@ const Interests = () => {
       </h1>
 
       <div className="max-w-4xl mx-auto bg-white rounded-lg border p-6">
-        <div className="flex flex-wrap gap-4">
+        <div className="flex flex-wrap gap-4 mb-6">
           {allInterests.map((interest) => {
             const isSelected = (userData?.interests || []).some(
               (i) => i.interest_id === interest.interest_id
@@ -93,9 +99,17 @@ const Interests = () => {
             );
           })}
         </div>
+
+        <button
+          className="w-full py-2 px-4 bg-black text-white font-semibold rounded-lg hover:bg-gray-800 disabled:bg-gray-300 disabled:cursor-not-allowed transition"
+          onClick={handleNextPage}
+          disabled={loading || (userData?.interests || []).length === 0}
+        >
+          Finalizar
+        </button>
       </div>
     </div>
   );
 };
 
-export default Interests;
+export default InteresesRegistro;

@@ -36,6 +36,7 @@ export default function CompletarRegistro() {
       username: data.username,
       birthdate: data.birthdate,
       genre: data.genre,
+      // description: data.description,
     };
 
     try {
@@ -66,7 +67,7 @@ export default function CompletarRegistro() {
         }
 
         showCustomToast("Snappy", "Registro con Google exitoso", "success");
-        router.push("/socialfeed");
+        router.push("/fotodeperfil");
       } else {
         const error = await response.json();
         showCustomToast(
@@ -141,6 +142,24 @@ export default function CompletarRegistro() {
                 )}
               </div>
 
+              {/* <div>
+                <label>
+                  Presentación
+                  <textarea
+                    className={`w-full h-32 border rounded-md p-2 ${
+                      errors.description ? "border-red-600" : "border-gray-400"
+                    }`}
+                    placeholder="Escribe una breve descripción sobre ti"
+                    {...register("description", validacionInputs.description)}
+                  />
+                </label>
+                {errors.description && (
+                  <span className="text-red-600 text-sm">
+                    {errors.description.message}
+                  </span>
+                )}
+              </div> */}
+
               <div className="flex gap-1 flex-wrap">
                 <p className="w-full">Género</p>
                 <div className="flex w-full gap-2">
@@ -201,7 +220,7 @@ export default function CompletarRegistro() {
                   type="submit"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? "Registrando..." : "Completar Registro"}
+                  {isSubmitting ? "Registrando..." : "Continuar"}
                 </button>
               </div>
             </form>
