@@ -127,7 +127,7 @@ const ProfileView = ({
     if (userTargetData) {
       if (userTargetData.followers && userTargetData.followers.length > 0) {
         const isFollowing = userTargetData.followers.map(
-          (follower: { follower: { id: string } }) => {
+          (follower) => {
             if (follower.follower.id == userTargetData.id) return true;
             else return false;
           }
@@ -385,7 +385,7 @@ const ProfileView = ({
                 : userTargetData.followers
               ).length === 0 && (
                 <p className="text-gray-500">
-                  No tienes{" "}
+                  El usuario ${userTargetData.username} no tiene {" "}
                   {modalType === "following" ? "seguidos" : "seguidores"}.
                 </p>
               )}
