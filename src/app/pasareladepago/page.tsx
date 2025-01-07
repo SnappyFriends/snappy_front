@@ -20,7 +20,6 @@ export default function PaymentGateway() {
   const duration = parseInt(subscriptionDuration, 10);
   const subtotal = pricePerMonth * duration;
 
-  // Fetch subscription details
   useEffect(() => {
     const fetchSubscriptionDetails = async () => {
       if (userId) {
