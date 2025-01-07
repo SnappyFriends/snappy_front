@@ -11,7 +11,7 @@ import { showCustomToast } from "./Notificacion";
 import {useRouter} from "next/navigation";
 
 interface User {
-  userId: string;
+  id: string;
   username: string;
   fullname: string;
   profile_image: string;
@@ -67,7 +67,7 @@ export default function PerfilComponent() {
 
   const [isFollowingModalOpen, setIsFollowingModalOpen] =
     useState<boolean>(false);
-  const [following, setFollowing] = useState<User[]>([]);
+  const [following, setFollower] = useState<User[]>([]);
  const router = useRouter();
 
   const fetchFollowers = async () => {
@@ -79,7 +79,7 @@ export default function PerfilComponent() {
         throw new Error("Error al obtener seguidores");
       }
       const data: User[] = await response.json();
-      setFollowing(data);
+      setFollower(data);
     } catch (error) {
       console.error("Error fetching friends:", error);
       alert("Hubo un problema al cargar tus seguidores");
@@ -180,7 +180,7 @@ export default function PerfilComponent() {
       const userStories = data
         .filter(
           (story) =>
-            story.user.userId === userData?.id &&
+            story.user.id === userData?.id &&
             new Date(story.creation_date).getTime() >= twentyFourHoursAgo
         )
         .sort((a, b) => {
@@ -528,7 +528,7 @@ export default function PerfilComponent() {
               <div className="space-y-4">
                 {following.map((follower) => (
                   <div
-                    key={follower.userId || follower.username}
+                    key={follower.id || follower.username}
                     className="flex justify-between items-center bg-gray-100 p-3 rounded-md"
                   >
                      <Link
@@ -550,7 +550,6 @@ export default function PerfilComponent() {
                       className="bg-red-500 text-white px-4 py-2 rounded-md"
                       onClick={() => {
                         removeFollower(follower.id);
-                        console.log(follower.id);
                       }}
                     >
                       Eliminar
