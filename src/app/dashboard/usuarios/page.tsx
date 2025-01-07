@@ -21,24 +21,24 @@ export default function Usuarios() {
   };
 
   return (
-<div className="flex flex-col items-center w-full ml-20">
-<h1 className="text-center text-3xl font-bold mb-5">Usuarios</h1>
+    <div className="flex flex-col items-center w-full ml-20">
+      <h1 className="text-center text-3xl font-bold mb-5">Usuarios</h1>
       <table className="w-full h-full text-sm mb-40">
         <thead>
           <tr>
             <th className="p-3 border">Foto de Perfil</th>
             <th className="p-3 border">Nombre de Usuario</th>
-            <th className="p-3 border">Nombre Completo</th>
-            <th className="p-3 border">Email</th> 
-            <th className="p-3 border">Género</th> 
-            <th className="p-3 border">Tipo</th>
+            <th className="p-3 border hidden lg:table-cell">Nombre Completo</th>
+            <th className="p-3 border hidden md:table-cell">Email</th> 
+            <th className="p-3 border hidden lg:table-cell">Género</th> 
+            <th className="p-3 border hidden lg:table-cell">Tipo</th>
             <th className="p-3 border">Acción</th>
           </tr>
         </thead>
         <tbody>
           {users?.map((user) => (
-            <tr key={user.id} className="border-b">
-              <td className="p-3">
+            <tr key={user.id} className=" border-b">
+              <td className="p-3 gn">
                 <Image
                   src={user.profile_image || "/default-profile.png"}
                   alt={user.username}
@@ -48,10 +48,10 @@ export default function Usuarios() {
                 />
               </td>
               <td className="p-3 text-center">{user.username}</td>
-              <td className="p-3 text-center">{user.fullname}</td>
-              <td className="p-3 text-center">{user.email}</td> 
-              <td className="p-3 text-center">{user.genre}</td> 
-              <td className="p-3 text-center">{user.user_type}</td> 
+              <td className="p-3 text-center hidden lg:table-cell">{user.fullname}</td>
+              <td className="p-3 text-center hidden md:table-cell">{user.email}</td> 
+              <td className="p-3 text-center hidden lg:table-cell">{user.genre}</td> 
+              <td className="p-3 text-center hidden lg:table-cell">{user.user_type}</td> 
               <td className="p-3 text-center">
                 <button
                   onClick={() => handleBan(user.id)}
