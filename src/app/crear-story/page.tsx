@@ -6,6 +6,7 @@ import React, { useState, useContext } from "react";
 import { UserContext } from "@/context/UserContext";
 import { useRouter } from "next/navigation";
 import Conectados from "@/components/Conectados";
+import { showCustomToast } from "@/components/Notificacion";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -48,7 +49,7 @@ const CrearStory = () => {
       const responseData = await response.json();
 
       if (response.ok) {
-        window.alert("¡Story creada con éxito!");
+        showCustomToast("Snappy", "Story creada correctamente", "success");
         setArchivo(null);
         setContent("");
         router.push("/miperfil");
@@ -71,7 +72,9 @@ const CrearStory = () => {
         <h2 className="text-2xl font-bold mb-4">Crear Story</h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <label className="p-2 border rounded flex flex-col items-start">
-            <span className="mb-2 text-sm">Sube tu archivo (imagen o video):</span>
+            <span className="mb-2 text-sm">
+              Sube tu archivo (imagen o video):
+            </span>
             <input
               type="file"
               onChange={(e) => setArchivo(e.target.files?.[0] || null)}
@@ -96,10 +99,12 @@ const CrearStory = () => {
           </button>
         </form>
 
-        {mensaje && <p className="mt-4 text-center text-sm text-red-500">{mensaje}</p>}
+        {mensaje && (
+          <p className="mt-4 text-center text-sm text-red-500">{mensaje}</p>
+        )}
         <div className="hidden md:flex flex-col w-80 space-y-6 absolute right-20 top-1/2 transform -translate-y-1/2">
-				<Conectados />
-			</div>
+          <Conectados />
+        </div>
       </div>
     </>
   );
