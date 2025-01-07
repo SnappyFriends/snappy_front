@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { UserProvider } from "../context/UserContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import Footer from "@/components/Footer"; 
 
 const interRegular = localFont({
   src: "./fonts/Inter28pt-Regular.woff",
@@ -28,8 +29,11 @@ export default function RootLayout({
           clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ""}
         >
           <UserProvider>
-            <Toaster />
-            {children}
+            <div className="flex flex-col min-h-screen">
+              <Toaster />
+              <main className="flex-1">{children}</main>
+              <Footer /> 
+            </div>
           </UserProvider>
         </GoogleOAuthProvider>
       </body>
