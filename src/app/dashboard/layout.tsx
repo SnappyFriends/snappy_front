@@ -10,17 +10,16 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
       <aside className="fixed z-50 h-full w-1/5">
         <DashboardSidebar />
       </aside>
-        <header className="fixed w-full h-40 ml-[20%] bg-gray-50">
-          <DashboardPicture />
-        </header>
-        <div className=" flex ml-[20%] w-[80%]">
-            <main className="mt-60">
-                {children}
-            </main>
-        </div>
+      <header className="fixed w-full h-40 ml-[20%] bg-gray-50 hidden lg:block">
+        <DashboardPicture />
+      </header>
+      <div className="flex ml-[20%] w-[80%]">
+        <main className="mt-60">
+          {children}
+        </main>
+      </div>
     </div>
   );
 };
 
 export default DashboardLayout;
-
