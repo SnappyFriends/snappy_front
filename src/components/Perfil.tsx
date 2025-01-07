@@ -418,6 +418,7 @@ export default function PerfilComponent() {
                 key={post.post_id}
                 className="relative w-[calc(50%-8px)] md:w-[calc(33.333%-12px)] lg:w-[calc(25%-16px)] aspect-square"
               >
+                
                 <Image
                   src={post.fileUrl}
                   alt={`Imagen del post ${post.post_id}`}
@@ -455,6 +456,10 @@ export default function PerfilComponent() {
                     key={followedUser.id || followedUser.username}
                     className="flex justify-between items-center bg-gray-100 p-3 rounded-md"
                   >
+                     <Link
+												href={`/perfil/${followedUser.username}`}
+												className="text-black hover:underline"
+											>
                     <div className="flex items-center gap-3">
                       <Image
                         src={followedUser.profile_image}
@@ -465,6 +470,7 @@ export default function PerfilComponent() {
                       />
                       <p>{followedUser.username}</p>
                     </div>
+                    </Link>
                     <button
                       className="bg-red-500 text-white px-4 py-2 rounded-md"
                       onClick={() => {
@@ -500,6 +506,10 @@ export default function PerfilComponent() {
                     key={follower.userId || follower.username}
                     className="flex justify-between items-center bg-gray-100 p-3 rounded-md"
                   >
+                     <Link
+												href={`/perfil/${follower.username}`}
+												className="text-black hover:underline"
+											>
                     <div className="flex items-center gap-3">
                       <Image
                         src={follower.profile_image}
@@ -509,7 +519,8 @@ export default function PerfilComponent() {
                         className="rounded-full"
                       />
                       <p>{follower.username}</p>
-                    </div>
+                      </div>
+                      </Link>
                   </div>
                 ))}
               </div>
