@@ -216,7 +216,7 @@ export interface IUsernameData {
   }[];
   posts: { post_id: string; fileUrl: string }[];
   following: { id: string, following: { id: string; username: string; profile_image: string } }[];
-  followers: { id: string, follower: IFollowers[] }[];
+  followers: { id: string, follower: { id: string; username: string; profile_image: string } }[];
 
   // stories: any[];
   // privacy: any[];
@@ -228,10 +228,6 @@ export interface IUsernameData {
   // reactions: any[];
   // comments: any[];
   // groupMembers: any[];
-}
-
-export interface IFollowers {
-  id: string; username: string; profile_image: string
 }
 
 
