@@ -238,3 +238,11 @@ export interface IUserChat {
   username: string;
   profile_image: string;
 }
+
+export interface INotification {
+  notification_id: string;
+  content: string;
+  type: string;
+  status: string;
+  creation_date: string;
+}
