@@ -1,38 +1,73 @@
 "use client";
 
-import React, { useState, useContext } from "react";
-import { UserContext } from "@/context/UserContext"; 
+import React, { useState, useEffect, useContext } from "react";
+import { UserContext } from "@/context/UserContext";
 import NavBar from "@/components/NavBar";
+import { showCustomToast } from "@/components/Notificacion";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function PaymentGateway() {
   const [subscriptionDuration, setSubscriptionDuration] = useState("1");
+  const [subscriptionDetails, setSubscriptionDetails] = useState<{
+    purchase_date: string;
+    expiration_date: string;
+    status: string;
+  } | null>(null);
   const { userData, userId } = useContext(UserContext);
 
   const pricePerMonth = 9.99;
   const duration = parseInt(subscriptionDuration, 10);
   const subtotal = pricePerMonth * duration;
 
+  useEffect(() => {
+    const fetchSubscriptionDetails = async () => {
+      if (userId) {
+        try {
+          const response = await fetch(`${API_URL}/purchases/user/${userId}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error("Error al obtener los detalles de la suscripción.");
+          }
+
+          const result = await response.json();
+          setSubscriptionDetails(result);
+        } catch (error) {
+          console.error("Error fetching subscription details", error);
+        }
+      }
+    };
+
+    fetchSubscriptionDetails();
+  }, [userId]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     if (userId) {
       try {
-        const response = await fetch(`${API_URL}/purchases/subscribe/${userId}`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ subscriptionDuration: duration }),
-        });
+        const response = await fetch(
+          `${API_URL}/purchases/subscribe/${userId}`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ subscriptionDuration: duration }),
+          }
+        );
 
         if (!response.ok) {
-          throw new Error('Hubo un problema con la solicitud');
+          throw new Error("Hubo un problema con la solicitud");
         }
 
         const result = await response.json();
-        console.log('Suscripción exitosa', result);
+        console.log("Suscripción exitosa", result);
 
         if (result.url) {
           window.location.href = result.url;
@@ -52,12 +87,37 @@ export default function PaymentGateway() {
       <div>
         <NavBar />
         <div className="min-h-screen flex justify-center items-center p-4">
-          <div className="w-full max-w-lg p-6 bg-white rounded-lg flex flex-col gap-8 shadow-lg">
-            <h2 className="text-2xl font-bold text-center mb-6">Tus detalles de suscripción premium</h2>
-            <p className="mb-4">Fecha de próximo pago: 01/01/2025</p>
+          <div className="w-full max-w-lg p-6 bg-white rounded-lg flex flex-col gap-4 shadow-xl border">
+            <h2 className="text-2xl font-bold text-center mb-6">
+              Historial de compras
+            </h2>
+            {subscriptionDetails ? (
+              <>
+                <p>
+                  Fecha de compra:{" "}
+                  {new Date(
+                    subscriptionDetails.purchase_date
+                  ).toLocaleDateString()}
+                </p>
+                <p>
+                  Fecha de expiración:{" "}
+                  {new Date(
+                    subscriptionDetails.expiration_date
+                  ).toLocaleDateString()}
+                </p>
+              </>
+            ) : (
+              <p className="mb-4">Cargando detalles de la suscripción...</p>
+            )}
             <button
-              className="w-full bg-red-500 text-white py-2 rounded font-bold hover:bg-red-400 transition-colors"
-              onClick={() => alert("Cancelación de suscripción exitosa. Veras impactados los cambios a partir del primer dia del proximo mes")}
+              className="w-full bg-red-500 text-white py-2 mt-4 rounded font-bold hover:bg-red-400 transition-colors"
+              onClick={() =>
+                showCustomToast(
+                  "Snappy",
+                  "Suscripción cancelada. Los cambios se efectuarán el próximo mes.",
+                  "success"
+                )
+              }
             >
               Cancelar suscripción
             </button>
@@ -72,48 +132,29 @@ export default function PaymentGateway() {
       <NavBar />
       <div className="min-h-screen flex justify-center items-center p-4">
         <div className="w-full max-w-lg p-6 bg-white rounded-lg flex flex-col gap-8 shadow-lg">
-          <h2 className="text-2xl font-bold text-center mb-6">Activa tu membresía premium con Snappy Friends</h2>
-
-          <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
-            <div>
-              <label
-                htmlFor="subscription-duration"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Duración de la suscripción (meses)
-              </label>
-              <select
-                id="subscription-duration"
-                value={subscriptionDuration}
-                onChange={(e) => setSubscriptionDuration(e.target.value)}
-                className="w-full p-2 border border-gray-300 rounded"
-              >
-                <option value="1">1 mes</option>
-                <option value="3">3 meses</option>
-                <option value="6">6 meses</option>
-                <option value="12">12 meses</option>
-              </select>
-            </div>
-
-            <h3 className="text-xl font-semibold mb-4">Resumen de pago</h3>
-            <div className="flex justify-between text-lg mb-2">
-              <span>Subtotal</span>
-              <span>${subtotal.toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between text-lg mb-4">
-              <span>Impuesto</span>
-              <span>FREE</span>
-            </div>
-            <div className="flex justify-between text-lg font-bold mb-6">
-              <span>Total</span>
-              <span>${subtotal.toFixed(2)}</span>
-            </div>
-
+          <h2 className="text-2xl font-bold text-center mb-6">
+            Selecciona la duración de tu suscripción
+          </h2>
+          <form onSubmit={handleSubmit}>
+            <label className="block mb-2">Duración (meses):</label>
+            <select
+              value={subscriptionDuration}
+              onChange={(e) => setSubscriptionDuration(e.target.value)}
+              className="w-full border rounded p-2 mb-4"
+            >
+              <option value="1">1 mes</option>
+              <option value="3">3 meses</option>
+              <option value="6">6 meses</option>
+              <option value="12">12 meses</option>
+            </select>
+            <p className="mb-4">
+              Subtotal: <strong>${subtotal.toFixed(2)}</strong>
+            </p>
             <button
               type="submit"
-              className="w-full bg-black text-white py-2 rounded font-bold hover:bg-gray-800 transition-colors"
+              className="w-full bg-blue-500 text-white py-2 rounded font-bold hover:bg-blue-400 transition-colors"
             >
-              Pagar con Stripe
+              Comprar
             </button>
           </form>
         </div>

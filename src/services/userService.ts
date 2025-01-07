@@ -4,7 +4,7 @@ export const getUserById = async (id: string) => {
   try {
     const response = await fetch(`${API_URL}/users/${id}`);
     if (!response.ok) {
-      throw new Error("Fallo el fetch getUserById");
+      return;
     }
 
     const data = await response.json();

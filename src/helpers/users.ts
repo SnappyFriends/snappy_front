@@ -5,15 +5,14 @@ export interface User {
   profile_image: string;
   isOnline: boolean;
   friends: [];
-
+  email?: string;
+  genre?: string;
+  user_type?: string;
 }
-
-
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const getUsers = async (interest?: string): Promise<User[]> => {
-
   try {
     let response;
     if (interest) {
@@ -28,9 +27,8 @@ export const getUsers = async (interest?: string): Promise<User[]> => {
       });
     }
 
-
     if (!response.ok) {
-      throw new Error("Error fetching users");
+      console.error("Error fetching users");
     }
 
     const users: User[] = await response.json();
@@ -48,27 +46,27 @@ export const getUsersByUsername = async (username: string) => {
     });
 
     if (!response.ok) {
-      throw new Error("Error fetching users");
+      console.error("Error fetching users");
     }
-    return response.json()
+    return response.json();
   } catch (error) {
     throw error;
-
   }
-}
+};
 
-export const getUsersSearchbar = async (username: string, interest?: string) => {
+export const getUsersSearchbar = async (
+  username: string,
+  interest?: string
+) => {
   try {
     let users;
     if (interest) {
       users = await getUsers(interest);
-
     } else {
       users = await getUsers();
     }
-    const filteredUsers = users.filter(
-      (user) =>
-        user.username.toLowerCase().includes(username.toLowerCase())
+    const filteredUsers = users.filter((user) =>
+      user.username.toLowerCase().includes(username.toLowerCase())
     );
     return filteredUsers;
   } catch (error) {
@@ -80,7 +78,7 @@ export const getUserById = async (id: string) => {
   try {
     const response = await fetch(`${API_URL}/users/${id}`);
     if (!response.ok) {
-      throw new Error("Error fetching user");
+      console.error("Error fetching user");
     }
     const userData = await response.json();
     return userData;
@@ -89,12 +87,11 @@ export const getUserById = async (id: string) => {
   }
 };
 
-
 export const fetchFriends = async (userId: string): Promise<User[]> => {
   try {
     const response = await fetch(`${API_URL}/follow/${userId}/friends`);
     if (!response.ok) {
-      throw new Error("Error fetching friends");
+      console.log("Errot fetching friends");
     }
     const userData = await response.json();
     return userData;
