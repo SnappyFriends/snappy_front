@@ -1,25 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useRef, useCallback } from "react";
 import Cookies from "js-cookie";
 import SocketService from "./socket";
-
-interface NotificationPayload {
-  type:
-    | "friend_request"
-    | "message"
-    | "post_reaction"
-    | "comment"
-    | "group_invitation"
-    | "system"
-    | "purchase";
-  content: string;
-  userId: string;
-  friendRequestId?: string;
-  messageId?: string;
-  postId?: string;
-  commentId?: string;
-  groupId?: string;
-  purchaseId?: string;
-}
 
 export const useSocket = () => {
   const token = Cookies.get("auth_token");
@@ -28,7 +10,7 @@ export const useSocket = () => {
   );
 
   useEffect(() => {
-    if (token) {
+    if (token && !socketRef.current) {
       const socket = SocketService.getInstance();
       socketRef.current = socket;
 
@@ -76,7 +58,7 @@ export const useSocket = () => {
     };
   }, [token]);
 
-  const sendNotification = useCallback((payload: NotificationPayload) => {
+  const sendNotification = useCallback((payload: any) => {
     if (socketRef.current) {
       socketRef.current.emit("notification", payload);
     }
