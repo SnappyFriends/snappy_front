@@ -1,68 +1,130 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 import Cookies from "js-cookie";
 import SocketService from "./socket";
+import { Chats, GroupChats, IGroupMessage, IMessage } from "@/interfaces/types";
+import { io, Socket } from "socket.io-client";
 
-export const useSocket = () => {
+interface NotificationPayload {
+  type:
+    | "friend_request"
+    | "message"
+    | "post_reaction"
+    | "comment"
+    | "group_invitation"
+    | "system"
+    | "purchase";
+  content: string;
+  userId: string;
+  friendRequestId?: string;
+  messageId?: string;
+  postId?: string;
+  commentId?: string;
+  groupId?: string;
+  purchaseId?: string;
+}
+
+export const useSocket = (
+  groupChat?: GroupChats | null,
+  chat?: Chats | null,
+  setMessages?: React.Dispatch<React.SetStateAction<IMessage[]>> | undefined,
+  setGroupMessages?:
+    | React.Dispatch<React.SetStateAction<IGroupMessage[]>>
+    | undefined
+) => {
   const token = Cookies.get("auth_token");
-  const socketRef = useRef<ReturnType<typeof SocketService.getInstance> | null>(
-    null
-  );
+  const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
+  const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
-    if (token && !socketRef.current) {
-      const socket = SocketService.getInstance();
-      socketRef.current = socket;
-
-      socket.on("connect", () => {
-        console.log("Conectado al servidor de websockets");
-      });
-
-      socket.on("error", (error: string) => {
-        console.error("Error de socket:", error);
-      });
-
-      socket.on("friendRequestNotification", (data) => {
-        console.log("Nueva solicitud de amistad:", data);
-      });
-
-      socket.on("messageNotification", (data) => {
-        console.log("Nuevo mensaje:", data);
-      });
-
-      socket.on("postReactionNotification", (data) => {
-        console.log("Nueva reacción:", data);
-      });
-
-      socket.on("commentNotification", (data) => {
-        console.log("Nuevo comentario:", data);
-      });
-
-      socket.on("groupInvitationNotification", (data) => {
-        console.log("Nueva invitación a grupo:", data);
-      });
-
-      socket.on("purchaseNotification", (data) => {
-        console.log("Nueva notificación de compra:", data);
-      });
-
-      socket.on("systemNotification", (data) => {
-        console.log("Notificación del sistema:", data);
-      });
+    const authToken = Cookies.get("auth_token");
+    if (!authToken) {
+      console.error("No auth token found in cookies");
+      return;
     }
+
+    socketRef.current = io(
+      `${process.env.NEXT_PUBLIC_API_URL}/chat?token=${authToken}`,
+      {
+        auth: {
+          token: authToken,
+        },
+        withCredentials: true,
+        transports: ["websocket"],
+      }
+    );
+
+    socketRef.current.on("connect", () => {});
+
+    socketRef.current.on("onlineUsers", (onlineUsersList) => {
+      setOnlineUsers(onlineUsersList.map((user: any) => user.id));
+    });
+
+    socketRef.current.on("receivePrivateMessage", (newMessage) => {
+      if (setMessages) {
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
+      }
+    });
+
+    socketRef.current.on("receiveGroupMessage", (newMessage) => {
+      if (setGroupMessages) {
+        setGroupMessages((prevMessages) => [...prevMessages, newMessage]);
+      }
+    });
+
+    if (chat) {
+      socketRef.current.emit("join_chat", chat);
+    }
+
+    if (groupChat) {
+      socketRef.current.emit("join_group_chat", groupChat);
+    }
+
+    socketRef.current.on("error", (error: string) => {
+      console.error("Error de socket:", error);
+    });
+
+    socketRef.current.on("friendRequestNotification", (data) => {});
+
+    socketRef.current.on("messageNotification", (data) => {});
+
+    socketRef.current.on("postReactionNotification", (data) => {});
+
+    socketRef.current.on("commentNotification", (data) => {});
+
+    socketRef.current.on("groupInvitationNotification", (data) => {});
+
+    socketRef.current.on("purchaseNotification", (data) => {});
+
+    socketRef.current.on("systemNotification", (data) => {});
 
     return () => {
       if (socketRef.current) {
         socketRef.current.disconnect();
       }
     };
-  }, [token]);
+  }, [token, chat, setMessages, groupChat, setGroupMessages]);
 
-  const sendNotification = useCallback((payload: any) => {
+  const sendNotification = useCallback((payload: NotificationPayload) => {
     if (socketRef.current) {
       socketRef.current.emit("notification", payload);
     }
   }, []);
 
-  return { sendNotification };
+  const sendMessage = useCallback((message: any) => {
+    if (socketRef.current) {
+      socketRef.current.emit("message", message);
+    } else {
+      console.error("Socket no está disponible");
+    }
+  }, []);
+
+  const getOnlineUsers = useCallback(() => {
+    if (socketRef.current) {
+      socketRef.current.emit("getOnlineUsers");
+    }
+  }, []);
+
+  return { sendNotification, sendMessage, getOnlineUsers, onlineUsers };
 };

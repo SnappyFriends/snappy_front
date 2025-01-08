@@ -1,10 +1,8 @@
 "use client";
 
-import React, { useEffect, useState, useRef, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
-import Cookies from "js-cookie";
-import io, { Socket } from "socket.io-client";
 import { getUsersByUsername, User } from "@/helpers/users";
 import { UserContext } from "@/context/UserContext";
 import NavBar from "@/components/NavBar";
@@ -12,6 +10,7 @@ import Sidebar from "@/components/Sidebar";
 import Conectados from "@/components/Conectados";
 import { Chats, IMessage } from "@/interfaces/types";
 import { timeAgo } from "@/helpers/timeAgo";
+import { useSocket } from "@/helpers/useSocket";
 
 const ChatWithUser = () => {
   const { username } = useParams();
@@ -19,8 +18,9 @@ const ChatWithUser = () => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<IMessage[]>([]);
   const { userData } = useContext(UserContext);
-  const socket = useRef<Socket | null>(null);
   const [chat, setChat] = useState<Chats | null>(null);
+
+  const { sendMessage } = useSocket(null, chat, setMessages, undefined);
 
   useEffect(() => {
     (async () => {
@@ -51,7 +51,6 @@ const ChatWithUser = () => {
                   `${process.env.NEXT_PUBLIC_API_URL}/chats/chat/${chatData.id}`
                 );
                 const messagesData = await responseMessages.json();
-
                 setChat(messagesData);
                 setMessages(messagesData.messages);
               } else {
@@ -90,50 +89,6 @@ const ChatWithUser = () => {
     })();
   }, [username, userData]);
 
-  useEffect(() => {
-    const authToken = Cookies.get("auth_token");
-    if (!authToken) {
-      console.error("No auth token found in cookies");
-      return;
-    }
-
-    socket.current = io(
-      `${process.env.NEXT_PUBLIC_API_URL}/chat?token=${authToken}`,
-      {
-        auth: {
-          token: authToken,
-        },
-        withCredentials: true,
-        transports: ["websocket"],
-      }
-    );
-
-    socket.current.on("connect", () => {
-      console.log("Conexión WebSocket establecida.");
-    });
-
-    socket.current.on("connect_error", (error) => {
-      console.error("Error de conexión al WebSocket:", error);
-    });
-
-    socket.current.on("receivePrivateMessage", (newMessage) => {
-      console.log("Mensaje recibido en WebSocket:", newMessage);
-
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
-    });
-
-    if (chat) {
-      socket.current.emit("join_chat", chat);
-    }
-
-    return () => {
-      if (socket.current) {
-        socket.current.disconnect();
-        console.log("Conexión WebSocket desconectada.");
-      }
-    };
-  }, [chat]);
-
   const handleSendMessage = async (receiverId: string) => {
     if (!message.trim()) return;
     if (!chat) {
@@ -155,36 +110,6 @@ const ChatWithUser = () => {
     };
 
     try {
-      /* const responseMessage = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/messages`,
-        {
-          method: "POST",
-          body: JSON.stringify(newMessage),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (responseMessage.ok) {
-        const responseData = await responseMessage.json();
-        console.log("Mensaje guardado en backend:", responseData);
-
-        const messagesData = {
-          username: responseData.username,
-          sender_id: responseData.sender_id,
-          user_type: responseData.user_type,
-          profile_image: responseData.profile_image,
-          message_id: responseData.message_id,
-          content: responseData.content,
-          send_date: responseData.send_date,
-          type: responseData.type,
-          is_anonymous: responseData.is_anonymous,
-          
-          }; 
-          
-          */
-
       const sendDate = timeAgo(new Date().toISOString());
 
       const messagesData = {
@@ -200,22 +125,9 @@ const ChatWithUser = () => {
       };
       setMessages((prevMessages) => [...prevMessages, messagesData]);
 
-      if (socket.current) {
-        socket.current.emit("message", newMessage);
-        console.log("Enviando evento 'message' al servidor:", newMessage);
-      } else {
-        console.error("Socket no está disponible");
-      }
+      sendMessage(newMessage);
 
       setMessage("");
-      /* } else {
-        const errorText = await responseMessage.text();
-        console.error(
-          "Error sending message:",
-          responseMessage.status,
-          errorText
-        );
-      } */
     } catch (error) {
       console.error("Error sending message:", error);
     }

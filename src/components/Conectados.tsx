@@ -2,12 +2,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState, useContext } from "react";
 import Image from "next/image";
-import { io, Socket } from "socket.io-client";
 import { UserContext } from "@/context/UserContext";
-import Cookies from "js-cookie";
 import { fetchFriends } from "@/helpers/users";
 import { User as BaseUser } from "@/helpers/users";
 import Link from "next/link";
+import { useSocket } from "@/helpers/useSocket";
 
 interface User extends BaseUser {
   isOnline: boolean;
@@ -20,27 +19,13 @@ interface User extends BaseUser {
 const Conectados: React.FC = () => {
   const { userId } = useContext(UserContext);
   const [friends, setFriends] = useState<User[]>([]);
-  const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
+
+  const { getOnlineUsers, onlineUsers } = useSocket();
 
   useEffect(() => {
     if (!userId) {
       return;
     }
-
-    const authToken = Cookies.get("auth_token");
-    if (!authToken) {
-      console.error("No se encontró el token de autenticación en las cookies.");
-      return;
-    }
-
-    const socket: Socket = io(
-      `${process.env.NEXT_PUBLIC_API_URL}/chat?token=${authToken}`,
-      {
-        auth: { token: authToken },
-        withCredentials: true,
-        transports: ["websocket"],
-      }
-    );
 
     const fetchUserFriends = async () => {
       try {
@@ -58,16 +43,7 @@ const Conectados: React.FC = () => {
 
     fetchUserFriends();
 
-    socket.on("onlineUsers", (onlineUsersList) => {
-      setOnlineUsers(onlineUsersList.map((user: any) => user.id));
-    });
-
-    socket.emit("getOnlineUsers");
-
-    return () => {
-      socket.off("onlineUsers");
-      socket.disconnect();
-    };
+    getOnlineUsers();
   }, [userId]);
 
   const friendsWithOnlineStatus = friends.map((friend) => ({

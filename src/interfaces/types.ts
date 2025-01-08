@@ -186,14 +186,16 @@ export interface IMessage {
 }
 
 export interface IGroupMessage {
-  username: string;
-  sender_id: string;
-  user_type: string;
-  profile_image: string;
+  message_id: string;
   content: string;
   send_date: string;
-  type: string;
-  is_anonymous: boolean;
+  sender: {
+    user_id: string;
+    username: string;
+    fullname: string;
+    profile_image: string;
+    user_type: string;
+  };
 }
 
 export interface IUsernameData {
@@ -216,8 +218,14 @@ export interface IUsernameData {
     name: string;
   }[];
   posts: { post_id: string; fileUrl: string }[];
-  following: { id: string, following: { id: string; username: string; profile_image: string } }[];
-  followers: { id: string, follower: { id: string; username: string; profile_image: string } }[];
+  following: {
+    id: string;
+    following: { id: string; username: string; profile_image: string };
+  }[];
+  followers: {
+    id: string;
+    follower: { id: string; username: string; profile_image: string };
+  }[];
 
   // stories: any[];
   // privacy: any[];
@@ -230,7 +238,6 @@ export interface IUsernameData {
   // comments: any[];
   // groupMembers: any[];
 }
-
 
 export interface IUserChat {
   chat_id: string;

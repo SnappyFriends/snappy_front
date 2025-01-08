@@ -1,7 +1,7 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useState, useEffect, useContext, useRef } from "react";
+import { useState, useEffect, useContext } from "react";
 import { getUsers } from "@/helpers/users";
 import Image from "next/image";
 import Sidebar from "@/components/Sidebar";
@@ -10,8 +10,7 @@ import NavBar from "@/components/NavBar";
 import CreateChat from "../crearchatgrupal/page";
 import { UserContext } from "@/context/UserContext";
 import { GroupChats, IGroupMessage } from "@/interfaces/types";
-import Cookies from "js-cookie";
-import io, { Socket } from "socket.io-client";
+import { useSocket } from "@/helpers/useSocket";
 import { timeAgo } from "@/helpers/timeAgo";
 
 // import { useSocket } from "@/helpers/useSocket";
@@ -32,14 +31,20 @@ const ChatRoomView = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isAdding, setIsAdding] = useState(false);
   const [hasGroupChats, setHasGroupChats] = useState<boolean>(false);
-  const [groupName, setGroupName] = useState("");
-  const [groupDescription, setGroupDescription] = useState("");
+  /* const [groupName, setGroupName] = useState("");
+  const [groupDescription, setGroupDescription] = useState(""); */
   const [groupId, setGroupId] = useState();
   const { userData } = useContext(UserContext);
-  const [chat, setChat] = useState<GroupChats | null>(null);
+  const [groupChat, setGroupChat] = useState<GroupChats | null>(null);
   const [message, setMessage] = useState("");
-  const [messages, setMessages] = useState<IGroupMessage[]>([]);
-  const socket = useRef<Socket | null>(null);
+  const [groupMessages, setGroupMessages] = useState<IGroupMessage[]>([]);
+
+  const { sendMessage } = useSocket(
+    groupChat,
+    null,
+    undefined,
+    setGroupMessages
+  );
 
   const filterUsers = (query: string) => {
     if (!query) {
@@ -63,17 +68,21 @@ const ChatRoomView = () => {
 
   //useEffect para hacer un fetch a la cantidad de Chats Grupales
   useEffect(() => {
+    if (!userData) {
+      return;
+    }
+
     const fetchGroupChats = async () => {
       try {
         const chatsQuantity = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/chat-groups`
+          `${process.env.NEXT_PUBLIC_API_URL}/chat-groups/${userData.id}/chats`
         );
         const response = await chatsQuantity.json();
         if (Array.isArray(response) && response.length > 0) {
           const group = response[0];
           setHasGroupChats(true);
-          setGroupDescription(group.description);
-          setGroupName(group.name);
+          /* setGroupDescription(group.description);
+          setGroupName(group.name); */
           setGroupId(group.group_id);
         } else {
           setHasGroupChats(false);
@@ -83,7 +92,7 @@ const ChatRoomView = () => {
       }
     };
     fetchGroupChats();
-  }, [groupId]);
+  }, [groupId, userData]);
 
   //useEffect para hacer un fetch a los miembros de un grupo.
   useEffect(() => {
@@ -142,14 +151,10 @@ const ChatRoomView = () => {
         );
         if (responseGroupChats.ok) {
           const groupChatData = await responseGroupChats.json();
-          setChat(groupChatData);
-          console.log("DATA", groupChatData);
 
-          const messagesData = groupChatData.map((message: any) => {
-            return message.messages;
-          });
+          setGroupChat(groupChatData[0]);
 
-          setMessages(messagesData);
+          setGroupMessages(groupChatData[0].messages);
         }
       } catch {
         console.log("Hubo un error al traer la información del Chat Grupal");
@@ -177,53 +182,9 @@ const ChatRoomView = () => {
     }
   };
 
-  useEffect(() => {
-    const authToken = Cookies.get("auth_token");
-    if (!authToken) {
-      console.error("No auth token found in cookies");
-      return;
-    }
-
-    socket.current = io(
-      `${process.env.NEXT_PUBLIC_API_URL}/chat?token=${authToken}`,
-      {
-        auth: {
-          token: authToken,
-        },
-        withCredentials: true,
-        transports: ["websocket"],
-      }
-    );
-
-    socket.current.on("connect", () => {
-      console.log("Conexión WebSocket establecida.");
-    });
-
-    socket.current.on("connect_error", (error) => {
-      console.error("Error de conexión al WebSocket:", error);
-    });
-
-    socket.current.on("message", (newMessage) => {
-      console.log("Mensaje recibido en WebSocket:", newMessage);
-
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
-    });
-
-    if (chat) {
-      socket.current.emit("join_group_chat", chat);
-    } else console.log("el objeto chat no está definido");
-
-    return () => {
-      if (socket.current) {
-        socket.current.disconnect();
-        console.log("Conexión WebSocket desconectada.");
-      }
-    };
-  }, [chat]);
-
   const handleSendMessage = () => {
     if (!message.trim()) return;
-    if (!chat) {
+    if (!groupChat) {
       console.error("No chatId available");
       return;
     }
@@ -232,17 +193,19 @@ const ChatRoomView = () => {
       return;
     }
 
+    const sendDate = timeAgo(new Date().toISOString());
     const newMessage = {
+      send_date: sendDate,
       content: message,
       groupId: groupId,
       sender_id: userData.id,
       type: "text",
       is_anonymous: false,
+      messageReceivers: members.map((member) => member.id),
     };
-    console.log("group_id", groupId);
 
     try {
-      const sendDate = timeAgo(new Date().toISOString());
+      /* const sendDate = timeAgo(new Date().toISOString());
       const messageData = {
         username: userData.username,
         sender_id: userData.id,
@@ -254,14 +217,9 @@ const ChatRoomView = () => {
         is_anonymous: false,
         group_id: groupId,
       };
-      setMessages((prevMessages) => [...prevMessages, messageData]);
+      setGroupMessages((prevMessages) => [...prevMessages, messageData]); */
 
-      if (socket.current) {
-        socket.current.emit("message", newMessage);
-        console.log("Enviando evento 'message' al servidor:", newMessage);
-      } else {
-        console.error("Socket no está disponible");
-      }
+      sendMessage(newMessage);
 
       setMessage("");
     } catch (error) {
@@ -361,37 +319,41 @@ const ChatRoomView = () => {
                         />
                       </div>
                       <div className="ml-3">
-                        <h1 className="text-xl font-semibold">{groupName}</h1>
+                        <h1 className="text-xl font-semibold">
+                          {groupChat?.name}
+                        </h1>
                         <p className="text-sm text-gray-500">
-                          {groupDescription}
+                          {groupChat?.description}
                         </p>
                       </div>
                     </div>
                   </div>
 
                   <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
-                    {chat ? (
-                      messages.length > 0 ? (
-                        messages.map((uniqueMsg, index) => {
-                          const isSender = uniqueMsg.sender_id === userData?.id;
+                    {groupChat ? (
+                      Array.isArray(groupMessages) &&
+                      groupMessages.length > 0 ? (
+                        groupMessages.map((uniqueMsg, index) => {
+                          const isSender =
+                            uniqueMsg.sender.user_id === userData?.id;
 
                           const divContainer = isSender ? (
                             <div
                               className="text-right"
-                              key={`${uniqueMsg.sender_id}-${index}`}
+                              key={`${uniqueMsg.sender.user_id}-${index}`}
                             >
                               <div className="p-2 bg-blue-100 rounded-lg my-2">
-                                <p>{uniqueMsg.username}</p>
+                                <p>{uniqueMsg.sender.username}</p>
                                 <p>{uniqueMsg.content}</p>
                               </div>
                             </div>
                           ) : (
                             <div
                               className="text-left"
-                              key={`${uniqueMsg.sender_id}-${index}`}
+                              key={`${uniqueMsg.sender.user_id}-${index}`}
                             >
                               <div className="p-2 bg-blue-100 rounded-lg my-2">
-                                <p>{uniqueMsg.username}</p>
+                                <p>{uniqueMsg.sender.username}</p>
                                 <p>{uniqueMsg.content}</p>
                               </div>
                             </div>

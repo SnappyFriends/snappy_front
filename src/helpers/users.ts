@@ -88,7 +88,7 @@ export const fetchFriends = async (userId: string): Promise<User[]> => {
   try {
     const response = await fetch(`${API_URL}/follow/${userId}/friends`);
     if (!response.ok) {
-      console.log("Errot fetching friends");
+      console.log("Error fetching friends");
     }
     const userData = await response.json();
     return userData;
