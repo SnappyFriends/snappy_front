@@ -39,67 +39,60 @@ export const useSocket = (
 
   useEffect(() => {
     const authToken = Cookies.get("auth_token");
+
     if (!authToken) {
       console.error("No auth token found in cookies");
       return;
     }
 
-    socketRef.current = io(
-      `${process.env.NEXT_PUBLIC_API_URL}/chat?token=${authToken}`,
-      {
-        auth: {
-          token: authToken,
-        },
-        withCredentials: true,
-        transports: ["websocket"],
+    // Retrasar la conexión del WebSocket
+    const timeoutId = setTimeout(() => {
+      socketRef.current = io(
+        `${process.env.NEXT_PUBLIC_API_URL}/chat?token=${authToken}`,
+        {
+          auth: {
+            token: authToken,
+          },
+          withCredentials: true,
+          transports: ["websocket"],
+        }
+      );
+
+      socketRef.current.on("connect", () => {
+        console.log("WebSocket conectado");
+      });
+
+      socketRef.current.on("onlineUsers", (onlineUsersList) => {
+        setOnlineUsers(onlineUsersList.map((user: any) => user.id));
+      });
+
+      socketRef.current.on("receivePrivateMessage", (newMessage) => {
+        if (setMessages) {
+          setMessages((prevMessages) => [...prevMessages, newMessage]);
+        }
+      });
+
+      socketRef.current.on("receiveGroupMessage", (newMessage) => {
+        if (setGroupMessages) {
+          setGroupMessages((prevMessages) => [...prevMessages, newMessage]);
+        }
+      });
+
+      if (chat) {
+        socketRef.current.emit("join_chat", chat);
       }
-    );
 
-    socketRef.current.on("connect", () => {});
-
-    socketRef.current.on("onlineUsers", (onlineUsersList) => {
-      setOnlineUsers(onlineUsersList.map((user: any) => user.id));
-    });
-
-    socketRef.current.on("receivePrivateMessage", (newMessage) => {
-      if (setMessages) {
-        setMessages((prevMessages) => [...prevMessages, newMessage]);
+      if (groupChat) {
+        socketRef.current.emit("join_group_chat", groupChat);
       }
-    });
 
-    socketRef.current.on("receiveGroupMessage", (newMessage) => {
-      if (setGroupMessages) {
-        setGroupMessages((prevMessages) => [...prevMessages, newMessage]);
-      }
-    });
-
-    if (chat) {
-      socketRef.current.emit("join_chat", chat);
-    }
-
-    if (groupChat) {
-      socketRef.current.emit("join_group_chat", groupChat);
-    }
-
-    socketRef.current.on("error", (error: string) => {
-      console.error("Error de socket:", error);
-    });
-
-    socketRef.current.on("friendRequestNotification", (data) => {});
-
-    socketRef.current.on("messageNotification", (data) => {});
-
-    socketRef.current.on("postReactionNotification", (data) => {});
-
-    socketRef.current.on("commentNotification", (data) => {});
-
-    socketRef.current.on("groupInvitationNotification", (data) => {});
-
-    socketRef.current.on("purchaseNotification", (data) => {});
-
-    socketRef.current.on("systemNotification", (data) => {});
+      socketRef.current.on("error", (error) => {
+        console.error("Error de socket:", error);
+      });
+    }, 1500);
 
     return () => {
+      clearTimeout(timeoutId);
       if (socketRef.current) {
         socketRef.current.disconnect();
       }
