@@ -6,7 +6,7 @@ import DashboardPicture from "@/components/DashboardPicture";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 	return (
-		<div className="flex h-screen w-screen">
+		<div className="flex h-screen">
 			<aside className="fixed z-50 h-full">
 				<DashboardSidebar />
 			</aside>
