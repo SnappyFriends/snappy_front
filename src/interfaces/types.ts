@@ -253,3 +253,21 @@ export interface INotification {
   status: string;
   creation_date: string;
 }
+
+export interface IReport {
+  report_id: string;
+  description: string;
+  report_date: string;
+  reported_user: {
+    id: string;
+    fullname: string;
+    username: string;
+    profile_image: string;
+  };
+  reporting_user: {
+    id: string;
+    fullname: string;
+    username: string;
+    profile_image: string;
+  };
+}
