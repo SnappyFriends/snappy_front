@@ -5,6 +5,9 @@ export interface User {
   profile_image: string;
   isOnline: boolean;
   friends: [];
+  email?: string;
+  genre?: string;
+  user_type?: string;
 }
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;

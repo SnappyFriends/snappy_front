@@ -78,7 +78,7 @@ const CrearPublicacion = () => {
 			<Sidebar />
 
 			<div className="max-w-md mx-auto mt-10 p-4 border rounded shadow-lg">
-				<h2 className="text-2xl font-bold mb-4">Crear Publicación</h2>
+				<h2 className="text-2xl font-bold mb-4">Crear Snappy Post</h2>
 				<form onSubmit={handleSubmit} className="flex flex-col gap-4">
 					<textarea
 						className="p-2 border rounded"

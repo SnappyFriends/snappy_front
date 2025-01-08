@@ -69,7 +69,7 @@ const CrearStory = () => {
       <Sidebar />
 
       <div className="max-w-md mx-auto mt-10 p-4 border rounded shadow-lg">
-        <h2 className="text-2xl font-bold mb-4">Crear Story</h2>
+        <h2 className="text-2xl font-bold mb-4">Crear Snappy Moment</h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <label className="p-2 border rounded flex flex-col items-start">
             <span className="mb-2 text-sm">
@@ -95,7 +95,7 @@ const CrearStory = () => {
             type="submit"
             className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition"
           >
-            Subir Story
+            Subir Moment
           </button>
         </form>
 

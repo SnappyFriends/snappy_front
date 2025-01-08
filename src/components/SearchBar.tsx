@@ -4,7 +4,6 @@ import { getUsersSearchbar } from "@/helpers/users";
 import Image from "next/image";
 import Link from "next/link";
 
-
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 interface SearchUser {
   id: string;
@@ -67,10 +66,9 @@ const SearchBar: React.FC = () => {
       }
     };
 
-      fetchFilteredUsers();
-      setSearched(true);
-    }, [searchQuery]);
-
+    fetchFilteredUsers();
+    setSearched(true);
+  }, [searchQuery]);
 
   const toggleInterest = (interest: string) => {
     setSelectedInterests((prev) =>
@@ -135,24 +133,25 @@ const SearchBar: React.FC = () => {
           </button>
 
           {showDropdown && (
-            <div className="absolute top-full left-0 w-full max-h-60 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg z-10 overflow-y-auto">
-              <ul className="space-y-2 p-2">
-                {interests.map((interest) => (
-                  <li key={interest.interest_id}>
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={selectedInterests.includes(interest.name)}
-                        onChange={() => toggleInterest(interest.name)}
-                        className="form-checkbox h-4 w-4 text-blue-500"
-                      />
-                      <span className="text-gray-700">{interest.name}</span>
-                    </label>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+  <div className="absolute top-full left-0 w-full md:w-[120%] max-h-60 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg z-10 overflow-y-auto">
+    <ul className="space-y-2 p-2">
+      {interests.map((interest) => (
+        <li key={interest.interest_id}>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={selectedInterests.includes(interest.name)}
+              onChange={() => toggleInterest(interest.name)}
+              className="form-checkbox h-4 w-4 text-blue-500"
+            />
+            <span className="text-gray-700">{interest.name}</span>
+          </label>
+        </li>
+      ))}
+    </ul>
+  </div>
+)}
+
         </div>
 
         <button
@@ -170,7 +169,7 @@ const SearchBar: React.FC = () => {
           <p className="text-gray-500 text-center">No hay resultados.</p>
         )}
 
-        <div className="absolute z-10 top-0 w-full max-h-60 overflow-y-auto mt-2 bg-white shadow-lg">
+        <div className="absolute z-10 top-0 w-full max-h-60 overflow-y-auto mt-2 bg-white shadow-lg md:w-3/5">
           {filteredUsers.map((user) => (
             <div
               key={user.id}
