@@ -44,7 +44,7 @@ const Conectados: React.FC = () => {
     fetchUserFriends();
 
     getOnlineUsers();
-  }, [userId]);
+  }, [userId, getOnlineUsers, onlineUsers]);
 
   const friendsWithOnlineStatus = friends.map((friend) => ({
     ...friend,
