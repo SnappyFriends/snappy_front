@@ -126,17 +126,16 @@ const ChatRoomView = () => {
     fetchGroupMembers();
   }, [groupId, usersList]);
 
-  const fetchUsers = async () => {
-    try {
-      const users = await getUsers();
-      setUsersList(users);
-    } catch (error) {
-      console.error("Error fetching users:", error);
-    }
-  };
-
   useEffect(() => {
-    fetchUsers();
+    const fetchUsers = async () => {
+      try {
+        const users = await getUsers();
+        setUsersList(users);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+
     (async (groupId) => {
       if (!groupId || !userData) {
         console.log(
@@ -160,6 +159,7 @@ const ChatRoomView = () => {
         console.log("Hubo un error al traer la información del Chat Grupal");
       }
     })(groupId);
+    fetchUsers();
   }, [groupId, userData]);
 
   const addMemberToRoom = async (user: User) => {
