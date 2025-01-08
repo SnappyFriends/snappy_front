@@ -334,21 +334,12 @@ const ChatRoomView = () => {
                       Array.isArray(groupMessages) &&
                       groupMessages.length > 0 ? (
                         groupMessages.map((uniqueMsg, index) => {
-                          if (!uniqueMsg.sender) {
-                            return (
-                              <div
-                                className="text-center text-gray-400"
-                                key={`undefined-sender-${index}`}
-                              >
-                                <p>Mensaje sin remitente</p>
-                              </div>
-                            );
-                          }
-
+                          const userId = localStorage.getItem("userId");
                           const isSender =
-                            uniqueMsg.sender.user_id === userData?.id;
+                            uniqueMsg.sender.user_id === userData?.id ||
+                            uniqueMsg.sender.user_id === userId;
 
-                          return isSender ? (
+                          const divContainer = isSender ? (
                             <div
                               className="text-right"
                               key={`${uniqueMsg.sender.user_id}-${index}`}
@@ -369,6 +360,8 @@ const ChatRoomView = () => {
                               </div>
                             </div>
                           );
+
+                          return divContainer;
                         })
                       ) : (
                         <p className="text-gray-400 text-center">
