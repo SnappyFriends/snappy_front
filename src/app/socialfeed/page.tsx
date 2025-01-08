@@ -265,6 +265,12 @@ const SocialFeedView = () => {
     setSelectedStory(currentList[nextIndex]);
   };
 
+  const uniqueUsers = Array.from(
+    new Set(stories.map((story) => story.user.userId))
+  ).map((userId) => {
+    return stories.find((story) => story.user.userId === userId)?.user;
+  });
+
   return (
     <>
       <NavBar />
@@ -301,22 +307,26 @@ const SocialFeedView = () => {
               </button>
             </div>
 
-            {stories?.slice(0, 5).map((story) => (
+            {uniqueUsers.map((user) => (
               <div
-                key={story.story_id}
+                key={user?.userId}
                 className="relative w-14 h-14 flex flex-col items-center cursor-pointer"
-                onClick={() => handleStoryClick(story)}
+                onClick={() =>
+                  handleStoryClick(
+                    stories.find((story) => story.user.userId === user?.userId)!
+                  )
+                }
               >
                 <Image
-                  src={story.user.profile_image || "/user.png"}
-                  alt={`Foto de ${story.user.username}`}
+                  src={user?.profile_image || "/user.png"}
+                  alt={`Foto de ${user?.username}`}
                   layout="fill"
                   className="rounded-full object-cover"
                 />
                 <p className="text-xs mt-14 text-center font-semibold text-ellipsis whitespace-nowrap">
-                  {story.user.username.length > 8
-                    ? `${story.user.username.slice(0, 8)}...`
-                    : story.user.username}
+                  {user?.username && user.username.length > 8
+                    ? `${user.username.slice(0, 8)}...`
+                    : user?.username}
                 </p>
               </div>
             ))}
