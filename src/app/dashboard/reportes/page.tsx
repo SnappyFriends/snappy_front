@@ -29,14 +29,20 @@ const ReportesPage: React.FC = () => {
         Reportes de usuarios
       </h1>
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white border border-gray-200">
+        <table className="w-full bg-white border border-gray-200">
           <thead>
             <tr className="bg-gray-100">
               <th className="px-4 py-2 border border-gray-200 text-center">
-                Foto de Perfil
+                Foto de Perfil (Reportante)
               </th>
               <th className="px-4 py-2 border border-gray-200 text-center">
-                Username
+                Username (Reportante)
+              </th>
+              <th className="px-4 py-2 border border-gray-200 text-center">
+                Foto de Perfil (Reportado)
+              </th>
+              <th className="px-4 py-2 border border-gray-200 text-center">
+                Username (Reportado)
               </th>
               <th className="px-4 py-2 border border-gray-200 text-center">
                 Fecha de Reporte
@@ -49,6 +55,22 @@ const ReportesPage: React.FC = () => {
           <tbody>
             {reports.map((report) => (
               <tr key={report.report_id} className="border-t">
+                <td className="px-4 py-2 border border-gray-200 text-center">
+                  <Link href={`../perfil/${report.reporting_user.username}`}>
+                    <Image
+                      src={report.reporting_user.profile_image}
+                      alt={report.reporting_user.username}
+                      width={40}
+                      height={40}
+                      className="w-10 h-10 rounded-full mx-auto"
+                    />
+                  </Link>
+                </td>
+                <td className="px-4 py-2 border border-gray-200 text-center">
+                  <Link href={`../perfil/${report.reporting_user.username}`}>
+                    {report.reporting_user.username}
+                  </Link>
+                </td>
                 <td className="px-4 py-2 border border-gray-200 text-center">
                   <Link href={`../perfil/${report.reported_user.username}`}>
                     <Image
