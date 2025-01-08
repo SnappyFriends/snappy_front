@@ -6,6 +6,7 @@ import { fetchReports } from "@/services/reportService";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import UserReportsChart from "@/components/UserReportsChart";
 
 const ReportesPage: React.FC = () => {
   const [reports, setReports] = useState<IReport[]>([]);
@@ -28,7 +29,7 @@ const ReportesPage: React.FC = () => {
       <h1 className="text-2xl font-bold mb-4 text-center">
         Reportes de usuarios
       </h1>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto mt-4">
         <table className="w-full bg-white border border-gray-200">
           <thead>
             <tr className="bg-gray-100">
@@ -98,6 +99,7 @@ const ReportesPage: React.FC = () => {
           </tbody>
         </table>
       </div>
+      <UserReportsChart />
     </div>
   );
 };
