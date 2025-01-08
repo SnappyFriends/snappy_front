@@ -10,6 +10,7 @@ import {
   Legend,
   ArcElement,
 } from "chart.js";
+import { IChartData, IReportData } from "@/interfaces/types";
 
 Chart.register(
   CategoryScale,
@@ -21,37 +22,12 @@ Chart.register(
   ArcElement
 );
 
-interface UserReport {
-  id: string;
-  fullname: string;
-  reportCount?: number;
-  reportedCount?: number;
-}
-
-interface ReportData {
-  usersWhoReport: UserReport[];
-  mostReportedUsers: UserReport[];
-  totalReportedUsers: number;
-  totalUnreportedUsers: number;
-}
-
-interface ChartData {
-  labels: string[];
-  datasets: {
-    label: string;
-    data: number[];
-    backgroundColor: string[];
-    borderColor: string[];
-    borderWidth: number;
-  }[];
-}
-
 const UserReportsChart: React.FC = () => {
   const [mostReportedUsersData, setMostReportedUsersData] =
-    useState<ChartData | null>(null);
+    useState<IChartData | null>(null);
   const [usersWhoReportData, setUsersWhoReportData] =
-    useState<ChartData | null>(null);
-  const [totalUsersData, setTotalUsersData] = useState<ChartData | null>(null);
+    useState<IChartData | null>(null);
+  const [totalUsersData, setTotalUsersData] = useState<IChartData | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -59,7 +35,7 @@ const UserReportsChart: React.FC = () => {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/logs/user-reports`
         );
-        const data: ReportData = await response.json();
+        const data: IReportData = await response.json();
 
         const mostReportedUsersNames = data.mostReportedUsers.map(
           (user) => user.fullname
@@ -125,71 +101,77 @@ const UserReportsChart: React.FC = () => {
   }, []);
 
   return (
-    <div>
+    <div className="flex flex-wrap justify-center mt-4">
       {mostReportedUsersData && (
-        <div>
-          <h2 className="text-2xl font-bold mt-10 mb-4 text-center">
-            Usuarios más reportados
-          </h2>
-          <Bar
-            data={mostReportedUsersData}
-            options={{
-              responsive: true,
-              plugins: {
-                legend: {
-                  position: "top",
+        <div className="w-full md:w-1/2 p-4">
+          <div className="rounded-xl shadow-lg p-6">
+            <h2 className="text-2xl font-bold mt-10 mb-4 text-center">
+              Usuarios más reportados
+            </h2>
+            <Bar
+              data={mostReportedUsersData}
+              options={{
+                responsive: true,
+                plugins: {
+                  legend: {
+                    position: "top",
+                  },
+                  title: {
+                    display: true,
+                    text: "Usuarios más reportados",
+                  },
                 },
-                title: {
-                  display: true,
-                  text: "Usuarios más reportados",
-                },
-              },
-            }}
-          />
+              }}
+            />
+          </div>
         </div>
       )}
       {usersWhoReportData && (
-        <div>
-          <h2 className="text-2xl font-bold mt-10 mb-4 text-center">
-            Usuarios que más reportes han generado
-          </h2>
-          <Bar
-            data={usersWhoReportData}
-            options={{
-              responsive: true,
-              plugins: {
-                legend: {
-                  position: "top",
+        <div className="w-full md:w-1/2 p-4">
+          <div className="rounded-xl shadow-lg p-6">
+            <h2 className="text-2xl font-bold mt-10 mb-4 text-center">
+              Usuarios que más reportes han generado
+            </h2>
+            <Bar
+              data={usersWhoReportData}
+              options={{
+                responsive: true,
+                plugins: {
+                  legend: {
+                    position: "top",
+                  },
+                  title: {
+                    display: true,
+                    text: "Usuarios que más reportes han generado",
+                  },
                 },
-                title: {
-                  display: true,
-                  text: "Usuarios que más reportes han generado",
-                },
-              },
-            }}
-          />
+              }}
+            />
+          </div>
         </div>
       )}
       {totalUsersData && (
-        <div>
-          <h2 className="text-2xl font-bold mt-10 mb-4 text-center">
-            Cantidad de usuarios reportados vs no reportados
-          </h2>
-          <Pie
-            data={totalUsersData}
-            options={{
-              responsive: true,
-              plugins: {
-                legend: {
-                  position: "top",
+        <div className="w-full md:w-1/2 p-4 mb-10">
+          <div className="rounded-xl shadow-lg p-6">
+            <h2 className="text-2xl font-bold mt-10 mb-4 text-center">
+              Cantidad de usuarios reportados vs no reportados
+            </h2>
+            <Pie
+              data={totalUsersData}
+              options={{
+                responsive: true,
+                plugins: {
+                  legend: {
+                    position: "top",
+                  },
+                  title: {
+                    display: true,
+                    text: "Cantidad de usuarios reportados vs no reportados",
+                  },
                 },
-                title: {
-                  display: true,
-                  text: "Cantidad de usuarios reportados vs no reportados",
-                },
-              },
-            }}
-          />
+              }}
+            />
+          </div>
         </div>
       )}
     </div>
