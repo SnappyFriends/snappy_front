@@ -8,6 +8,7 @@ export interface User {
   email?: string;
   genre?: string;
   user_type?: string;
+  status: string;
 }
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;

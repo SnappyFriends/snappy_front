@@ -1,12 +1,14 @@
 "use client";
-
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { getUsers, User } from "@/helpers/users";
+import { UserContext } from "@/context/UserContext";
 import Image from "next/image";
 
 export default function Usuarios() {
+  const { userData } = useContext(UserContext);
   const [users, setUsers] = useState<User[]>();
   const [filter, setFilter] = useState<string>(""); 
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -19,17 +21,45 @@ export default function Usuarios() {
     fetchUsers();
   }, []); 
 
-  const handleBan = (userId: string) => {
-    console.log(`Usuario con ID ${userId} baneado`);
+  const handleBanToggle = async (userId: string, currentStatus: string) => {
+    if (!userData) return;
+    
+    setLoading(true);
+
+    // Toggle status between "banned" and "active"
+    const newStatus = currentStatus === "banned" ? "active" : "banned";
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
+      if (response.ok) {
+        setUsers((prevUsers) =>
+          prevUsers?.map((user) =>
+            user.id === userId ? { ...user, status: newStatus } : user
+          )
+        );
+      } else {
+        console.error("Error al actualizar el estado del usuario");
+      }
+    } catch (error) {
+      console.error("Error al hacer el fetch:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
- 
   const filteredUsers = users?.filter(user => 
     user.username.toLowerCase().includes(filter.toLowerCase())
   );
 
   return (
-    <div className="flex flex-col items-center w-full ml-20">
+    <div className="flex flex-col items-center w-full lg:ml-20">
       <h1 className="text-center text-3xl font-bold mb-5">Usuarios</h1>
       
       <input
@@ -54,8 +84,8 @@ export default function Usuarios() {
         </thead>
         <tbody>
           {filteredUsers?.map((user) => (
-            <tr key={user.id} className=" border-b">
-              <td className="p-3 gn">
+            <tr key={user.id} className="border-b">
+              <td className="p-3">
                 <Image
                   src={user.profile_image || "/default-profile.png"}
                   alt={user.username}
@@ -71,10 +101,11 @@ export default function Usuarios() {
               <td className="p-3 text-center hidden lg:table-cell">{user.user_type}</td> 
               <td className="p-3 text-center">
                 <button
-                  onClick={() => handleBan(user.id)}
-                  className="bg-red-600 text-white py-1 px-4 rounded-lg"
+                  onClick={() => handleBanToggle(user.id, user.status)}
+                  disabled={loading}
+                  className={`py-1 px-4 rounded-lg ${user.status === "banned" ? "bg-gray-400 text-white" : "bg-red-600 text-white"}`}
                 >
-                  Bannear
+                  {user.status === "banned" ? "Desbanear" : "Bannear"}
                 </button>
               </td>
             </tr>
