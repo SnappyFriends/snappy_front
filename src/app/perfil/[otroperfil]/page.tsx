@@ -13,7 +13,7 @@ import NavBar from "@/components/NavBar";
 import { UserContext } from "@/context/UserContext";
 import { showCustomToast } from "@/components/Notificacion";
 import PostDetails from "@/components/PostDetails";
-// import { formatDistanceToNow } from "date-fns";
+
 interface IPost {
   post_id: string;
   content: string;
@@ -50,8 +50,9 @@ const ProfileView = ({
   const [modalType, setModalType] = useState<"followers" | "following" | null>(
     null
   );
-
   const [selectedPost, setSelectedPost] = useState<IPost | null>(null);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [reportDescription, setReportDescription] = useState("");
 
   const handleFriendRequest = async () => {
     if (!followingState) {
@@ -96,6 +97,37 @@ const ProfileView = ({
     setShowModal(false);
     setModalType(null);
   };
+
+  const handleOpenReportModal = () => {
+    setShowReportModal(true);
+  };
+
+  const handleCloseReportModal = () => {
+    setShowReportModal(false);
+    setReportDescription("");
+  };
+
+  const handleReportSubmit = async () => {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reports`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        reporting: userData?.id,
+        reported: userTargetData?.id,
+        description: reportDescription,
+      }),
+    });
+
+    if (response.ok) {
+      showCustomToast("Snappy", "Reporte enviado con éxito.", "success");
+      handleCloseReportModal();
+    } else {
+      showCustomToast("Snappy", "Error al enviar el reporte.", "error");
+    }
+  };
+
   useEffect(() => {
     const fetchParams = async () => {
       const resolvedParams = await params;
@@ -126,12 +158,10 @@ const ProfileView = ({
   useEffect(() => {
     if (userTargetData) {
       if (userTargetData.followers && userTargetData.followers.length > 0) {
-        const isFollowing = userTargetData.followers.map(
-          (follower) => {
-            if (follower.follower.id == userTargetData.id) return true;
-            else return false;
-          }
-        );
+        const isFollowing = userTargetData.followers.map((follower) => {
+          if (follower.follower.id == userTargetData.id) return true;
+          else return false;
+        });
 
         if (isFollowing) setFollowingState(true);
       }
@@ -158,14 +188,6 @@ const ProfileView = ({
   const closePostDetails = () => {
     setSelectedPost(null);
   };
-
-  // const lastLoginDate = userTargetData.last_login_date
-  //   ? new Date(userTargetData.last_login_date)
-  //   : null;
-
-  // const timeAgo = lastLoginDate
-  //   ? formatDistanceToNow(lastLoginDate, { addSuffix: true })
-  //   : "Fecha no disponible";
 
   return (
     <>
@@ -239,6 +261,12 @@ const ProfileView = ({
             >
               Pregunta anónima
             </Link>
+            <button
+              onClick={handleOpenReportModal}
+              className="px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-md"
+            >
+              Reportar
+            </button>
           </div>
           {userTargetData.interests?.length > 0 && (
             <div className="w-full px-2 text-center">
@@ -253,34 +281,6 @@ const ProfileView = ({
                 )}
             </div>
           )}
-          {/* <div className="flex-1 flex flex-col items-center max-w-6xl px-4 md:px-8 mt-10 mx-auto">
-            <div className="flex justify-center space-x-6 mb-6">
-              <div className="relative w-16 h-16 md:w-20 md:h-20">
-                <button title="Ver mis historias">
-                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden">
-                    <Image
-                      src={userTargetData?.profile_image || "/user.png"}
-                      alt="Foto de perfil"
-                      width={200}
-                      height={200}
-                      className="object-cover w-full h-full"
-                    />
-                  </div>
-                  <div className="absolute bottom-0 right-0 w-5 h-5 md:w-6 md:h-6 bg-white rounded-full flex items-center justify-center">
-                    <Link href={"/crear-story"}>
-                      <Image
-                        src="/addhistoria.png"
-                        alt="Añadir historia"
-                        width={20}
-                        height={20}
-                        className="object-cover"
-                      />
-                    </Link>
-                  </div>
-                </button>
-              </div>
-            </div>
-          </div> */}
           <section className="px-4 py-6">
             {userTargetData.posts.length > 0 ? (
               <div className="flex flex-wrap justify-center gap-4 max-w-6xl">
@@ -334,19 +334,19 @@ const ProfileView = ({
                       >
                         {profileData && (
                           <Link
-                          href={`/perfil/${profileData.username}`}
-                          className="text-black hover:underline"
-                        >
-                          <div className="flex items-center gap-3">
-                            <Image
-                              src={profileData.profile_image}
-                              alt={profileData.username}
-                              width={40}
-                              height={40}
-                              className="rounded-full"
-                            />
-                            <p>{profileData.username}</p>
-                          </div>
+                            href={`/perfil/${profileData.username}`}
+                            className="text-black hover:underline"
+                          >
+                            <div className="flex items-center gap-3">
+                              <Image
+                                src={profileData.profile_image}
+                                alt={profileData.username}
+                                width={40}
+                                height={40}
+                                className="rounded-full"
+                              />
+                              <p>{profileData.username}</p>
+                            </div>
                           </Link>
                         )}
                       </div>
@@ -361,20 +361,20 @@ const ProfileView = ({
                         className="flex justify-between items-center bg-gray-100 p-3 rounded-md"
                       >
                         {profileData && (
-                           <Link
-                           href={`/perfil/${profileData.username}`}
-                           className="text-black hover:underline"
-                         >
-                          <div className="flex items-center gap-3">
-                            <Image
-                              src={profileData.profile_image}
-                              alt={profileData.username}
-                              width={40}
-                              height={40}
-                              className="rounded-full"
-                            />
-                            <p>{profileData.username}</p>
-                          </div>
+                          <Link
+                            href={`/perfil/${profileData.username}`}
+                            className="text-black hover:underline"
+                          >
+                            <div className="flex items-center gap-3">
+                              <Image
+                                src={profileData.profile_image}
+                                alt={profileData.username}
+                                width={40}
+                                height={40}
+                                className="rounded-full"
+                              />
+                              <p>{profileData.username}</p>
+                            </div>
                           </Link>
                         )}
                       </div>
@@ -385,10 +385,37 @@ const ProfileView = ({
                 : userTargetData.followers
               ).length === 0 && (
                 <p className="text-gray-500">
-                  El usuario ${userTargetData.username} no tiene {" "}
+                  El usuario ${userTargetData.username} no tiene{" "}
                   {modalType === "following" ? "seguidos" : "seguidores"}.
                 </p>
               )}
+            </div>
+          </div>
+        )}
+
+        {showReportModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+            <div className="bg-white rounded-lg p-6 w-full max-w-lg flex flex-col relative">
+              <button
+                className="absolute top-2 right-2 text-black font-bold"
+                onClick={handleCloseReportModal}
+              >
+                X
+              </button>
+              <h2 className="text-lg font-bold mb-4">Reportar Usuario</h2>
+              <textarea
+                className="w-full p-2 border border-gray-300 rounded-md mb-4"
+                rows={4}
+                placeholder="Escribe el motivo del reporte"
+                value={reportDescription}
+                onChange={(e) => setReportDescription(e.target.value)}
+              />
+              <button
+                onClick={handleReportSubmit}
+                className="px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-md"
+              >
+                Enviar Reporte
+              </button>
             </div>
           </div>
         )}
