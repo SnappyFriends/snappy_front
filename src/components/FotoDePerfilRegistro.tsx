@@ -88,6 +88,10 @@ export default function FotoDePerfilRegistro() {
     }
   };
 
+  const handleSkip = () => {
+    router.push("/intereses");
+  };
+
   return (
     <div className="mb-4">
       <div className="relative flex justify-center">
@@ -123,6 +127,12 @@ export default function FotoDePerfilRegistro() {
           className="bg-blue-500 text-white py-2 px-4 rounded-lg disabled:opacity-50 transition-colors duration-200 hover:bg-blue-600"
         >
           Subir foto
+        </button>
+        <button
+          onClick={handleSkip}
+          className="ml-4 bg-gray-500 text-white py-2 px-4 rounded-lg transition-colors duration-200 hover:bg-gray-600"
+        >
+          Omitir
         </button>
       </div>
     </div>
