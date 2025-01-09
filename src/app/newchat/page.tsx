@@ -10,7 +10,7 @@ import { useSocket } from "@/helpers/useSocket";
 import { Chats, IMessage } from "@/interfaces/types";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -38,27 +38,6 @@ const ChatView = () => {
 
   const { userId, userData } = useContext(UserContext);
   const { sendMessage } = useSocket(null, chat, setMessages, undefined);
-
-  const getPrivateChatAndMessages = useCallback(async () => {
-    try {
-      const responseChats = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/chats/${randomUser?.id}/${userId}`
-      );
-      if (responseChats.ok) {
-        const chatData = await responseChats.json();
-
-        const responseMessages = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/chats/chat/${chatData.id}`
-        );
-        const messagesData = await responseMessages.json();
-
-        setChat(messagesData);
-        setMessages(messagesData.messages);
-      }
-    } catch (error) {
-      console.error("Error buscando o creando el chat:", error);
-    }
-  }, [randomUser?.id, userId]);
 
   useEffect(() => {
     const savedRequests = localStorage.getItem("sentRequests");
@@ -97,42 +76,40 @@ const ChatView = () => {
       console.error("No user data available");
       return;
     }
-    try {
-      let chatId = chat?.id;
 
-      if (!chat) {
-        const users = [receiverId, userId];
-        const createChatResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/chats`,
-          {
-            method: "POST",
-            body: JSON.stringify({ userIds: users }),
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+    let chatId = chat?.id;
 
-        if (createChatResponse.ok) {
-          const newChat = await createChatResponse.json();
-          setChat(newChat);
-          chatId = newChat.id;
-        } else {
-          console.error("Error creating chat");
-          return;
-        }
+    const users = [receiverId, userId];
+    const createChatResponse = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/chats`,
+      {
+        method: "POST",
+        body: JSON.stringify({ userIds: users }),
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
-      await getPrivateChatAndMessages();
+    );
 
-      const newMessage = {
-        content: message,
-        chatId: chatId,
-        sender_id: userData.id,
-        type: "text",
-        is_anonymous: false,
-        messageReceivers: receiverId ? [receiverId] : [],
-      };
+    if (createChatResponse.ok) {
+      const newChat = await createChatResponse.json();
+      setChat(newChat);
+      chatId = newChat.id;
+    } else {
+      console.error("Error creating chat");
+      return;
+    }
 
+    const newMessage = {
+      content: message,
+      chatId: chatId,
+      sender_id: userData.id,
+      type: "text",
+      is_anonymous: false,
+      messageReceivers: receiverId ? [receiverId] : [],
+    };
+
+    try {
       const sendDate = timeAgo(new Date().toISOString());
 
       const messagesData = {
@@ -239,7 +216,7 @@ const ChatView = () => {
                     </p>
                   </>
                 ) : (
-                  <p className="text-gray-500">No hay usuarios disponibles</p>
+                  <p className="text-gray-500"> Te esperan nuevos usuarios !</p>
                 )}
               </div>
             </div>
@@ -291,16 +268,15 @@ const ChatView = () => {
                   )
                 ) : (
                   <p className="text-center text-gray-400">
-                    Esperando selección...
+                    Inicia tu conversación con @{randomUser.username}
                   </p>
                 )}
               </>
             ) : (
-              <p className="text-center text-gray-400">
-                No hay usuarios disponibles
-              </p>
+              <p className="text-center text-gray-400">Comienza a Snappear !</p>
             )}
           </div>
+
           <div className="px-4 py-3 border-t flex items-center">
             <input
               type="text"

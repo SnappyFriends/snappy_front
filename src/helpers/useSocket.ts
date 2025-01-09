@@ -109,6 +109,7 @@ export const useSocket = (
     console.log("Mensaje recibido en useSocket", message);
     if (socketRef.current) {
       socketRef.current.emit("message", message);
+      console.log("Mensaje emitido al backend");
     } else {
       console.error("Socket no está disponible");
     }
