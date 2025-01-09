@@ -11,7 +11,7 @@ import SearchBar from "./SearchBar";
 
 export default function NavBar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { setToken, setUserId, setUserGoogle, userData } = useContext(UserContext); // Acceder a userData
+  const { setToken, setUserId, setUserGoogle, userData } = useContext(UserContext);
   const router = useRouter();
 
   const handleLogout = () => {
@@ -180,7 +180,7 @@ export default function NavBar() {
                         Configuración
                       </Link>
                     </li>
-                    {userData?.user_type === "superadmin" && ( 
+                    {(userData?.user_role === "superadmin" || userData?.user_role === "admin") && ( 
                       <li>
                         <Link
                           href="/dashboard"

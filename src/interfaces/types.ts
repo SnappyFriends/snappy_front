@@ -65,7 +65,8 @@ export interface IUserData {
   location: { latitude: number; longitude: number } | unknown;
   registration_date: string;
   last_login_date: string;
-  user_type: "regular" | "admin" | string;
+  user_type: "regular" | "premium";
+  user_role: "default" | "admin" | "superadmin";
   status: "active" | "inactive" | string;
   interests: IInterest[] | undefined;
   posts: { post_id: string; fileUrl: string }[];
