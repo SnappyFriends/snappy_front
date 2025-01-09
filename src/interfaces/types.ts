@@ -21,6 +21,7 @@ export interface ILoginResponse {
   userId: string;
   message: string;
   user_type: string;
+  user_status: string;
 }
 
 export interface IUserContextType {
@@ -269,6 +270,22 @@ export interface IReport {
     username: string;
     profile_image: string;
   };
+}
+
+export interface IPurchase {
+  purchase_id: string,
+    purchase_date: string,
+    expiration_date: string,
+    amount: string,
+    payment_method: string,
+    status: string,
+    stripe_session_id: string,
+    user: {
+      id: string,
+      fullname: string,
+      username: string,
+      profile_image: string
+    }
 }
 
 export interface IUserReport {

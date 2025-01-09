@@ -21,6 +21,10 @@ export const loginUser = async (
 
     const dataResponse: ILoginResponse = await response.json();
 
+    if (dataResponse.user_status === "banned") {
+      throw new Error("Lo sentimos, pero has sido baneado por incumplir las normas.");
+    }
+
     return dataResponse;
   } catch (error) {
     throw new Error(

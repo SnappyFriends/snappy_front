@@ -49,8 +49,8 @@ export default function LoginComponent() {
 
       showCustomToast("Snappy", "Iniciaste sesión correctamente", "success");
       router.push("/loading");
-    } catch {
-      showCustomToast("Snappy", "Usuario o contraseña incorrectos", "error");
+    } catch (error) {
+      showCustomToast("Snappy", `${error}`, "error");
     }
   };
 
@@ -150,6 +150,12 @@ export default function LoginComponent() {
                         if (response.ok) {
                           const responseData = await response.json();
 
+                          if (responseData.user_status === "banned") {
+                            throw new Error(
+                              "Lo sentimos, pero has sido baneado por incumplir las normas."
+                            );
+                          }
+
                           if (responseData.token) {
                             const { token, userId } = responseData;
                             Cookies.set("auth_token", token, {
@@ -188,11 +194,7 @@ export default function LoginComponent() {
                         }
                       } catch (error) {
                         console.error("Error en Google Login:", error);
-                        showCustomToast(
-                          "Snappy",
-                          "Hubo un error al autenticar con Google",
-                          "error"
-                        );
+                        showCustomToast("Snappy", `${error}`, "error");
                       }
                     }}
                     onError={() => {

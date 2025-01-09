@@ -1,0 +1,86 @@
+"use client";
+
+import { timeAgo } from "@/helpers/timeAgo";
+import { IPurchase } from "@/interfaces/types";
+import { fetchPurchases } from "@/services/purchasesService";
+import Image from "next/image";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
+
+const PurchasesPage: React.FC = () => {
+  const [purchases, setPurchases] = useState<IPurchase[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const data = await fetchPurchases();
+        setPurchases(data);
+      } catch (error) {
+        console.error("Error fetching purchases:", error);
+      }
+    })();
+  }, []);
+
+  return (
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4 text-center">
+        Suscripciones de Usuarios
+      </h1>
+      <div className="overflow-x-auto mt-4">
+        <table className="w-full bg-white border border-gray-200">
+          <thead>
+            <tr className="bg-gray-100">
+              <th className="px-4 py-2 border border-gray-200 text-center">
+                Usuario
+              </th>
+              <th className="px-4 py-2 border border-gray-200 text-center">
+                Fecha de pago
+              </th>
+              <th className="px-4 py-2 border border-gray-200 text-center">
+                Monto
+              </th>
+              <th className="px-4 py-2 border border-gray-200 text-center">
+                Fecha de expiración
+              </th>
+              <th className="px-4 py-2 border border-gray-200 text-center">
+                Estado
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {purchases.map((purchase) => (
+              <tr key={purchase.purchase_id} className="border-t">
+                <td className="px-4 py-2 border border-gray-200 text-center">
+                  <Link href={`../perfil/${purchase.user.username}`}>
+                    <Image
+                      src={purchase.user.profile_image}
+                      alt={purchase.user.username}
+                      width={40}
+                      height={40}
+                      className="w-10 h-10 rounded-full mx-auto inline mr-2"
+                    />
+                    {purchase.user.username}
+                  </Link>
+                </td>
+                <td className="px-4 py-2 border border-gray-200 text-center">
+                  {timeAgo(purchase.purchase_date)}
+                </td>
+                <td className="px-4 py-2 border border-gray-200 text-center">
+                  {purchase.amount} USD
+                </td>
+                <td className="px-4 py-2 border border-gray-200 text-center">
+                  {new Date(purchase.expiration_date).toLocaleString()}
+                </td>
+                <td className="px-4 py-2 border border-gray-200 text-center">
+                <span className={purchase.status === "completed" ? "bg-green-600 text-white p-1 rounded-lg" : "bg-gray-800 text-white p-1 rounded-lg"}>{purchase.status === "completed" ? "Completado" : "Pendiente"}</span>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+};
+
+export default PurchasesPage;

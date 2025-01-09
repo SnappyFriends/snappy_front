@@ -7,36 +7,42 @@ import Image from "next/image";
 export default function Usuarios() {
   const { userData } = useContext(UserContext);
   const [users, setUsers] = useState<User[]>();
-  const [filter, setFilter] = useState<string>(""); 
+  const [filter, setFilter] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchUsers = async () => {
       const fetchedUsers = await getUsers();
-      
-      const sortedUsers = fetchedUsers.sort((a, b) => a.username.localeCompare(b.username));
+
+      const sortedUsers = fetchedUsers.sort((a, b) =>
+        a.username.localeCompare(b.username)
+      );
       setUsers(sortedUsers);
     };
 
     fetchUsers();
-  }, []); 
+  }, []);
 
   const handleBanToggle = async (userId: string, currentStatus: string) => {
     if (!userData) return;
-    
+
     setLoading(true);
 
-    // Toggle status between "banned" and "active"
     const newStatus = currentStatus === "banned" ? "active" : "banned";
+    console.log("🚀 ~ handleBanToggle ~ newStatus:", newStatus)
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status: newStatus }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ status: newStatus }),
+        }
+      );
+      console.log("🚀 ~ handleBanToggle ~ response:", response);
 
       if (response.ok) {
         setUsers((prevUsers) =>
@@ -54,14 +60,15 @@ export default function Usuarios() {
     }
   };
 
-  const filteredUsers = users?.filter(user => 
+  const filteredUsers = users?.filter((user) =>
     user.username.toLowerCase().includes(filter.toLowerCase())
   );
 
   return (
-    <div className="flex flex-col items-center w-full lg:ml-20">
+    <div className="flex justify-center">
+    <div className="flex flex-col items-center w-full">
       <h1 className="text-center text-3xl font-bold mb-5">Usuarios</h1>
-      
+
       <input
         type="text"
         placeholder="Nombre de usuario"
@@ -76,8 +83,8 @@ export default function Usuarios() {
             <th className="p-3 border">Foto de Perfil</th>
             <th className="p-3 border">Nombre de Usuario</th>
             <th className="p-3 border hidden lg:table-cell">Nombre Completo</th>
-            <th className="p-3 border hidden md:table-cell">Email</th> 
-            <th className="p-3 border hidden lg:table-cell">Género</th> 
+            <th className="p-3 border hidden md:table-cell">Email</th>
+            <th className="p-3 border hidden lg:table-cell">Género</th>
             <th className="p-3 border hidden lg:table-cell">Tipo</th>
             <th className="p-3 border">Acción</th>
           </tr>
@@ -97,13 +104,17 @@ export default function Usuarios() {
               <td className="p-3 text-center">{user.username}</td>
               <td className="p-3 text-center hidden lg:table-cell">{user.fullname}</td>
               <td className="p-3 text-center hidden md:table-cell">{user.email}</td> 
-              <td className="p-3 text-center hidden lg:table-cell">{user.genre}</td> 
+              <td className="p-3 text-center hidden lg:table-cell">{user.genre?.toLocaleLowerCase() }</td> 
               <td className="p-3 text-center hidden lg:table-cell">{user.user_type}</td> 
               <td className="p-3 text-center">
                 <button
                   onClick={() => handleBanToggle(user.id, user.status)}
                   disabled={loading}
-                  className={`py-1 px-4 rounded-lg ${user.status === "banned" ? "bg-gray-400 text-white" : "bg-red-600 text-white"}`}
+                  className={`py-1 px-4 rounded-lg ${
+                    user.status === "banned"
+                      ? "bg-gray-400 text-white"
+                      : "bg-red-600 text-white"
+                  }`}
                 >
                   {user.status === "banned" ? "Desbanear" : "Bannear"}
                 </button>
@@ -112,6 +123,7 @@ export default function Usuarios() {
           ))}
         </tbody>
       </table>
+    </div>
     </div>
   );
 }
