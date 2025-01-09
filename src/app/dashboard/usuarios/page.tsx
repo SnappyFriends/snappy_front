@@ -65,8 +65,8 @@ export default function Usuarios() {
   );
 
   return (
-    <div className="ml-10 flex justify-center">
-    <div className="flex flex-col items-center w-full lg:ml-20">
+    <div className="flex justify-center">
+    <div className="flex flex-col items-center w-full">
       <h1 className="text-center text-3xl font-bold mb-5">Usuarios</h1>
 
       <input
