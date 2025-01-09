@@ -28,7 +28,6 @@ export default function Usuarios() {
 
     setLoading(true);
 
-    // Toggle status between "banned" and "active"
     const newStatus = currentStatus === "banned" ? "active" : "banned";
     console.log("🚀 ~ handleBanToggle ~ newStatus:", newStatus)
 
@@ -66,6 +65,7 @@ export default function Usuarios() {
   );
 
   return (
+    <div className="ml-10 flex justify-center">
     <div className="flex flex-col items-center w-full lg:ml-20">
       <h1 className="text-center text-3xl font-bold mb-5">Usuarios</h1>
 
@@ -102,18 +102,10 @@ export default function Usuarios() {
                 />
               </td>
               <td className="p-3 text-center">{user.username}</td>
-              <td className="p-3 text-center hidden lg:table-cell">
-                {user.fullname}
-              </td>
-              <td className="p-3 text-center hidden md:table-cell">
-                {user.email}
-              </td>
-              <td className="p-3 text-center hidden lg:table-cell">
-                {user.genre}
-              </td>
-              <td className="p-3 text-center hidden lg:table-cell">
-                {user.user_type}
-              </td>
+              <td className="p-3 text-center hidden lg:table-cell">{user.fullname}</td>
+              <td className="p-3 text-center hidden md:table-cell">{user.email}</td> 
+              <td className="p-3 text-center hidden lg:table-cell">{user.genre?.toLocaleLowerCase() }</td> 
+              <td className="p-3 text-center hidden lg:table-cell">{user.user_type}</td> 
               <td className="p-3 text-center">
                 <button
                   onClick={() => handleBanToggle(user.id, user.status)}
@@ -131,6 +123,7 @@ export default function Usuarios() {
           ))}
         </tbody>
       </table>
+    </div>
     </div>
   );
 }

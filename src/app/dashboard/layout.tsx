@@ -10,11 +10,11 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 			<aside className="fixed z-50 h-full">
 				<DashboardSidebar />
 			</aside>
-			<header className="fixed w-full h-40 ml-[20%] bg-gray-50 hidden lg:block">
+			<header >
 				<DashboardPicture />
 			</header>
-			<div className="flex lg:ml-[15%]">
-				<main className="mt-40">{children}</main>
+			<div className="flex lg:ml-[15%] mt-5">
+				<main className="mt-20">{children}</main>
 			</div>
 		</div>
 	);
