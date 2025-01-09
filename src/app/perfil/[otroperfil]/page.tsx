@@ -71,6 +71,30 @@ const ProfileView = ({
         "Comenzaste a seguir a este usuario.",
         "success"
       );
+
+      setUserTargetData((prevData) => {
+        if (!prevData) return prevData;
+        return {
+          ...prevData,
+          followers: [
+            ...prevData.followers,
+            {
+              id: userData?.id || "",
+              follower: {
+                id: userData?.id || "",
+                username: userData?.username || "",
+                profile_image: userData?.profile_image || "",
+              },
+            },
+          ],
+        };
+      });
+
+      userData?.following.push({
+        id: userTargetData?.id || "",
+        username: "",
+        profile_image: "",
+      });
     } else {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/follow/${userData?.id}/${userTargetData?.id}`,
@@ -80,9 +104,27 @@ const ProfileView = ({
       );
 
       if (!response.ok)
-        throw new Error(`Ocurrió un error al intentar seguir a este usuario.`);
+        throw new Error(
+          `Ocurrió un error al intentar dejar de seguir a este usuario.`
+        );
 
       showCustomToast("Snappy", "Dejaste de seguir a este usuario.", "success");
+
+      setUserTargetData((prevData) => {
+        if (!prevData) return prevData;
+        return {
+          ...prevData,
+          followers: prevData.followers.filter(
+            (follower) => follower.id !== (userData?.id || "")
+          ),
+        };
+      });
+
+      if (userData) {
+        userData.following = userData.following.filter(
+          (followed) => followed.id !== userTargetData?.id
+        );
+      }
     }
 
     setFollowingState(!followingState);
