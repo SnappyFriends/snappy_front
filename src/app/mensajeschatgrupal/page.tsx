@@ -133,10 +133,12 @@ const MensajesGrupales = () => {
                           </div>
                         </div>
                         <div className="text-sm text-gray-500">
-                          {lastMessage
+                         {lastMessage
                             ? `${timeAgo(
-                                new Date(lastMessage.send_date).toISOString()}`
-                            : "Sin mensajes recientes"}
+                                new Date(lastMessage.send_date).toISOString()
+                              )}`
+                            : "Sin mensajes recientes"
+                          }
                         </div>
                       </section>
                     );
