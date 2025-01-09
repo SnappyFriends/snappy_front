@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function DashboardPage() {
   return (
-    <div className="fixed flex flex-col bg-white text-black overflow-auto h-full ml-5">
+    <div className="flex flex-col bg-white text-black h-full">
       <header className="w-full py-6 bg-white text-center">
         <h1 className="text-4xl font-bold">Bienvenido al Dashboard</h1>
         <p className="text-lg mt-2">
