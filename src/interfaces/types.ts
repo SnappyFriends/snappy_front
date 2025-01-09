@@ -272,6 +272,22 @@ export interface IReport {
   };
 }
 
+export interface IPurchase {
+  purchase_id: string,
+    purchase_date: string,
+    expiration_date: string,
+    amount: string,
+    payment_method: string,
+    status: string,
+    stripe_session_id: string,
+    user: {
+      id: string,
+      fullname: string,
+      username: string,
+      profile_image: string
+    }
+}
+
 export interface IUserReport {
   id: string;
   fullname: string;
