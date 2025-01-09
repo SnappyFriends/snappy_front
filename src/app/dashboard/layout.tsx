@@ -13,8 +13,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
 			<header >
 				<DashboardPicture />
 			</header>
-			<div className="flex justify-center mt-5 w-full ml-80">
-				<main className="mt-20">{children}</main>
+			<div className="flex justify-center mt-5 w-full lg:ml-80">
+				<main className="mt-20 container mx-auto px-4">{children}</main>
 			</div>
 		</div>
 	);
