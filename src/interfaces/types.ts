@@ -174,6 +174,27 @@ export interface GroupChats {
   messages: [IGroupMessage];
 }
 
+export interface GroupChatsBeta {
+  group: {
+    group_id: string;
+    name: string;
+    description: string;
+    creation_date: string;
+    privacy: string;
+    messages: {
+      message_id: string;
+      content: string;
+      send_date: string;
+      type: string;
+      is_anonymous: string;
+    }[];
+  };
+  group_id: string;
+  join_date: string;
+  role: string;
+  user_id: string;
+}
+
 export interface IMessage {
   chat_id: string | undefined;
   username: string;
@@ -273,19 +294,19 @@ export interface IReport {
 }
 
 export interface IPurchase {
-  purchase_id: string,
-    purchase_date: string,
-    expiration_date: string,
-    amount: string,
-    payment_method: string,
-    status: string,
-    stripe_session_id: string,
-    user: {
-      id: string,
-      fullname: string,
-      username: string,
-      profile_image: string
-    }
+  purchase_id: string;
+  purchase_date: string;
+  expiration_date: string;
+  amount: string;
+  payment_method: string;
+  status: string;
+  stripe_session_id: string;
+  user: {
+    id: string;
+    fullname: string;
+    username: string;
+    profile_image: string;
+  };
 }
 
 export interface IUserReport {

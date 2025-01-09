@@ -54,8 +54,22 @@ const ChatRoomView = () => {
       `${process.env.NEXT_PUBLIC_API_URL}/follow/${userData?.id}/friends`
     );
     const data = await response.json();
+    console.log("DATA", data);
 
-    setFriendsList(data);
+    const groupMembers = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/group-members/${groupId}`
+    );
+    const parsedMembers = await groupMembers.json();
+    console.log("Parsed Members", parsedMembers);
+
+    const filteredFriends = data.filter(
+      (friend: User) =>
+        !parsedMembers.some((member: User) => member.user.id === friend.id)
+    );
+
+    console.log("FIlteredFriends", filteredFriends);
+
+    setFriendsList(filteredFriends);
   };
 
   //useEffect para hacer un fetch a la cantidad de Chats Grupales
@@ -110,37 +124,6 @@ const ChatRoomView = () => {
     console.log("FETCH MEMBERS");
   }, [groupId]);
 
-  /*  useEffect(() => {
-    if (!userData) {
-      return;
-    }
-    (async () => {
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/follow/${userData?.id}/friends/`
-        );
-        const data = await response.json();
-        console.log("AMIGOS", data);
-        console.log("MEMBERS", members);
-
-        interface testUser {
-          id: string;
-          username: string;
-          profile_image: string;
-          user_type: string;
-        }
-        const filteredUsers = data.filter((friend: testUser) => {
-          return !members.some((member) => member.id === friend.id);
-        });
-        console.log("FILTERED users", filteredUsers);
-
-        setFriendsList(filteredUsers);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    })();
-  }, [userData, members]); */
-
   useEffect(() => {
     if (!groupId || !userData) {
       console.log(
@@ -191,32 +174,21 @@ const ChatRoomView = () => {
   };
 
   const handleSendMessage = () => {
-    if (!message.trim()) return;
-    if (!groupChat) {
-      console.error("No chatId available");
-      return;
-    }
+    if (!message.trim() || !userData || !groupChat) return;
 
-    if (!userData) {
-      return;
-    }
-
-    const sendDate = timeAgo(new Date().toISOString());
-    const newMessage = {
-      send_date: sendDate,
+    const serverMessage = {
       content: message,
       groupId: groupId,
       sender_id: userData.id,
       type: "text",
       is_anonymous: false,
-      messageReceivers: members.map((member) => member.id),
+      messageReceivers: members.map((member) => member.user.id),
     };
 
     try {
-      const sendDate = timeAgo(new Date().toISOString());
-      const messageData = {
+      const uiMessage = {
         content: message,
-        send_date: sendDate,
+        send_date: timeAgo(new Date().toISOString()),
         sender: {
           user_id: userData.id,
           username: userData.username,
@@ -225,10 +197,10 @@ const ChatRoomView = () => {
           user_type: userData.user_type,
         },
       };
-      setGroupMessages((prevMessages) => [...prevMessages, messageData]);
 
-      sendMessage(newMessage);
+      setGroupMessages((prevMessages) => [...prevMessages, uiMessage]);
 
+      sendMessage(serverMessage);
       setMessage("");
     } catch (error) {
       console.error("Error sending message:", error);
@@ -255,18 +227,18 @@ const ChatRoomView = () => {
                   <div className="space-y-4">
                     {members.map((member, index) => (
                       <div
-                        key={member.id || `member-${index}`}
+                        key={member?.id || `member-${index}`}
                         className="flex items-center space-x-2"
                       >
                         <div className="relative w-10 h-10">
                           <Image
-                            src={member.imgSrc || "/agregarfoto.png"}
-                            alt={`Foto de perfil de ${member.user.username}`}
+                            src={member?.imgSrc || "/agregarfoto.png"}
+                            alt={`Foto de perfil de ${member.user?.username}`}
                             layout="fill"
                             className="rounded-full object-cover"
                           />
                         </div>
-                        <span className="text-sm">{member.user.username}</span>
+                        <span className="text-sm">{member.user?.username}</span>
                       </div>
                     ))}
                   </div>
@@ -292,21 +264,21 @@ const ChatRoomView = () => {
                       <div>
                         {friendsList.map((user, index) => (
                           <div
-                            key={user.id || `user-${index}`}
+                            key={user?.id || `user-${index}`}
                             className="flex items-center space-x-2 p-2 cursor-pointer hover:bg-gray-200 rounded-md"
                             onClick={() => addMemberToRoom(user)}
                           >
                             <div className="relative w-10 h-10">
                               <Image
-                                src={user.imgSrc || "/agregarfoto.png"}
-                                alt={`Foto de perfil de ${user.username}`}
+                                src={user?.imgSrc || "/agregarfoto.png"}
+                                alt={`Foto de perfil de ${user?.username}`}
                                 layout="fill"
                                 className="rounded-full object-cover"
                               />
                             </div>
-                            <span className="text-sm">{user.username}</span>
+                            <span className="text-sm">{user?.username}</span>
                             <span className="text-xs text-gray-400">
-                              {user.fullName}
+                              {user?.fullName}
                             </span>
                           </div>
                         ))}
@@ -341,23 +313,10 @@ const ChatRoomView = () => {
                     {groupChat ? (
                       groupMessages.length > 0 ? (
                         groupMessages.map((uniqueMsg, index) => {
-                          console.log(
-                            "uniqueMessage",
-                            uniqueMsg.sender?.user_id
-                          );
                           const isSender =
                             uniqueMsg.sender?.user_id === userData?.id;
                           if (isSender) {
-                            console.log(
-                              "sender.user_id",
-                              uniqueMsg.sender?.user_id,
-                              "userData?.id",
-                              userData?.id
-                            );
-                            console.log("is Sender existe", isSender);
-                          } else console.log("is Sender no existe", isSender);
-
-                          console.log("sender_id", uniqueMsg.sender?.user_id);
+                          } else console.log("sender_id");
                           const divContainer = isSender ? (
                             <div
                               className="text-right"
@@ -365,7 +324,7 @@ const ChatRoomView = () => {
                             >
                               <div className="p-2 bg-blue-100 rounded-lg my-2">
                                 <p>{uniqueMsg.sender?.username}</p>
-                                <p>{uniqueMsg.content}</p>
+                                <p>{uniqueMsg?.content}</p>
                               </div>
                             </div>
                           ) : (
@@ -375,7 +334,7 @@ const ChatRoomView = () => {
                             >
                               <div className="p-2 bg-blue-100 rounded-lg my-2">
                                 <p>{uniqueMsg.sender?.username}</p>
-                                <p>{uniqueMsg.content}</p>
+                                <p>{uniqueMsg?.content}</p>
                               </div>
                             </div>
                           );
@@ -398,6 +357,7 @@ const ChatRoomView = () => {
 
                   <div className="px-4 py-3 border-t flex items-center space-x-3">
                     <input
+                      value={message}
                       type="text"
                       placeholder="Escribe un mensaje..."
                       onChange={(e) => setMessage(e.target.value)}

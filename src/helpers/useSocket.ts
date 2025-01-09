@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useRef, useCallback, useState } from "react";
+import { useEffect, useRef, useCallback, useState, useContext } from "react";
 import Cookies from "js-cookie";
 import SocketService from "./socket";
 import { Chats, GroupChats, IGroupMessage, IMessage } from "@/interfaces/types";
 import { io, Socket } from "socket.io-client";
+import { UserContext } from "@/context/UserContext";
 
 interface NotificationPayload {
   type:
@@ -36,6 +37,7 @@ export const useSocket = (
   const token = Cookies.get("auth_token");
   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
   const socketRef = useRef<Socket | null>(null);
+  const { userData } = useContext(UserContext);
 
   useEffect(() => {
     const authToken = Cookies.get("auth_token");
@@ -72,11 +74,7 @@ export const useSocket = (
         }
       });
 
-      socketRef.current.on("receiveGroupMessage", (newMessage) => {
-        if (setGroupMessages) {
-          setGroupMessages((prevMessages) => [...prevMessages, newMessage]);
-        }
-      });
+      socketRef.current.on("receiveGroupMessage", (newMessage) => {});
 
       if (chat) {
         socketRef.current.emit("join_chat", chat);
