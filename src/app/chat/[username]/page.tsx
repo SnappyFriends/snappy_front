@@ -71,11 +71,7 @@ const ChatWithUser = () => {
 
                   setChat(newChat);
                 } else {
-                  console.log(
-                    "Error creando el chat:",
-                    createChatResponse.status,
-                    await createChatResponse.text()
-                  );
+                  console.error("Error creating chat:", createChatResponse);
                 }
               }
             } catch (error) {

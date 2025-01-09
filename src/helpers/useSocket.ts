@@ -106,6 +106,7 @@ export const useSocket = (
   }, []);
 
   const sendMessage = useCallback((message: any) => {
+    console.log("Mensaje recibido en useSocket", message);
     if (socketRef.current) {
       socketRef.current.emit("message", message);
     } else {

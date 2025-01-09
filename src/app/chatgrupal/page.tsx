@@ -1,17 +1,16 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { useState, useEffect, useContext } from "react";
-import { getUsers } from "@/helpers/users";
-import Image from "next/image";
-import Sidebar from "@/components/Sidebar";
 import Conectados from "@/components/Conectados";
 import NavBar from "@/components/NavBar";
-import CreateChat from "../crearchatgrupal/page";
+import Sidebar from "@/components/Sidebar";
 import { UserContext } from "@/context/UserContext";
-import { GroupChats, IGroupMessage } from "@/interfaces/types";
-import { useSocket } from "@/helpers/useSocket";
 import { timeAgo } from "@/helpers/timeAgo";
+import { useSocket } from "@/helpers/useSocket";
+import { GroupChats, IGroupMessage, IUserData } from "@/interfaces/types";
+import Image from "next/image";
+import { useContext, useEffect, useState } from "react";
+import CreateChat from "../crearchatgrupal/page";
 
 // import { useSocket } from "@/helpers/useSocket";
 
@@ -22,12 +21,12 @@ interface User {
   imgSrc?: string;
   email?: string;
   profile_image: string;
+  user: IUserData;
 }
 
 const ChatRoomView = () => {
   const [members, setMembers] = useState<User[]>([]);
-  const [usersList, setUsersList] = useState<User[]>([]);
-  const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
+  const [friendsList, setFriendsList] = useState<User[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isAdding, setIsAdding] = useState(false);
   const [hasGroupChats, setHasGroupChats] = useState<boolean>(false);
@@ -46,25 +45,18 @@ const ChatRoomView = () => {
     setGroupMessages
   );
 
-  const filterUsers = (query: string) => {
-    if (!query) {
-      setFilteredUsers(usersList);
+  const filterFriends = async () => {
+    if (!userData) {
       return;
     }
-
-    const lowercasedQuery = query.toLowerCase();
-    const filtered = usersList.filter(
-      (user) =>
-        (user.username &&
-          user.username.toLowerCase().includes(lowercasedQuery)) ||
-        (user.fullName && user.fullName.toLowerCase().includes(lowercasedQuery))
+    setIsAdding(true);
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/follow/${userData?.id}/friends`
     );
-    setFilteredUsers(filtered);
-  };
+    const data = await response.json();
 
-  useEffect(() => {
-    filterUsers(searchQuery);
-  }, [searchQuery, usersList]);
+    setFriendsList(data);
+  };
 
   //useEffect para hacer un fetch a la cantidad de Chats Grupales
   useEffect(() => {
@@ -72,7 +64,7 @@ const ChatRoomView = () => {
       return;
     }
 
-    const fetchGroupChats = async () => {
+    (async () => {
       try {
         const chatsQuantity = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/chat-groups/${userData.id}/chats`
@@ -81,8 +73,6 @@ const ChatRoomView = () => {
         if (Array.isArray(response) && response.length > 0) {
           const group = response[0];
           setHasGroupChats(true);
-          /* setGroupDescription(group.description);
-          setGroupName(group.name); */
           setGroupId(group.group_id);
         } else {
           setHasGroupChats(false);
@@ -90,15 +80,14 @@ const ChatRoomView = () => {
       } catch {
         setHasGroupChats(false);
       }
-    };
-    fetchGroupChats();
+    })();
   }, [groupId, userData]);
 
   //useEffect para hacer un fetch a los miembros de un grupo.
   useEffect(() => {
     if (!groupId) return;
 
-    const fetchGroupMembers = async () => {
+    (async () => {
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/group-members/${groupId}`
@@ -111,45 +100,62 @@ const ChatRoomView = () => {
 
         const groupMembers = await response.json();
 
-        const membersData = groupMembers
-          .map((member: { user_id: string }) =>
-            usersList.find((user) => user.id === member.user_id)
-          )
-          .filter((user: User) => user !== undefined);
-
-        setMembers(membersData as User[]);
+        setMembers(groupMembers);
+        console.log(groupMembers);
       } catch (error) {
         console.error("Error fetching group members:", error);
       }
-    };
+    })();
 
-    fetchGroupMembers();
-  }, [groupId, usersList]);
+    console.log("FETCH MEMBERS");
+  }, [groupId]);
 
-  useEffect(() => {
-    const fetchUsers = async () => {
+  /*  useEffect(() => {
+    if (!userData) {
+      return;
+    }
+    (async () => {
       try {
-        const users = await getUsers();
-        setUsersList(users);
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/follow/${userData?.id}/friends/`
+        );
+        const data = await response.json();
+        console.log("AMIGOS", data);
+        console.log("MEMBERS", members);
+
+        interface testUser {
+          id: string;
+          username: string;
+          profile_image: string;
+          user_type: string;
+        }
+        const filteredUsers = data.filter((friend: testUser) => {
+          return !members.some((member) => member.id === friend.id);
+        });
+        console.log("FILTERED users", filteredUsers);
+
+        setFriendsList(filteredUsers);
       } catch (error) {
         console.error("Error fetching users:", error);
       }
-    };
+    })();
+  }, [userData, members]); */
 
+  useEffect(() => {
+    if (!groupId || !userData) {
+      console.log(
+        "Esperando a que groupId y userData tengan valores válidos..."
+      );
+      return;
+    }
     (async (groupId) => {
-      if (!groupId || !userData) {
-        console.log(
-          "Esperando a que groupId y userData tengan valores válidos..."
-        );
-        return;
-      }
-
       try {
         const responseGroupChats = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/chat-groups/chats/${groupId}`
         );
         if (responseGroupChats.ok) {
           const groupChatData = await responseGroupChats.json();
+          console.log("groupChatData", groupChatData);
 
           setGroupChat(groupChatData[0]);
 
@@ -159,7 +165,7 @@ const ChatRoomView = () => {
         console.log("Hubo un error al traer la información del Chat Grupal");
       }
     })(groupId);
-    fetchUsers();
+    console.log("FETCH USERS");
   }, [groupId, userData]);
 
   const addMemberToRoom = async (user: User) => {
@@ -176,9 +182,11 @@ const ChatRoomView = () => {
         }
       );
       await response.json();
-      setMembers([...members, user]);
+      console.log("USER", user);
+      setMembers((members) => [...members, user]);
       setSearchQuery("");
       setIsAdding(false);
+      console.log("members", members);
     }
   };
 
@@ -205,19 +213,19 @@ const ChatRoomView = () => {
     };
 
     try {
-      /* const sendDate = timeAgo(new Date().toISOString());
+      const sendDate = timeAgo(new Date().toISOString());
       const messageData = {
-        username: userData.username,
-        sender_id: userData.id,
-        user_type: userData.user_type,
-        profile_image: userData.profile_image,
         content: message,
         send_date: sendDate,
-        type: "text",
-        is_anonymous: false,
-        group_id: groupId,
+        sender: {
+          user_id: userData.id,
+          username: userData.username,
+          fullname: userData.fullname,
+          profile_image: userData.profile_image,
+          user_type: userData.user_type,
+        },
       };
-      setGroupMessages((prevMessages) => [...prevMessages, messageData]); */
+      setGroupMessages((prevMessages) => [...prevMessages, messageData]);
 
       sendMessage(newMessage);
 
@@ -253,17 +261,17 @@ const ChatRoomView = () => {
                         <div className="relative w-10 h-10">
                           <Image
                             src={member.imgSrc || "/agregarfoto.png"}
-                            alt={`Foto de perfil de ${member.username}`}
+                            alt={`Foto de perfil de ${member.user.username}`}
                             layout="fill"
                             className="rounded-full object-cover"
                           />
                         </div>
-                        <span className="text-sm">{member.username}</span>
+                        <span className="text-sm">{member.user.username}</span>
                       </div>
                     ))}
                   </div>
                   <button
-                    onClick={() => setIsAdding(true)}
+                    onClick={filterFriends}
                     className="bg-green-500 text-white w-full px-4 py-2 rounded-lg text-sm mt-4 hover:bg-green-600 transition"
                   >
                     Agregar Miembro
@@ -282,7 +290,7 @@ const ChatRoomView = () => {
                         className="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 mb-4"
                       />
                       <div>
-                        {filteredUsers.map((user, index) => (
+                        {friendsList.map((user, index) => (
                           <div
                             key={user.id || `user-${index}`}
                             className="flex items-center space-x-2 p-2 cursor-pointer hover:bg-gray-200 rounded-md"
@@ -331,31 +339,42 @@ const ChatRoomView = () => {
 
                   <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
                     {groupChat ? (
-                      Array.isArray(groupMessages) &&
                       groupMessages.length > 0 ? (
                         groupMessages.map((uniqueMsg, index) => {
-                          const userId = localStorage.getItem("userId");
+                          console.log(
+                            "uniqueMessage",
+                            uniqueMsg.sender?.user_id
+                          );
                           const isSender =
-                            uniqueMsg.sender.user_id === userData?.id ||
-                            uniqueMsg.sender.user_id === userId;
+                            uniqueMsg.sender?.user_id === userData?.id;
+                          if (isSender) {
+                            console.log(
+                              "sender.user_id",
+                              uniqueMsg.sender?.user_id,
+                              "userData?.id",
+                              userData?.id
+                            );
+                            console.log("is Sender existe", isSender);
+                          } else console.log("is Sender no existe", isSender);
 
+                          console.log("sender_id", uniqueMsg.sender?.user_id);
                           const divContainer = isSender ? (
                             <div
                               className="text-right"
-                              key={`${uniqueMsg.sender.user_id}-${index}`}
+                              key={`${uniqueMsg.sender?.user_id}-${index}`}
                             >
                               <div className="p-2 bg-blue-100 rounded-lg my-2">
-                                <p>{uniqueMsg.sender.username}</p>
+                                <p>{uniqueMsg.sender?.username}</p>
                                 <p>{uniqueMsg.content}</p>
                               </div>
                             </div>
                           ) : (
                             <div
                               className="text-left"
-                              key={`${uniqueMsg.sender.user_id}-${index}`}
+                              key={`${uniqueMsg.sender?.user_id}-${index}`}
                             >
                               <div className="p-2 bg-blue-100 rounded-lg my-2">
-                                <p>{uniqueMsg.sender.username}</p>
+                                <p>{uniqueMsg.sender?.username}</p>
                                 <p>{uniqueMsg.content}</p>
                               </div>
                             </div>

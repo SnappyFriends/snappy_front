@@ -174,7 +174,7 @@ export interface GroupChats {
 }
 
 export interface IMessage {
-  chat_id: string;
+  chat_id: string | undefined;
   username: string;
   sender_id: string;
   user_type: string;
@@ -186,7 +186,6 @@ export interface IMessage {
 }
 
 export interface IGroupMessage {
-  message_id: string;
   content: string;
   send_date: string;
   sender: {
