@@ -21,6 +21,7 @@ export interface ILoginResponse {
   userId: string;
   message: string;
   user_type: string;
+  user_status: string;
 }
 
 export interface IUserContextType {
