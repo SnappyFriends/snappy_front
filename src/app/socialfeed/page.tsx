@@ -33,7 +33,7 @@ interface Story {
 
 const SocialFeedView = () => {
   const [posts, setPosts] = useState<Post[]>([]);
-  const { userData, userId } = useContext(UserContext);
+  const { userData } = useContext(UserContext);
   const [reaction, setReaction] = useState(false);
   const [stories, setStories] = useState<Story[]>([]);
   const [selectedStory, setSelectedStory] = useState<Story | null>(null);
@@ -41,32 +41,6 @@ const SocialFeedView = () => {
   const [currentFeed, setCurrentFeed] = useState<"following" | "forYou">(
     "forYou"
   );
-  const [followedUsers, setFollowedUsers] = useState<Set<string>>(new Set());
-
-  const handleFollow = async (userTarget: string) => {
-    const endpoint = `${process.env.NEXT_PUBLIC_API_URL}/follow/${userId}/${userTarget}`;
-    try {
-      const response = followedUsers.has(userTarget)
-        ? await fetch(endpoint, { method: "DELETE" })
-        : await fetch(endpoint, { method: "POST" });
-
-      if (!response.ok) {
-        throw new Error("Hubo un error al cambiar el estado de seguir.");
-      }
-
-      setFollowedUsers((prevState) => {
-        const newState = new Set(prevState);
-        if (newState.has(userTarget)) {
-          newState.delete(userTarget);
-        } else {
-          newState.add(userTarget);
-        }
-        return newState;
-      });
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   useEffect(() => {
     const fetchFollowingUser = async (userId: string) => {
@@ -265,12 +239,6 @@ const SocialFeedView = () => {
     setSelectedStory(currentList[nextIndex]);
   };
 
-  const uniqueUsers = Array.from(
-    new Set(stories.map((story) => story.user.userId))
-  ).map((userId) => {
-    return stories.find((story) => story.user.userId === userId)?.user;
-  });
-
   return (
     <>
       <NavBar />
@@ -307,26 +275,22 @@ const SocialFeedView = () => {
               </button>
             </div>
 
-            {uniqueUsers.map((user) => (
+            {stories?.slice(0, 5).map((story) => (
               <div
-                key={user?.userId}
+                key={story.story_id}
                 className="relative w-14 h-14 flex flex-col items-center cursor-pointer"
-                onClick={() =>
-                  handleStoryClick(
-                    stories.find((story) => story.user.userId === user?.userId)!
-                  )
-                }
+                onClick={() => handleStoryClick(story)}
               >
                 <Image
-                  src={user?.profile_image || "/user.png"}
-                  alt={`Foto de ${user?.username}`}
+                  src={story.user.profile_image || "/user.png"}
+                  alt={`Foto de ${story.user.username}`}
                   layout="fill"
                   className="rounded-full object-cover"
                 />
                 <p className="text-xs mt-14 text-center font-semibold text-ellipsis whitespace-nowrap">
-                  {user?.username && user.username.length > 8
-                    ? `${user.username.slice(0, 8)}...`
-                    : user?.username}
+                  {story.user.username.length > 8
+                    ? `${story.user.username.slice(0, 8)}...`
+                    : story.user.username}
                 </p>
               </div>
             ))}
@@ -406,18 +370,6 @@ const SocialFeedView = () => {
                         </Link>
                       </div>
                     </div>
-                    <button
-                      onClick={() => handleFollow(post.user.id)}
-                      className={`px-4 py-2 rounded-lg transition-colors ${
-                        followedUsers.has(post.user.id)
-                          ? "bg-gray-300 text-black"
-                          : "bg-blue-500 text-white"
-                      }`}
-                    >
-                      {followedUsers.has(post.user.id)
-                        ? "Dejar de seguir"
-                        : "Seguir"}
-                    </button>
                   </div>
 
                   <Link href={`/publicacion/${post.post_id}`}>
