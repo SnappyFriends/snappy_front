@@ -4,6 +4,7 @@ export interface IFormDataLogin {
 }
 
 export interface IFormDataRegister {
+  id?: string;
   fullname: string;
   birthdate: string;
   genre: "hombre" | "mujer" | "otro" | string;
