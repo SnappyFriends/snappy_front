@@ -1,13 +1,14 @@
 "use client";
 
 import { showCustomToast } from "@/components/Notificacion";
+import { UserContext } from "@/context/UserContext";
 import { validacionInputs } from "@/helpers/validacionInputs";
 import { IFormDataRegister } from "@/interfaces/types";
 import { registerUser } from "@/services/registerService";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 
 export default function RegisterComponent() {
@@ -16,7 +17,7 @@ export default function RegisterComponent() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<IFormDataRegister>();
-
+  const { setUserId } = useContext(UserContext);
   const router = useRouter();
   const [showOtherGender, setShowOtherGender] = useState(false);
 
@@ -31,10 +32,11 @@ export default function RegisterComponent() {
   const onSubmit = async (data: IFormDataRegister) => {
     try {
       const resultado = await registerUser(data);
-      console.log("🚀 ~ onSubmit ~ resultado TRY REGISTER.TSX:", resultado);
+      const { id } = resultado;
+      setUserId(id ?? null);
 
       showCustomToast("Snappy", "¡Registro exitoso!", "success");
-      router.push("/");
+      router.push("/subirfoto");
     } catch (error) {
       showCustomToast(
         "Snappy",
