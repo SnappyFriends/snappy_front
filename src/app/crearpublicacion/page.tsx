@@ -26,13 +26,9 @@ const CrearPublicacion = () => {
 				return;
 			}
 
-			if (selectedFile.size > 200 * 1024) {
-				setFileSizeError("La imagen debe ser de máximo 200 KB.");
-				setFile(null);
-			} else {
-				setFileSizeError(null);
-				setFile(selectedFile);
-			}
+			setFileSizeError(null);
+			setFile(selectedFile);
+
 		}
 	};
 
