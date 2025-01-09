@@ -65,7 +65,7 @@ const DashboardSidebar = () => {
 							SNAPPY FRIENDS
 						</h1>
 					</div>
-					<button onClick={toggleMenu} className="text-white text-3xl">
+					<button onClick={toggleMenu} className="text-white text-1xl">
 						{isOpen ? "✖" : "☰"}
 					</button>
 				</div>
@@ -84,7 +84,7 @@ const DashboardSidebar = () => {
 									className="text-white font-bold p-2 text-center text-2xl mb-7"
 								>
 									<Link
-										href={`dashboard/${item.toLowerCase()}`}
+										href={`../dashboard/${item.toLowerCase()}`}
 										className="hover:underline"
 									>
 										{item}
