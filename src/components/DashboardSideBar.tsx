@@ -8,9 +8,9 @@ const DashboardSidebar = () => {
 	const sideBarList = [
 		"Usuarios",
 		"Publicaciones",
-		"Comentarios",
 		"Reportes",
-		"Estadisticas",
+		"Suscripciones",
+		"Intereses"
 	];
 
 	const [isOpen, setIsOpen] = useState(false);
@@ -74,7 +74,7 @@ const DashboardSidebar = () => {
 					<div className="bg-black text-white p-4 h-[calc(100vh-80px)] overflow-y-auto">
 						<ul>
 							<Link href="/dashboard">
-								<li className="text-white font-bold p-2 text-center text-2xl mb-7">
+								<li className="text-white font-bold p-2 text-center text-1xl mb-7">
 									Dashboard
 								</li>
 							</Link>
@@ -92,7 +92,7 @@ const DashboardSidebar = () => {
 								</li>
 							))}
 							<Link href="/socialfeed">
-								<li className="text-white font-bold p-2 text-center text-2xl mb-7">
+								<li className="text-white font-bold p-2 text-center text-1xl mb-7">
 									Social Feed
 								</li>
 							</Link>

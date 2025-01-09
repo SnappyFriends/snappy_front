@@ -9,7 +9,7 @@ const DashboardPicture = () => {
 	const { userData } = useContext(UserContext);
 
 	return (
-		<nav className="bg-gray-50 flex justify-between items-center mt-4 px-4 w-[80%] ml-[20%] fixed top-0 left-0">
+		<nav className="bg-gray-50 flex justify-between items-center px-4 w-full h-[21%] fixed top-0 left-0 mb-10">
 			<h1 className=" text-black font-extrabold text-2xl justify-center "></h1>
 			<div className="flex flex-row items-center mt-2 mr-10 cursor-pointer">
         <p className="text-black text-center font-semibold text-xl">
