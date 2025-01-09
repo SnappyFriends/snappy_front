@@ -34,6 +34,7 @@ export default function LoginComponent() {
   const onSubmit = async (data: IFormDataLogin) => {
     try {
       const resultado = await loginUser(data);
+      console.log("🚀 ~ onSubmit ~ resultado:", resultado)
       const { token, userId } = resultado;
 
       if (token) {
@@ -149,6 +150,7 @@ export default function LoginComponent() {
 
                         if (response.ok) {
                           const responseData = await response.json();
+                          console.log("🚀 ~ onSuccess={ ~ responseData:", responseData)
 
                           if (responseData.token) {
                             const { token, userId } = responseData;
