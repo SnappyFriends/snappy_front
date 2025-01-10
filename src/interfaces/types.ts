@@ -162,18 +162,18 @@ export interface Chats {
 }
 
 export interface GroupChats {
-  group_id: string;
-  name: string;
-  description: string;
   creation_date: string;
-  privacy: string;
-  group_members: {
+  description: string;
+  group_id: string;
+  members: {
     group_id: string;
     user_id: string;
     role: string;
     join_date: string;
   }[];
   messages: [IGroupMessage];
+  name: string;
+  privacy: string;
 }
 
 export interface GroupChatsBeta {

@@ -33,16 +33,46 @@ const ChatRoomView = () => {
   const [isAdding, setIsAdding] = useState(false);
   const [hasGroupChats, setHasGroupChats] = useState<boolean>(false);
 
-  const [groupId, setGroupId] = useState();
+  const [groupId, setGroupId] = useState<string | null>();
   const { userData } = useContext(UserContext);
   const [groupChat, setGroupChat] = useState<GroupChats | null>(null);
   const [message, setMessage] = useState("");
   const [groupMessages, setGroupMessages] = useState<IGroupMessage[]>([]);
 
   const [needsUpdate, setNeedsUpdate] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const token = Cookies.get("auth_token");
   const socketRef = useRef<Socket | null>(null);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleDeleteGroup = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/chat-groups/${groupId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (!response.ok) {
+        return;
+      }
+      setGroupId(null);
+      setHasGroupChats(false);
+    } catch (error) {
+      console.error("Error deleting chat group", error);
+    }
+  };
 
   useEffect(() => {
     const authToken = Cookies.get("auth_token");
@@ -69,14 +99,12 @@ const ChatRoomView = () => {
       });
 
       socketRef.current.on("receiveGroupMessage", (newMessage) => {
-        console.log("Mensaje grupal recibido:", newMessage);
         if (setGroupMessages) {
           setGroupMessages((prevMessages) => [...prevMessages, newMessage]);
-        } else console.log("No existe setGroupMessages");
+        }
       });
 
       if (groupChat) {
-        console.log("Estoy conectado al grupo !");
         socketRef.current.emit("join_group_chat", groupChat);
       }
     }, 1500);
@@ -112,29 +140,30 @@ const ChatRoomView = () => {
   };
 
   //useEffect para hacer un fetch a la cantidad de Chats Grupales
-  useEffect(() => {
-    if (!userData) {
-      return;
-    }
+  const fetchGroupChats = async () => {
+    if (!userData) return;
 
-    (async () => {
-      try {
-        const chatsQuantity = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/chat-groups/${userData.id}/chats`
-        );
-        const response = await chatsQuantity.json();
-        if (Array.isArray(response) && response.length > 0) {
-          const group = response[0];
-          setHasGroupChats(true);
-          setGroupId(group.group_id);
-        } else {
-          setHasGroupChats(false);
-        }
-      } catch {
+    try {
+      const chatsQuantity = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/chat-groups/${userData.id}/chats`
+      );
+      const response = await chatsQuantity.json();
+      if (Array.isArray(response) && response.length > 0) {
+        const group = response[0];
+        setHasGroupChats(true);
+        setGroupId(group.group_id);
+      } else {
         setHasGroupChats(false);
       }
-    })();
-  }, [groupId, userData]);
+    } catch (error) {
+      console.error("Error fetching group chats:", error);
+      setHasGroupChats(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchGroupChats();
+  }, [userData]);
 
   //useEffect para hacer un fetch a los miembros de un grupo.
   useEffect(() => {
@@ -393,6 +422,40 @@ const ChatRoomView = () => {
                       Enviar
                     </button>
                   </div>
+
+                  <button
+                    onClick={openModal}
+                    className="bg-red-500 text-white px-4 py-2 rounded-lg text-sm mt-4 hover:bg-red-600 transition"
+                  >
+                    Eliminar Grupo
+                  </button>
+
+                  {isModalOpen && (
+                    <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center">
+                      <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                        <h2 className="text-lg font-semibold mb-4">
+                          Confirmación
+                        </h2>
+                        <p className="mb-4">
+                          ¿Estás seguro de que quieres eliminar este grupo?
+                        </p>
+                        <div className="flex justify-between">
+                          <button
+                            onClick={closeModal}
+                            className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+                          >
+                            Cancelar
+                          </button>
+                          <button
+                            onClick={handleDeleteGroup}
+                            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                          >
+                            Eliminar
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
