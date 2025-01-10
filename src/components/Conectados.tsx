@@ -6,11 +6,13 @@ import { UserContext } from "@/context/UserContext";
 import { fetchFriends } from "@/helpers/users";
 import Link from "next/link";
 import { useSocket } from "@/helpers/useSocket";
+import { User as BaseUser } from "@/helpers/users";
 
-interface User {
+interface User extends BaseUser {
   id: string;
   username: string;
   profile_image: string;
+  friends: [];
   isOnline: boolean;
 }
 
@@ -25,6 +27,12 @@ const Conectados: React.FC = () => {
     const fetchUserFriends = async () => {
       try {
         const fetchedFriends = await fetchFriends(userId);
+        setFriends((prevFriends) =>
+          prevFriends.map((friend) => ({
+            ...friend,
+            isOnline: onlineUsers.includes(friend.id),
+          }))
+        );
         setFriends(fetchedFriends);
         getOnlineUsers();
       } catch (error) {
@@ -33,18 +41,15 @@ const Conectados: React.FC = () => {
     };
 
     fetchUserFriends();
-  }, [userId, getOnlineUsers]);
+    getOnlineUsers();
+  }, [userId, getOnlineUsers, onlineUsers]);
 
-  useEffect(() => {
-    setFriends((prevFriends) =>
-      prevFriends.map((friend) => ({
-        ...friend,
-        isOnline: onlineUsers.includes(friend.id),
-      }))
-    );
-  }, [onlineUsers]);
+  const friendsWithOnlineStatus = friends.map((friend) => ({
+    ...friend,
+    isOnline: onlineUsers.includes(friend.id),
+  }));
 
-  const sortedFriends = [...friends].sort((a, b) => {
+  const sortedFriends = [...friendsWithOnlineStatus].sort((a, b) => {
     if (a.isOnline === b.isOnline) return 0;
     return a.isOnline ? -1 : 1;
   });
