@@ -1,25 +1,44 @@
 "use client";
 
+import { UserContext } from "@/context/UserContext";
 import { timeAgo } from "@/helpers/timeAgo";
 import { IPurchase } from "@/interfaces/types";
-import { fetchPurchases } from "@/services/purchasesService";
+// import { fetchPurchases } from "@/services/purchasesService";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 const PurchasesPage: React.FC = () => {
   const [purchases, setPurchases] = useState<IPurchase[]>([]);
+  const { token } = useContext(UserContext);
 
   useEffect(() => {
-    (async () => {
+    const fetchPurchases = async () => {
       try {
-        const data = await fetchPurchases();
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/purchases`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`Error fetching purchases: ${response.statusText}`);
+        }
+
+        const data = await response.json();
         setPurchases(data);
       } catch (error) {
         console.error("Error fetching purchases:", error);
       }
-    })();
-  }, []);
+    };
+
+    fetchPurchases();
+  }, [token]);
 
   return (
     <div className="container mx-auto p-4">
@@ -72,7 +91,17 @@ const PurchasesPage: React.FC = () => {
                   {new Date(purchase.expiration_date).toLocaleString()}
                 </td>
                 <td className="px-4 py-2 border border-gray-200 text-center">
-                <span className={purchase.status === "completed" ? "bg-green-600 text-white p-1 rounded-lg" : "bg-gray-800 text-white p-1 rounded-lg"}>{purchase.status === "completed" ? "Completado" : "Pendiente"}</span>
+                  <span
+                    className={
+                      purchase.status === "completed"
+                        ? "bg-green-600 text-white p-1 rounded-lg"
+                        : "bg-gray-800 text-white p-1 rounded-lg"
+                    }
+                  >
+                    {purchase.status === "completed"
+                      ? "Completado"
+                      : "Pendiente"}
+                  </span>
                 </td>
               </tr>
             ))}
