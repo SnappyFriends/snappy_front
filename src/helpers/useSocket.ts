@@ -47,7 +47,6 @@ export const useSocket = (
       return;
     }
 
-    // Retrasar la conexión del WebSocket
     const timeoutId = setTimeout(() => {
       socketRef.current = io(
         `${process.env.NEXT_PUBLIC_API_URL}/chat?token=${authToken}`,
@@ -74,7 +73,11 @@ export const useSocket = (
         }
       });
 
-      socketRef.current.on("receiveGroupMessage", (newMessage) => {});
+      socketRef.current.on("receiveGroupMessage", (newMessage) => {
+        if (setGroupMessages) {
+          setGroupMessages((prevMessages) => [...prevMessages, newMessage]);
+        }
+      });
 
       if (chat) {
         socketRef.current.emit("join_chat", chat);
