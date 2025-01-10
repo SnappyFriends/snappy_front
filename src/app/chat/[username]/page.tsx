@@ -3,18 +3,18 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
-import { getUsersByUsername, User } from "@/helpers/users";
+import { getUsersByUsername } from "@/helpers/users";
 import { UserContext } from "@/context/UserContext";
 import NavBar from "@/components/NavBar";
 import Sidebar from "@/components/Sidebar";
 import Conectados from "@/components/Conectados";
-import { Chats, IMessage } from "@/interfaces/types";
+import { Chats, IMessage, IUsernameData } from "@/interfaces/types";
 import { timeAgo } from "@/helpers/timeAgo";
 import { useSocket } from "@/helpers/useSocket";
 
 const ChatWithUser = () => {
   const { username } = useParams();
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<IUsernameData | null>(null);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<IMessage[]>([]);
   const { userData } = useContext(UserContext);
@@ -156,7 +156,8 @@ const ChatWithUser = () => {
                     {user.fullname || user.username}
                   </h1>
                   <p className="text-sm text-gray-500">
-                    Última conexión: Hace 5 min
+                    Última conexión:
+                    {timeAgo(new Date(user.last_login_date).toISOString())}
                   </p>
                 </div>
               </div>
