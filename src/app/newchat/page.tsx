@@ -140,6 +140,7 @@ const ChatView = () => {
         userList[Math.floor(Math.random() * userList.length)];
       console.log("RANDOM USER", newRandomUser);
       setRandomUser(newRandomUser);
+      setMessages([]);
 
       if (sentRequests.has(newRandomUser.id)) {
         setIsRequestSent(true);
