@@ -11,13 +11,10 @@ import { timeAgo } from "@/helpers/timeAgo";
 import Link from "next/link";
 
 enum NotificationType {
-	FRIEND_REQUEST = "friend_request",
-	MESSAGE = "message",
-	POST_REACTION = "post_reaction",
-	COMMENT = "comment",
-	GROUP_INVITATION = "group_invitation",
-	SYSTEM = "system",
-	PURCHASE = "purchase",
+	MENSAJE = "mensaje",
+	COMENTARIO = "comentario",
+	REACCION = "reaccion",
+	SEGUIDOR = "seguidor",
 }
 
 const ActivityView = () => {
