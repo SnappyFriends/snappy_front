@@ -1,6 +1,6 @@
 import { UserContext } from "@/context/UserContext";
 import Image from "next/image";
-import React, { useContext, useState } from "react";
+import React, { FormEvent, useContext, useState } from "react";
 import { useRouter } from "next/navigation";
 /* import { useState } from "react"; */
 
@@ -11,12 +11,13 @@ const CreateChatGroupForm = () => {
   const { userData } = useContext(UserContext);
   const router = useRouter();
 
-  const createGroupChat = async () => {
+  const createGroupChat = async (e: FormEvent) => {
+    e.preventDefault();
     if (!userData) return;
 
-    const responseObject = { name, description, creator_id: userData.id };
-    console.log("data", responseObject);
     try {
+      const responseObject = { name, description, creator_id: userData.id };
+      console.log("data", responseObject);
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/chat-groups`,
         {
@@ -33,7 +34,9 @@ const CreateChatGroupForm = () => {
         throw new Error(`Failed to create ChatGroup: ${errorText}`);
       }
 
-      router.push("/chatgrupal");
+      setTimeout(() => {
+        router.push("/chatgrupal");
+      }, 4000);
     } catch (error) {
       console.error("Error creating chatGroup", error);
     }
