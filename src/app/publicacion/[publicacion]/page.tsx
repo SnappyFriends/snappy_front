@@ -17,6 +17,7 @@ import {
 	faComment,
 } from "@fortawesome/free-regular-svg-icons";
 import VerifiedAccount from "@/components/VerifiedAccount";
+import Link from "next/link";
 
 const Publicacion = ({
 	params,
@@ -26,13 +27,13 @@ const Publicacion = ({
 	const [post, setPost] = useState<Post | null>(null);
 	const [uuid, setUuid] = useState<string | null>(null);
 	const [loading, setLoading] = useState(true);
-	const [showCommentBox, setShowCommentBox] = useState(false);
 	const [comment, setComment] = useState("");
-	const [showDropdown, setShowDropdown] = useState(false);
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
 	const { userData } = useContext(UserContext);
 	const router = useRouter();
 	const [reaction, setReaction] = useState(false);
+	const [showDropdown, setShowDropdown] = useState(false);
+	// const [showDeleteCommentModal, setShowDeleteCommentModal] = useState(false);
 
 	useEffect(() => {
 		const fetchParams = async () => {
@@ -67,61 +68,51 @@ const Publicacion = ({
 		}
 	}, [uuid, reaction]);
 
-	const handleCommentSubmit = async () => {
-		if (!comment.trim()) return;
-
-		if (!userData) return;
-
-		const response = await fetch(
+	const handleCommentSubmit = async (e: React.FormEvent) => {
+		e.preventDefault();
+		if (!comment.trim() || !userData) return;
+	
+		try {
+		  const response = await fetch(
 			`${process.env.NEXT_PUBLIC_API_URL}/comments`,
 			{
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					content: comment,
-					user_id: userData?.id,
-					post_id: uuid,
-				}),
-			}
-		);
-
-		if (response.ok) {
-			showCustomToast("Snappy", "Comentario enviado", "success");
-
-			const responseData = await response.json();
-
-			console.log(responseData);
-
-			const newComment = {
-				id: responseData.comment_id,
+			  method: "POST",
+			  headers: { "Content-Type": "application/json" },
+			  body: JSON.stringify({
 				content: comment,
-				comment_date: responseData.comment_date,
-				user: {
-					id: userData.id,
-					username: userData.username,
-					profile_image: userData.profile_image,
-					user_type: userData.user_type,
-				},
+				user_id: userData.id,
+				post_id: uuid,
+			  }),
+			}
+		  );
+	
+		  if (response.ok) {
+			showCustomToast("Snappy", "Comentario enviado", "success");
+			const responseData = await response.json();
+			const newComment = {
+			  id: responseData.comment_id,
+			  content: comment,
+			  comment_date: responseData.comment_date,
+			  user: {
+				id: userData.id,
+				username: userData.username,
+				profile_image: userData.profile_image,
+				user_type: userData.user_type,
+			  },
 			};
-
-			setPost((prevPost) => {
-				if (prevPost) {
-					return {
-						...prevPost,
-						comments: [newComment, ...prevPost.comments],
-					};
-				}
-				return prevPost;
-			});
-
-			setShowCommentBox(false);
+			setPost((prevPost) =>
+			  prevPost ? { ...prevPost, comments: [newComment, ...prevPost.comments] } : prevPost
+			);
 			setComment("");
-		} else {
-			alert("Hubo un error al enviar el comentario");
+		  } else {
+			alert("Error al enviar el comentario");
+		  }
+		} catch (error) {
+		  console.error("Error al enviar el comentario:", error);
 		}
-	};
+	  };
+	
+
 
 	const handleDeletePost = async () => {
 		try {
@@ -145,6 +136,30 @@ const Publicacion = ({
 		}
 		setShowDeleteModal(false);
 	};
+
+	// const handleDeleteCommentPost = async (id) => {
+	// 	try {
+	// 		const response = await fetch(
+	// 			`${process.env.NEXT_PUBLIC_API_URL}/comment/${id}`,
+	// 			{
+	// 				method: "DELETE",
+	// 			}
+	// 		);
+	// 		if (response.ok) {
+	// 			showCustomToast("Snappy", "Comentario eliminado", "success");
+
+	// 			setTimeout(() => {
+	// 				router.push("/socialfeed");
+	// 			}, 1000);
+	// 		} else {
+	// 			alert("Hubo un error al eliminar el comentario");
+	// 		}
+	// 	} catch (error) {
+	// 		console.error("Hubo un error al eliminar el comentario:", error);
+	// 	}
+	// 	setShowDeleteCommentModal(false);
+	// };
+
 
 	const handleLikeToggle = async (postId: string, isLiked: boolean) => {
 		if (!userData || !post) return;
@@ -231,6 +246,7 @@ const Publicacion = ({
 					<div className="w-full max-w-md space-y-4">
 						<div className="flex items-center justify-between">
 							<div className="flex items-center">
+								<Link href={`/perfil/${post.user.username}`}>
 								<div className="relative w-10 h-10">
 									<Image
 										src={post.user.profile_image}
@@ -239,7 +255,10 @@ const Publicacion = ({
 										className="rounded-full object-cover"
 									/>
 								</div>
+								</Link>
 								<div className="ml-4">
+								<Link href={`/perfil/${post.user.username}`}>
+
 									<h2 className="text-sm font-semibold">
 										{post.user.username}{" "}
 										{post.user.user_type === "premium" ? (
@@ -248,16 +267,15 @@ const Publicacion = ({
 											""
 										)}
 									</h2>
+									</Link>
+
 									<p className="text-xs text-gray-500">
 										{timeAgo(post.creation_date)}{" "}
 									</p>
 								</div>
 							</div>
 							<div className="flex items-center gap-2">
-								<button className="bg-green-500 text-white px-4 py-1 rounded-full text-sm">
-									Seguir
-								</button>
-
+							
 								{userData?.username === post.user.username && (
 									<div className="relative">
 										<button
@@ -321,30 +339,21 @@ const Publicacion = ({
 									{post.comments.length}
 								</p>
 							</div>
-							<button
-								onClick={() => setShowCommentBox((prev) => !prev)}
-								className="bg-blue-500 text-white px-4 py-1 rounded-full text-xs"
-							>
-								Comentar
-							</button>
+							
 						</div>
 
-						{showCommentBox && (
-							<div className="mt-4">
-								<textarea
-									value={comment}
-									onChange={(e) => setComment(e.target.value)}
-									className="w-full p-2 border border-gray-300 rounded-md"
-									placeholder="Escribe tu comentario..."
-								/>
-								<button
-									onClick={handleCommentSubmit}
-									className="mt-2 bg-blue-500 text-white px-4 py-1 rounded-full"
-								>
-									Enviar
-								</button>
-							</div>
-						)}
+						<form onSubmit={handleCommentSubmit} className="mt-4 flex gap-2">
+            <input
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              className="flex-1 p-2 border border-gray-300 rounded-md"
+              placeholder="Escribe tu comentario..."
+            />
+            <button type="submit" className="bg-blue-500 text-white px-4 py-1 rounded-md">
+              Enviar
+            </button>
+          </form>
+						
 
 						{post.comments?.length > 0 && (
 							<div className="mt-6 space-y-4">
@@ -407,6 +416,30 @@ const Publicacion = ({
 					</div>
 				</div>
 			)}
+
+{/* {showDeleteCommentModal && (
+				<div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+					<div className="bg-white p-6 rounded-lg shadow-lg w-80">
+						<h3 className="text-lg font-semibold text-center mb-4">
+							¿Estás seguro de que quieres eliminar este comentario?
+						</h3>
+						<div className="flex justify-between">
+							<button
+								onClick={() => setShowDeleteCommentModal(false)}
+								className="bg-gray-300 text-gray-700 px-4 py-2 rounded"
+							>
+								Cancelar
+							</button>
+							<button
+								onClick={handleDeleteCommentPost}
+								className="bg-red-600 text-white px-4 py-2 rounded"
+							>
+								Eliminar
+							</button>
+						</div>
+					</div>
+				</div>
+			)} */}
 		</>
 	);
 };
