@@ -1,6 +1,8 @@
 import { IFormDataRegister } from "@/interfaces/types";
 
-export const registerUser = async (data: IFormDataRegister): Promise<void> => {
+export const registerUser = async (
+  data: IFormDataRegister
+): Promise<IFormDataRegister> => {
   try {
     const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -14,12 +16,12 @@ export const registerUser = async (data: IFormDataRegister): Promise<void> => {
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(
-        error.message || "Error en try registerService.ts"
-      );
+      throw new Error(error.message || "Error en try registerService.ts");
     }
 
-    return response.json();
+    const dataResponse: IFormDataRegister = await response.json();
+
+    return dataResponse;
   } catch (error) {
     throw new Error(
       (error as Error).message || "Error desconocido en el servicio."

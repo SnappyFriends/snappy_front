@@ -10,7 +10,8 @@ export function middleware(req: NextRequest) {
     pathname !== "/" &&
     pathname !== "/register" &&
     pathname !== "/terminos" &&
-    pathname !== "/completarregistro"
+    pathname !== "/completarregistro" &&
+    pathname !== "/subirfoto"
   ) {
     return NextResponse.redirect(new URL("/", req.url));
   }
@@ -19,7 +20,8 @@ export function middleware(req: NextRequest) {
     isLoggedIn &&
     (pathname === "/" ||
       pathname === "/register" ||
-      pathname === "/completarregistro")
+      pathname === "/completarregistro" ||
+      pathname === "/subirfoto")
   ) {
     return NextResponse.redirect(new URL("/socialfeed", req.url));
   }

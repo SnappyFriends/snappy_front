@@ -11,7 +11,7 @@ import SearchBar from "./SearchBar";
 
 export default function NavBar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { setToken, setUserId, setUserGoogle } = useContext(UserContext);
+  const { setToken, setUserId, setUserGoogle, userData } = useContext(UserContext);
   const router = useRouter();
 
   const handleLogout = () => {
@@ -24,6 +24,7 @@ export default function NavBar() {
     showCustomToast("Snappy", "Cerraste sesión correctamente", "success");
     router.push("/");
   };
+
   const toggleDropdown = () => {
     setIsDropdownOpen((prevState) => !prevState);
   };
@@ -45,37 +46,6 @@ export default function NavBar() {
             <h1 className="font-bold text-2xl ml-2">SNAPPY FRIENDS</h1>
           </Link>
         </div>
-
-        {/* <div
-          id="barradebusqueda"
-          className="flex justify-center sm:justify-center sm:col-span-1"
-        >
-          <form className="flex items-center w-full sm:w-auto">
-            <div className="relative w-full sm:w-96">
-              <input
-                type="text"
-                placeholder="Buscar..."
-                className="w-full pl-4 pr-10 py-2 text-sm text-gray-700 bg-white border border-gray-600 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300"
-              />
-              <button
-                type="submit"
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none transition-colors duration-300"
-              >
-                <svg
-                  className="h-5 w-5 text-gray-500"
-                  fill="none"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                </svg>
-              </button>
-            </div>
-          </form>
-        </div> */}
 
         <SearchBar />
 
@@ -210,6 +180,23 @@ export default function NavBar() {
                         Configuración
                       </Link>
                     </li>
+                    {(userData?.user_role === "superadmin" || userData?.user_role === "admin") && ( 
+                      <li>
+                        <Link
+                          href="/dashboard"
+                          className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          <Image
+                            src="/dashboard.png"
+                            alt="Dashboard"
+                            width={15}
+                            height={15}
+                            className="mr-2"
+                          />
+                          Dashboard
+                        </Link>
+                      </li>
+                    )}
                     <li>
                       <button
                         onClick={handleLogout}

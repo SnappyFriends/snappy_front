@@ -8,15 +8,13 @@ import NavBar from "@/components/NavBar";
 import { UserContext } from "@/context/UserContext";
 import { INotification } from "@/interfaces/types";
 import { timeAgo } from "@/helpers/timeAgo";
+import Link from "next/link";
 
 enum NotificationType {
-	FRIEND_REQUEST = "friend_request",
-	MESSAGE = "message",
-	POST_REACTION = "post_reaction",
-	COMMENT = "comment",
-	GROUP_INVITATION = "group_invitation",
-	SYSTEM = "system",
-	PURCHASE = "purchase",
+	MENSAJES = "mensajes",
+	COMENTARIOS = "comentarios",
+	REACCIONES = "reacciones",
+	SEGUIDORES = "seguidores",
 }
 
 const ActivityView = () => {
@@ -79,9 +77,10 @@ const ActivityView = () => {
 								const {
 									notification_id,
 									content,
-									type,
-									status,
+									// type,
+									// status,
 									creation_date,
+									user_sender
 								} = notification;
 
 								return (
@@ -91,25 +90,27 @@ const ActivityView = () => {
 									>
 										<div className="flex items-center">
 											<div className="relative w-10 h-10">
+												<Link href={`/perfil/${notification.user_sender.username}`}>
 												<Image
-													src="/agregarfoto.png"
+													src={user_sender?.profile_image}
 													alt={content}
 													layout="fill"
 													className="rounded-full object-cover"
 												/>
+												</Link>
 											</div>
 											<div className="ml-3">
-												<h2 className="text-sm font-semibold">{content}</h2>
+												<h2 className="text-sm font-semibold">{content} de {user_sender.username}</h2>
 												<p className="text-xs text-gray-500">
 													{timeAgo(creation_date)}
 												</p>
 											</div>
 										</div>
-										{status === "unread" && (
+										{/* {status === "unread" && (
 											<button className="bg-green-500 text-white px-4 py-2 rounded-full text-sm">
 												{type === "friend_request" ? "Aceptar" : "Ver"}
 											</button>
-										)}
+										)} */}
 									</div>
 								);
 							})}

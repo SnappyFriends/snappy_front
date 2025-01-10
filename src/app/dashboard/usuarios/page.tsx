@@ -9,6 +9,8 @@ export default function Usuarios() {
   const [users, setUsers] = useState<User[]>();
   const [filter, setFilter] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [selectedUser, setSelectedUser] = useState<{id: string, status: string} | null>(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -26,14 +28,20 @@ export default function Usuarios() {
   const handleBanToggle = async (userId: string, currentStatus: string) => {
     if (!userData) return;
 
+    setSelectedUser({ id: userId, status: currentStatus });
+    setShowModal(true);
+  };
+
+  const confirmBanAction = async () => {
+    if (!selectedUser) return;
+    
     setLoading(true);
 
-    const newStatus = currentStatus === "banned" ? "active" : "banned";
-    console.log("🚀 ~ handleBanToggle ~ newStatus:", newStatus)
+    const newStatus = selectedUser.status === "banned" ? "active" : "banned";
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/users/${selectedUser.id}`,
         {
           method: "PUT",
           headers: {
@@ -42,12 +50,11 @@ export default function Usuarios() {
           body: JSON.stringify({ status: newStatus }),
         }
       );
-      console.log("🚀 ~ handleBanToggle ~ response:", response);
 
       if (response.ok) {
         setUsers((prevUsers) =>
           prevUsers?.map((user) =>
-            user.id === userId ? { ...user, status: newStatus } : user
+            user.id === selectedUser.id ? { ...user, status: newStatus } : user
           )
         );
       } else {
@@ -57,7 +64,12 @@ export default function Usuarios() {
       console.error("Error al hacer el fetch:", error);
     } finally {
       setLoading(false);
+      setShowModal(false);
     }
+  }
+
+  const cancelBanAction = () => {
+    setShowModal(false);
   };
 
   const filteredUsers = users?.filter((user) =>
@@ -123,6 +135,32 @@ export default function Usuarios() {
           ))}
         </tbody>
       </table>
+
+      {showModal && (
+          <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50">
+            <div className="bg-white p-6 rounded-lg w-96">
+              <h2 className="text-center text-xl font-semibold mb-4">¿Estás seguro?</h2>
+              <p className="text-center mb-6">
+                ¿Seguro que deseas {selectedUser?.status === "banned" ? "desbanear" : "banear"} a este usuario?
+              </p>
+              <div className="flex justify-center space-x-4">
+                <button
+                  onClick={cancelBanAction}
+                  className="py-2 px-4 bg-gray-500 text-white rounded-lg"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={confirmBanAction}
+                  disabled={loading}
+                  className="py-2 px-4 bg-red-600 text-white rounded-lg"
+                >
+                  Confirmar
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
     </div>
     </div>
   );

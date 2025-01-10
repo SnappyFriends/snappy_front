@@ -4,6 +4,7 @@ export interface IFormDataLogin {
 }
 
 export interface IFormDataRegister {
+  id?: string;
   fullname: string;
   birthdate: string;
   genre: "hombre" | "mujer" | "otro" | string;
@@ -64,7 +65,8 @@ export interface IUserData {
   location: { latitude: number; longitude: number } | unknown;
   registration_date: string;
   last_login_date: string;
-  user_type: "regular" | "admin" | string;
+  user_type: "regular" | "premium";
+  user_role: "default" | "admin" | "superadmin";
   status: "active" | "inactive" | string;
   interests: IInterest[] | undefined;
   posts: { post_id: string; fileUrl: string }[];
@@ -273,6 +275,12 @@ export interface INotification {
   type: string;
   status: string;
   creation_date: string;
+  user_sender: {
+    id: string;
+    username: string;
+    profile_image: string;
+    user_type: string;
+  };
 }
 
 export interface IReport {
