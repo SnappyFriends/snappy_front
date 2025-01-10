@@ -1,6 +1,7 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import NavBar from "@/components/NavBar";
 import Conectados from "@/components/Conectados";
 import Sidebar from "@/components/Sidebar";
@@ -61,7 +62,25 @@ const MensajesGrupales = () => {
 
         <div className="flex-1 flex justify-center mt-20">
           <div className="w-full md:w-2/4 p-6">
-            <nav className="h-16 flex justify-center items-center">
+           
+            <nav className="h-16 flex flex-col justify-center items-center space-y-4">
+             
+              <Link
+                href="/chatgrupal"
+                className="flex items-center justify-center space-x-2 text-gray-800 hover:text-blue-500 transition"
+                title="Ir al enlace"
+              >
+                <Image
+                  src="/mas.jpg"
+                  width={24}
+                  height={24}
+                  alt="Icono personalizado"
+                  className="cursor-pointer"
+                />
+                <span className="text-sm font-medium">Crear nuevo chat grupal</span>
+              </Link>
+
+            
               <form className="w-full flex">
                 <input
                   type="text"
