@@ -39,6 +39,8 @@ const ChatRoomView = () => {
   const [message, setMessage] = useState("");
   const [groupMessages, setGroupMessages] = useState<IGroupMessage[]>([]);
 
+  const [needsUpdate, setNeedsUpdate] = useState(false);
+
   const token = Cookies.get("auth_token");
   const socketRef = useRef<Socket | null>(null);
 
@@ -152,11 +154,12 @@ const ChatRoomView = () => {
         const groupMembers = await response.json();
 
         setMembers(groupMembers);
+        setNeedsUpdate(false);
       } catch (error) {
         console.error("Error fetching group members:", error);
       }
     })();
-  }, [groupId]);
+  }, [groupId, needsUpdate]);
 
   useEffect(() => {
     if (!groupId || !userData) {
@@ -200,6 +203,7 @@ const ChatRoomView = () => {
       setMembers((members) => [...members, user]);
       setSearchQuery("");
       setIsAdding(false);
+      setNeedsUpdate(true);
     }
   };
 
@@ -212,29 +216,17 @@ const ChatRoomView = () => {
     );
 
     const serverMessage = {
+      username: userData.username,
       content: message,
       groupId: groupId,
       sender_id: userData.id,
       type: "text",
       is_anonymous: false,
       messageReceivers: membersWithoutMe.map((member) => member.user.id),
+      send_date: timeAgo(new Date().toISOString()),
     };
 
     try {
-      const uiMessage = {
-        content: message,
-        send_date: timeAgo(new Date().toISOString()),
-        sender: {
-          user_id: userData.id,
-          username: userData.username,
-          fullname: userData.fullname,
-          profile_image: userData.profile_image,
-          user_type: userData.user_type,
-        },
-      };
-
-      setGroupMessages((prevMessages) => [...prevMessages, uiMessage]);
-
       socketRef.current.emit("groupMessage", serverMessage);
       setMessage("");
     } catch (error) {
@@ -268,7 +260,7 @@ const ChatRoomView = () => {
                         <div className="relative w-10 h-10">
                           <Image
                             src={
-                              member?.user.profile_image || "/agregarfoto.png"
+                              member?.user?.profile_image || "/agregarfoto.png"
                             }
                             alt={`Foto de perfil de ${member.user?.username}`}
                             layout="fill"
@@ -356,7 +348,7 @@ const ChatRoomView = () => {
                           return (
                             <div
                               className={isSender ? "text-right" : "text-left"}
-                              key={`${uniqueMsg.sender?.user_id}-${index}`}
+                              key={`${uniqueMsg.message_id}-${index}`}
                             >
                               <div
                                 className={`p-2 ${
@@ -364,7 +356,10 @@ const ChatRoomView = () => {
                                 } rounded-lg my-2`}
                               >
                                 <p className="font-semibold">
-                                  {isSender ? "Tú" : uniqueMsg.sender?.username}
+                                  {isSender
+                                    ? "Tú"
+                                    : uniqueMsg.sender.username ||
+                                      "Desconocido"}
                                 </p>
                                 <p>{uniqueMsg?.content}</p>
                               </div>

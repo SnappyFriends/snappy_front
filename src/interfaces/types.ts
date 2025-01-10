@@ -210,6 +210,7 @@ export interface IMessage {
 }
 
 export interface IGroupMessage {
+  message_id?: string;
   content: string;
   send_date: string;
   sender: {
