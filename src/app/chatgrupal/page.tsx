@@ -262,12 +262,14 @@ const ChatRoomView = () => {
                   <div className="space-y-4">
                     {members.map((member, index) => (
                       <div
-                        key={member?.id || `member-${index}`}
+                        key={member?.user?.id || `member-${index}`}
                         className="flex items-center space-x-2"
                       >
                         <div className="relative w-10 h-10">
                           <Image
-                            src={member?.imgSrc || "/agregarfoto.png"}
+                            src={
+                              member?.user.profile_image || "/agregarfoto.png"
+                            }
                             alt={`Foto de perfil de ${member.user?.username}`}
                             layout="fill"
                             className="rounded-full object-cover"
@@ -299,13 +301,13 @@ const ChatRoomView = () => {
                       <div>
                         {friendsList.map((user, index) => (
                           <div
-                            key={user?.id || `user-${index}`}
+                            key={user.user?.id || `user-${index}`}
                             className="flex items-center space-x-2 p-2 cursor-pointer hover:bg-gray-200 rounded-md"
                             onClick={() => addMemberToRoom(user)}
                           >
                             <div className="relative w-10 h-10">
                               <Image
-                                src={user?.imgSrc || "/agregarfoto.png"}
+                                src={user.profile_image || "/agregarfoto.png"}
                                 alt={`Foto de perfil de ${user?.username}`}
                                 layout="fill"
                                 className="rounded-full object-cover"
@@ -344,35 +346,25 @@ const ChatRoomView = () => {
                     </div>
                   </div>
 
-                  <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
+                  <div className="flex-1 overflow-y-auto mt-4 px-4 py-3 bg-white rounded-lg">
                     {groupChat ? (
                       groupMessages.length > 0 ? (
                         groupMessages.map((uniqueMsg, index) => {
-                          // Determinar si el usuario actual es el remitente
                           const isSender =
                             uniqueMsg.sender?.user_id === userData?.id;
 
-                          // Renderizar el mensaje dependiendo de si es remitente o receptor
-                          return isSender ? (
+                          return (
                             <div
-                              className="text-right"
+                              className={isSender ? "text-right" : "text-left"}
                               key={`${uniqueMsg.sender?.user_id}-${index}`}
                             >
-                              <div className="p-2 bg-blue-100 rounded-lg my-2">
+                              <div
+                                className={`p-2 ${
+                                  isSender ? "bg-blue-100" : "bg-gray-200"
+                                } rounded-lg my-2`}
+                              >
                                 <p className="font-semibold">
-                                  {uniqueMsg.sender?.username}
-                                </p>
-                                <p>{uniqueMsg?.content}</p>
-                              </div>
-                            </div>
-                          ) : (
-                            <div
-                              className="text-left"
-                              key={`${uniqueMsg.sender?.user_id}-${index}`}
-                            >
-                              <div className="p-2 bg-gray-200 rounded-lg my-2">
-                                <p className="font-semibold">
-                                  {uniqueMsg.sender?.username}
+                                  {isSender ? "Tú" : uniqueMsg.sender?.username}
                                 </p>
                                 <p>{uniqueMsg?.content}</p>
                               </div>
@@ -385,11 +377,9 @@ const ChatRoomView = () => {
                         </p>
                       )
                     ) : (
-                      <div className="flex-1 overflow-y-auto mt-4 px-4 py-3 bg-white rounded-lg">
-                        <p className="text-center text-gray-400">
-                          Inicia tu conversación en el chat
-                        </p>
-                      </div>
+                      <p className="text-center text-gray-400">
+                        Inicia tu conversación en el chat
+                      </p>
                     )}
                   </div>
 

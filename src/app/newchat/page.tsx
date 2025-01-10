@@ -20,6 +20,7 @@ interface IUserAPIResponse {
   user_type?: string;
   fullname?: string;
   chats?: Chats[];
+  profile_image: string;
   following?: { id: string; username: string; profile_image: string }[];
   followers?: { id: string; username: string; profile_image: string }[];
 }
@@ -137,6 +138,7 @@ const ChatView = () => {
     if (userList.length > 0) {
       const newRandomUser =
         userList[Math.floor(Math.random() * userList.length)];
+      console.log("RANDOM USER", newRandomUser);
       setRandomUser(newRandomUser);
 
       if (sentRequests.has(newRandomUser.id)) {
@@ -192,7 +194,7 @@ const ChatView = () => {
             <div className="flex items-center">
               <div className="relative w-12 h-12">
                 <Image
-                  src="/agregarfoto.png"
+                  src={randomUser?.profile_image || "/agregarfoto.png"}
                   alt="Foto de perfil"
                   layout="fill"
                   className="rounded-full object-cover"
