@@ -275,6 +275,12 @@ export interface INotification {
   type: string;
   status: string;
   creation_date: string;
+  user_sender: {
+    id: string;
+    username: string;
+    profile_image: string;
+    user_type: string;
+  };
 }
 
 export interface IReport {
