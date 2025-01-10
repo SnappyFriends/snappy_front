@@ -33,7 +33,7 @@ const Publicacion = ({
 	const router = useRouter();
 	const [reaction, setReaction] = useState(false);
 	const [showDropdown, setShowDropdown] = useState(false);
-	const [showDeleteCommentModal, setShowDeleteCommentModal] = useState(false);
+	// const [showDeleteCommentModal, setShowDeleteCommentModal] = useState(false);
 
 	useEffect(() => {
 		const fetchParams = async () => {
