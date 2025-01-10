@@ -2,19 +2,33 @@
 
 import { timeAgo } from "@/helpers/timeAgo";
 import { IReport } from "@/interfaces/types";
-import { fetchReports } from "@/services/reportService";
+// import { fetchReports } from "@/services/reportService";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import UserReportsChart from "@/components/UserReportsChart";
+import { UserContext } from "@/context/UserContext";
 
 const ReportesPage: React.FC = () => {
   const [reports, setReports] = useState<IReport[]>([]);
+  const { token } = useContext(UserContext);
 
   useEffect(() => {
     const getReports = async () => {
       try {
-        const data = await fetchReports();
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reports`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error fetching reports: ${response.statusText}`);
+        }
+
+        const data = await response.json();
         setReports(data);
       } catch (error) {
         console.error("Error fetching reports:", error);
@@ -22,7 +36,7 @@ const ReportesPage: React.FC = () => {
     };
 
     getReports();
-  }, []);
+  }, [token]);
 
   return (
     <div className="container mx-auto p-4">
