@@ -16,31 +16,28 @@ const MensajesGrupales = () => {
   const { userData } = useContext(UserContext);
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchGroupChats = async () => {
-      if (!userData?.id) return;
+  const fetchGroupChats = async () => {
+    if (!userData?.id) return;
 
-      try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/chat-groups/${userData.id}/chats`
-        );
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/chat-groups/${userData.id}/chats`
+      );
 
-        const data = await response.json();
-        console.log("DATA dentro del UseEffect", data);
+      const data = await response.json();
+      console.log("DATA dentro del UseEffect", data);
 
-        if (Array.isArray(data) && data.length > 0) {
-          setGroupChats(data);
-        } else {
-          console.error("No se encontraron chats grupales para este usuario");
-        }
-      } catch (error) {
-        console.error(
-          "Error al obtener los chats grupales del usuario:",
-          error
-        );
+      if (Array.isArray(data) && data.length > 0) {
+        setGroupChats(data);
+      } else {
+        console.error("No se encontraron chats grupales para este usuario");
       }
-    };
+    } catch (error) {
+      console.error("Error al obtener los chats grupales del usuario:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchGroupChats();
   }, [userData]);
 

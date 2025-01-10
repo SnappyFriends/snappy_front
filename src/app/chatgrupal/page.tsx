@@ -8,7 +8,7 @@ import { UserContext } from "@/context/UserContext";
 import { timeAgo } from "@/helpers/timeAgo";
 import { GroupChats, IGroupMessage, IUserData } from "@/interfaces/types";
 import Image from "next/image";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import CreateChat from "../crearchatgrupal/page";
 
 import Cookies from "js-cookie";
@@ -140,7 +140,7 @@ const ChatRoomView = () => {
   };
 
   //useEffect para hacer un fetch a la cantidad de Chats Grupales
-  const fetchGroupChats = useCallback(async () => {
+  const fetchGroupChats = async () => {
     if (!userData) return;
 
     try {
@@ -159,11 +159,11 @@ const ChatRoomView = () => {
       console.error("Error fetching group chats:", error);
       setHasGroupChats(false);
     }
-  }, [userData]);
+  };
 
   useEffect(() => {
     fetchGroupChats();
-  }, [userData, fetchGroupChats]);
+  }, [userData]);
 
   //useEffect para hacer un fetch a los miembros de un grupo.
   useEffect(() => {
