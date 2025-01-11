@@ -13,6 +13,7 @@ import CreateChat from "../crearchatgrupal/page";
 
 import Cookies from "js-cookie";
 import { io, Socket } from "socket.io-client";
+import Link from "next/link";
 
 // import { useSocket } from "@/helpers/useSocket";
 
@@ -267,17 +268,24 @@ const ChatRoomView = () => {
                         key={member?.user?.id || `member-${index}`}
                         className="flex items-center space-x-2"
                       >
-                        <div className="relative w-10 h-10">
-                          <Image
-                            src={
-                              member?.user?.profile_image || "/agregarfoto.png"
-                            }
-                            alt={`Foto de perfil de ${member.user?.username}`}
-                            layout="fill"
-                            className="rounded-full object-cover"
-                          />
-                        </div>
-                        <span className="text-sm">{member.user?.username}</span>
+                        {" "}
+                        <Link
+                          href={`/perfil/${member.user?.username}`}
+                          className="flex items-center space-x-3 text-black hover:underline"
+                        >
+                          <div className="relative w-10 h-10">
+                            <Image
+                              src={
+                                member?.user?.profile_image ||
+                                "/agregarfoto.png"
+                              }
+                              alt={`Foto de perfil de ${member.user?.username}`}
+                              layout="fill"
+                              className="rounded-full object-cover"
+                            />
+                          </div>
+                          <div className="text-sm">{member.user?.username}</div>
+                        </Link>
                       </div>
                     ))}
                   </div>

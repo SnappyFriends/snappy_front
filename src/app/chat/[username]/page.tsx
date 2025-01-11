@@ -11,6 +11,7 @@ import Conectados from "@/components/Conectados";
 import { Chats, IMessage, IUsernameData } from "@/interfaces/types";
 import { timeAgo } from "@/helpers/timeAgo";
 import { useSocket } from "@/helpers/useSocket";
+import Link from "next/link";
 
 const ChatWithUser = () => {
   const { username } = useParams();
@@ -144,17 +145,22 @@ const ChatWithUser = () => {
               {/* Chat Header */}
               <div className="flex items-center p-4 border-b bg-gray-100">
                 <div className="relative w-12 h-12">
-                  <Image
-                    src={user.profile_image || "/agregarfoto.png"}
-                    alt={user.username}
-                    layout="fill"
-                    className="rounded-full object-cover"
-                  />
+                  <Link href={`/perfil/${user.username}`}>
+                    <Image
+                      src={user.profile_image || "/agregarfoto.png"}
+                      alt={user.username}
+                      layout="fill"
+                      className="rounded-full object-cover"
+                    />
+                  </Link>
                 </div>
                 <div className="ml-4">
-                  <h1 className="text-lg font-semibold">
-                    {user.fullname || user.username}
-                  </h1>
+                  <Link href={`/perfil/${user.username}`}>
+                    <h1 className="text-lg font-semibold text-black hover:underline">
+                      {user.fullname || user.username}
+                    </h1>
+                  </Link>
+
                   <p className="text-sm text-gray-500">
                     Última conexión:
                     {timeAgo(new Date(user.last_login_date).toISOString())}
