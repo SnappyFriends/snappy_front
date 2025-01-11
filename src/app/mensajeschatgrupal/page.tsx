@@ -1,7 +1,6 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import NavBar from "@/components/NavBar";
 import Conectados from "@/components/Conectados";
 import Sidebar from "@/components/Sidebar";
@@ -10,11 +9,13 @@ import { UserContext } from "@/context/UserContext";
 import { timeAgo } from "@/helpers/timeAgo";
 import { useRouter } from "next/navigation";
 import CreateChat from "../crearchatgrupal/page";
+import CreateChatGroupForm from "@/components/CrearChatGrupal";
 
 const MensajesGrupales = () => {
   const [groupChats, setGroupChats] = useState<GroupChatsBeta[]>([]);
+  const [isGoingToAdd, setIsGoingToAdd] = useState(false);
 
-  const { userData } = useContext(UserContext);
+  const { userData, setGroupId } = useContext(UserContext);
   const router = useRouter();
 
   useEffect(() => {
@@ -27,7 +28,6 @@ const MensajesGrupales = () => {
         );
 
         const data = await response.json();
-        console.log("DATA dentro del UseEffect", data);
 
         if (Array.isArray(data) && data.length > 0) {
           setGroupChats(data);
@@ -45,7 +45,14 @@ const MensajesGrupales = () => {
     fetchGroupChats();
   }, [userData]);
 
+  const pushToCreateForm = () => {
+    setIsGoingToAdd(true);
+  };
+
   const handleGroupClick = (groupId: string) => {
+    console.log("HACIENDO EL ROUTER.PUSH groupId", groupId);
+
+    setGroupId(groupId);
     router.push(`/chatgrupal?group_id=${groupId}`);
   };
 
@@ -60,112 +67,114 @@ const MensajesGrupales = () => {
           <Sidebar />
         </div>
 
-        <div className="flex-1 flex justify-center mt-20">
-          <div className="w-full md:w-2/4 p-6">
-           
-            <nav className="h-16 flex flex-col justify-center items-center space-y-4">
-             
-              <Link
-                href="/chatgrupal"
-                className="flex items-center justify-center space-x-2 text-gray-800 hover:text-blue-500 transition"
-                title="Ir al enlace"
-              >
-                <Image
-                  src="/mas.jpg"
-                  width={24}
-                  height={24}
-                  alt="Icono personalizado"
-                  className="cursor-pointer"
-                />
-                <span className="text-sm font-medium">Crear nuevo chat grupal</span>
-              </Link>
-
-            
-              <form className="w-full flex">
-                <input
-                  type="text"
-                  className="border border-gray-500 border-r-transparent rounded-full rounded-e-none h-10 w-full px-4"
-                  placeholder="Buscar chat grupal"
-                />
-                <button
-                  type="submit"
-                  className="border border-gray-500 h-10 w-11 border-l-transparent rounded-full rounded-s-none"
-                  aria-label="Buscar chat grupal"
-                  title="Buscar chat grupal"
+        {isGoingToAdd ? (
+          <CreateChatGroupForm />
+        ) : (
+          <div className="flex-1 flex justify-center mt-20">
+            <div className="w-full md:w-2/4 p-6">
+              <nav className="h-16 flex flex-col justify-center items-center space-y-4">
+                <div
+                  onClick={pushToCreateForm}
+                  className="flex items-center justify-center space-x-2 text-gray-800 hover:text-blue-500 transition"
+                  title="Ir al enlace"
                 >
                   <Image
-                    src="/lupa.png"
-                    width={20}
-                    height={20}
-                    alt="Buscar"
+                    src="/mas.jpg"
+                    width={24}
+                    height={24}
+                    alt="Icono personalizado"
                     className="cursor-pointer"
                   />
-                </button>
-              </form>
-            </nav>
+                  <span className="text-sm font-medium">
+                    Crear nuevo chat grupal
+                  </span>
+                </div>
 
-            <main>
-              <div>
-                <h2 className="text-center my-2 text-lg font-semibold text-gray-800">
-                  Chats Grupales
-                </h2>
-                {groupChats.length === 0 ? (
-                  <CreateChat />
-                ) : (
-                  (console.log("GroupChats", groupChats),
-                  groupChats.map((groupChat) => {
-                    const lastMessage =
-                      groupChat.group.messages &&
-                      groupChat.group.messages.length > 0
-                        ? groupChat.group.messages[
-                            groupChat.group.messages.length - 1
-                          ]
-                        : null;
+                <form className="w-full flex">
+                  <input
+                    type="text"
+                    className="border border-gray-500 border-r-transparent rounded-full rounded-e-none h-10 w-full px-4"
+                    placeholder="Buscar chat grupal"
+                  />
+                  <button
+                    type="submit"
+                    className="border border-gray-500 h-10 w-11 border-l-transparent rounded-full rounded-s-none"
+                    aria-label="Buscar chat grupal"
+                    title="Buscar chat grupal"
+                  >
+                    <Image
+                      src="/lupa.png"
+                      width={20}
+                      height={20}
+                      alt="Buscar"
+                      className="cursor-pointer"
+                    />
+                  </button>
+                </form>
+              </nav>
 
-                    console.log("ULTIMO MENSAJE", lastMessage);
+              <main>
+                <div>
+                  <h2 className="text-center my-2 text-lg font-semibold text-gray-800">
+                    Chats Grupales
+                  </h2>
+                  {groupChats.length === 0 ? (
+                    <CreateChat />
+                  ) : (
+                    groupChats.map((groupChat) => {
+                      const lastMessage =
+                        groupChat.group.messages &&
+                        groupChat.group.messages.length > 0
+                          ? groupChat.group.messages[
+                              groupChat.group.messages.length - 1
+                            ]
+                          : null;
 
-                    return (
-                      <section
-                        key={groupChat.group_id}
-                        className="h-20 flex justify-between items-center px-4 border-b border-[#EEEEEE] cursor-pointer hover:bg-gray-100 transition"
-                        onClick={() => handleGroupClick(groupChat.group_id)}
-                      >
-                        <div className="flex items-center space-x-4">
-                          <div>
-                            <Image
-                              src="/agregarfoto.png"
-                              width={1000}
-                              height={1000}
-                              alt="Imagen del chat grupal"
-                              className="rounded-full w-16 h-16 object-cover"
-                            />
+                      return (
+                        <section
+                          key={groupChat.group?.group_id}
+                          className="h-20 flex justify-between items-center px-4 border-b border-[#EEEEEE] cursor-pointer hover:bg-gray-100 transition"
+                          onClick={() =>
+                            handleGroupClick(groupChat.group?.group_id)
+                          }
+                        >
+                          <div className="flex items-center space-x-4">
+                            <div>
+                              <Image
+                                src="/agregarfoto.png"
+                                width={1000}
+                                height={1000}
+                                alt="Imagen del chat grupal"
+                                className="rounded-full w-16 h-16 object-cover"
+                              />
+                            </div>
+                            <div>
+                              <h2 className="font-bold text-sm text-gray-900">
+                                {groupChat.group.name}
+                              </h2>
+                              <p className="text-xs text-gray-500">
+                                {lastMessage
+                                  ? `${lastMessage.content}`
+                                  : "Sin mensajes recientes"}
+                              </p>
+                            </div>
                           </div>
-                          <div>
-                            <h2 className="font-bold text-sm text-gray-900">
-                              {groupChat.group.name}
-                            </h2>
-                            <p className="text-xs text-gray-500">
-                              {lastMessage
-                                ? `${lastMessage.content}`
-                                : "Sin mensajes recientes"}
-                            </p>
+                          <div className="text-sm text-gray-500">
+                            {lastMessage
+                              ? `${timeAgo(
+                                  new Date(lastMessage.send_date).toISOString()
+                                )}`
+                              : "Sin mensajes recientes"}
                           </div>
-                        </div>
-                        <div className="text-sm text-gray-500">
-                          {lastMessage
-                            ? `${timeAgo(
-                                new Date(lastMessage.send_date).toISOString()
-                              )}`
-                            : "Sin mensajes recientes"}
-                        </div>
-                      </section>
-                    );
-                  }))
-                )}
-              </div>
-            </main>
+                        </section>
+                      );
+                    })
+                  )}
+                </div>
+              </main>
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="hidden md:flex flex-col w-80 space-y-6 absolute right-20 top-1/2 transform -translate-y-1/2">
           <Conectados />

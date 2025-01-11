@@ -19,6 +19,8 @@ export const UserContext = createContext<IUserContextType>({
   setUserData: () => {},
   userGoogle: null,
   setUserGoogle: () => {},
+  groupId: null,
+  setGroupId: () => {},
 });
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
@@ -28,6 +30,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [userId, setUserId] = useState<string | null>(null);
   const [userData, setUserData] = useState<IUserData | null>(null);
   const [userGoogle, setUserGoogle] = useState<IUserDataGoogle | null>(null);
+  const [groupId, setGroupId] = useState<string | null>(null);
 
   useEffect(() => {
     const savedUserId = localStorage.getItem("userId");
@@ -70,6 +73,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         setUserData,
         userGoogle,
         setUserGoogle,
+        groupId,
+        setGroupId,
       }}
     >
       {children}

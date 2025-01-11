@@ -8,7 +8,8 @@ const CreateChatGroupForm = () => {
   /* const [groupChats, setGroupChats] = useState<[]>([]); */
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const { userData } = useContext(UserContext);
+  const { userData, setGroupId } = useContext(UserContext);
+
   const router = useRouter();
 
   const createGroupChat = async (e: FormEvent) => {
@@ -17,7 +18,6 @@ const CreateChatGroupForm = () => {
 
     try {
       const responseObject = { name, description, creator_id: userData.id };
-      console.log("data", responseObject);
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/chat-groups`,
         {
@@ -30,13 +30,16 @@ const CreateChatGroupForm = () => {
       );
 
       if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Failed to create ChatGroup: ${errorText}`);
+        const errorText = await response.json();
+        alert(errorText.message);
       }
+      const parsedResponse = await response.json();
+
+      setGroupId(parsedResponse.group_id);
 
       setTimeout(() => {
-        router.push("/chatgrupal");
-      }, 4000);
+        router.push(`/chatgrupal?group_id=${parsedResponse.group_id}`);
+      }, 3000);
     } catch (error) {
       console.error("Error creating chatGroup", error);
     }

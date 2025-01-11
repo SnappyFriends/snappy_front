@@ -33,8 +33,7 @@ const ChatRoomView = () => {
   const [isAdding, setIsAdding] = useState(false);
   const [hasGroupChats, setHasGroupChats] = useState<boolean>(false);
 
-  const [groupId, setGroupId] = useState<string | null>();
-  const { userData } = useContext(UserContext);
+  const { userData, groupId, setGroupId } = useContext(UserContext);
   const [groupChat, setGroupChat] = useState<GroupChats | null>(null);
   const [message, setMessage] = useState("");
   const [groupMessages, setGroupMessages] = useState<IGroupMessage[]>([]);
@@ -67,8 +66,9 @@ const ChatRoomView = () => {
       if (!response.ok) {
         return;
       }
-      setGroupId(null);
       setHasGroupChats(false);
+      setGroupId(null);
+      window.location.href = "/mensajeschatgrupal";
     } catch (error) {
       console.error("Error deleting chat group", error);
     }
@@ -139,32 +139,6 @@ const ChatRoomView = () => {
     setFriendsList(filteredFriends);
   };
 
-  //useEffect para hacer un fetch a la cantidad de Chats Grupales
-  const fetchGroupChats = async () => {
-    if (!userData) return;
-
-    try {
-      const chatsQuantity = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/chat-groups/${userData.id}/chats`
-      );
-      const response = await chatsQuantity.json();
-      if (Array.isArray(response) && response.length > 0) {
-        const group = response[0];
-        setHasGroupChats(true);
-        setGroupId(group.group_id);
-      } else {
-        setHasGroupChats(false);
-      }
-    } catch (error) {
-      console.error("Error fetching group chats:", error);
-      setHasGroupChats(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchGroupChats();
-  }, [userData]);
-
   //useEffect para hacer un fetch a los miembros de un grupo.
   useEffect(() => {
     if (!groupId) return;
@@ -190,6 +164,7 @@ const ChatRoomView = () => {
     })();
   }, [groupId, needsUpdate]);
 
+  //useEffect para traerme los mensajes del chat con groupId
   useEffect(() => {
     if (!groupId || !userData) {
       console.log(
@@ -198,16 +173,20 @@ const ChatRoomView = () => {
       return;
     }
     (async (groupId) => {
+      console.log("GROUP ID previo al fetch", groupId);
       try {
         const responseGroupChats = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/chat-groups/chats/${groupId}`
         );
         if (responseGroupChats.ok) {
           const groupChatData = await responseGroupChats.json();
-
-          setGroupChat(groupChatData[0]);
-
-          setGroupMessages(groupChatData[0].messages);
+          if (Array.isArray(groupChatData) && groupChatData.length > 0) {
+            const group = groupChatData[0];
+            setGroupChat(group);
+            setGroupMessages(group.messages);
+            setHasGroupChats(true);
+          } else setHasGroupChats(false);
+          console.log("GroupChatData en /chatGrupal ", groupChatData);
         }
       } catch {
         console.log("Hubo un error al traer la información del Chat Grupal");
@@ -280,6 +259,8 @@ const ChatRoomView = () => {
                   <h3 className="text-xl font-semibold mb-4">
                     Miembros de la Sala
                   </h3>
+
+                  {/* Miembros de la sala */}
                   <div className="space-y-4">
                     {members.map((member, index) => (
                       <div
@@ -307,6 +288,7 @@ const ChatRoomView = () => {
                     Agregar Miembro
                   </button>
 
+                  {/* Agregar miembros al grupo */}
                   {isAdding && (
                     <div className="mt-4 max-h-60 overflow-y-auto bg-gray-50 p-4 rounded-lg">
                       <h4 className="text-lg font-semibold mb-3">
@@ -346,6 +328,7 @@ const ChatRoomView = () => {
                 </div>
 
                 <div className="lg:w-3/4 sm:w-full px-4 py-6 flex flex-col bg-gray-50 h-[calc(100vh-200px)] overflow-y-auto">
+                  {/* Información del grupo */}
                   <div className="flex items-center justify-between border-b pb-4">
                     <div className="flex items-center">
                       <div className="relative w-12 h-12">
@@ -367,6 +350,7 @@ const ChatRoomView = () => {
                     </div>
                   </div>
 
+                  {/* Historial de mensajes */}
                   <div className="flex-1 overflow-y-auto mt-4 px-4 py-3 bg-white rounded-lg">
                     {groupChat ? (
                       groupMessages.length > 0 ? (
@@ -407,6 +391,7 @@ const ChatRoomView = () => {
                     )}
                   </div>
 
+                  {/* Input para mandar mensajito */}
                   <div className="px-4 py-3 border-t flex items-center space-x-3">
                     <input
                       value={message}
@@ -423,13 +408,13 @@ const ChatRoomView = () => {
                     </button>
                   </div>
 
+                  {/* Botón y Modal para eliminar grupo */}
                   <button
                     onClick={openModal}
                     className="bg-red-500 text-white px-4 py-2 rounded-lg text-sm mt-4 hover:bg-red-600 transition"
                   >
                     Eliminar Grupo
                   </button>
-
                   {isModalOpen && (
                     <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center">
                       <div className="bg-white p-6 rounded-lg shadow-lg w-96">

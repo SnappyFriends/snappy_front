@@ -26,6 +26,8 @@ export interface ILoginResponse {
 }
 
 export interface IUserContextType {
+  groupId: string | null;
+  setGroupId: (groupId: string | null) => void;
   token: string | null;
   setToken: (token: string | null) => void;
   userId: string | null;

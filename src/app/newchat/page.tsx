@@ -69,12 +69,7 @@ const ChatView = () => {
   }, [userId]);
 
   const handleSendMessage = async (receiverId: string) => {
-    if (!message.trim()) {
-      console.error("Message is empty");
-      return;
-    }
-    if (!userData) {
-      console.error("No user data available");
+    if (!message.trim() || !userData) {
       return;
     }
 
@@ -138,7 +133,6 @@ const ChatView = () => {
     if (userList.length > 0) {
       const newRandomUser =
         userList[Math.floor(Math.random() * userList.length)];
-      console.log("RANDOM USER", newRandomUser);
       setRandomUser(newRandomUser);
       setMessages([]);
 
@@ -282,6 +276,7 @@ const ChatView = () => {
 
           <div className="px-4 py-3 border-t flex items-center">
             <input
+              value={message}
               type="text"
               placeholder="Escribe un mensaje..."
               className="flex-1 border border-gray-300 rounded-full px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
