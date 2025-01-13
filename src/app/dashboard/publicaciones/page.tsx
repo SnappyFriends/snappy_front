@@ -195,7 +195,7 @@ export default function AdminDashboard() {
                     <th className="px-4 py-2 text-left">Foto</th>
                     <th className="px-4 py-2 text-left">Usuario</th>
                     <th className="px-4 py-2 text-left">Comentario</th>
-                    <th className="px-4 py-2 text-left">Fecha</th>
+                    {/* <th className="px-4 py-2 text-left">Fecha</th> */}
                     <th className="px-4 py-2 text-left">Acciones</th>
                   </tr>
                 </thead>
@@ -213,9 +213,9 @@ export default function AdminDashboard() {
                       </td>
                       <td className="px-4 py-2">{comment.user.username}</td>
                       <td className="px-4 py-2">{comment.content}</td>
-                      <td className="px-4 py-2">
+                      {/* <td className="px-4 py-2">
                         {timeAgo(comment.comment_date)}
-                      </td>
+                      </td> */}
                       <td className="px-4 py-2">
                         <button
                           onClick={() => deleteComment(comment.id)}
