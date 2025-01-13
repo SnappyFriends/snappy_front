@@ -19,13 +19,6 @@ import {
 import VerifiedAccount from "@/components/VerifiedAccount";
 import Link from "next/link";
 
-interface Comment {
-	id: string;
-	text: string;
-	username: string;
-  }
-
-
 const Publicacion = ({
 	params,
 }: {
