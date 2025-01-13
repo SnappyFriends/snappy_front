@@ -106,15 +106,15 @@ export default function NavBar() {
 							</Link>
 						</li>
 						<li>
-							<Link href="/notificaciones">
+							<Link href="/notificaciones" className="relative">
 								<Image
 									src="/bell.png"
 									width={40}
 									height={40}
 									alt="notificaciones"
 								/>
-								{unreadNotifications && unreadNotifications > 0 && (
-									<div className="bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">
+								{!!unreadNotifications && (
+									<div className="bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs top-[-8px] right-0 absolute">
 										{unreadNotifications}
 									</div>
 								)}
