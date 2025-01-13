@@ -100,7 +100,7 @@ const ActivityView = () => {
 												</Link>
 											</div>
 											<div className="ml-3">
-												<h2 className="text-sm font-semibold">{content} de {user_sender.username}</h2>
+												<h2 className="text-sm font-semibold"><Link href={`/perfil/${notification.user_sender.username}`}>{user_sender.username}</Link> {content}</h2>
 												<p className="text-xs text-gray-500">
 													{timeAgo(creation_date)}
 												</p>
