@@ -12,10 +12,26 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const CrearStory = () => {
   const [archivo, setArchivo] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null); 
   const [mensaje, setMensaje] = useState("");
   const [content, setContent] = useState("");
   const { userId } = useContext(UserContext);
   const router = useRouter();
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setArchivo(file);
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setPreview(reader.result as string); 
+      };
+      reader.readAsDataURL(file); 
+    } else {
+      setPreview(null);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,6 +68,7 @@ const CrearStory = () => {
         showCustomToast("Snappy", "Story creada correctamente", "success");
         setArchivo(null);
         setContent("");
+        setPreview(null); // Resetea la previsualización
         router.push("/miperfil");
       } else {
         setMensaje("Error al crear la story.");
@@ -77,11 +94,22 @@ const CrearStory = () => {
             </span>
             <input
               type="file"
-              onChange={(e) => setArchivo(e.target.files?.[0] || null)}
+              accept="image/*,video/*" 
+              onChange={handleFileChange}
               className="p-1"
               required
             />
           </label>
+
+          {preview && (
+            <div className="w-full flex justify-center mb-4">
+              <img
+                src={preview}
+                alt="Preview"
+                className="max-w-full h-auto border rounded"
+              />
+            </div>
+          )}
 
           <textarea
             value={content}
