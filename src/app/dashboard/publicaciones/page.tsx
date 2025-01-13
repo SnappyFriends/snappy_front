@@ -118,7 +118,7 @@ export default function AdminDashboard() {
       />
       {error && <p className="text-red-500 mb-4">{error}</p>}
 
-      <div className="flex flex-wrap justify-center gap-10 px-4 w-auto mb-20">
+      <div className="flex flex-wrap justify-center gap-10 px-4 w-auto mb-20 z-index">
         {filteredPosts.length > 0 ? (
           filteredPosts.map((post) => (
             <div
@@ -175,7 +175,7 @@ export default function AdminDashboard() {
       </div>
 
       {isModalOpen && selectedPost && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-10">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-8 rounded-lg w-2/3 max-h-96 overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">Comentarios</h2>
