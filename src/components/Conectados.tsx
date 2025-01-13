@@ -17,12 +17,12 @@ interface User extends BaseUser {
 }
 
 const Conectados: React.FC = () => {
-  const { userId } = useContext(UserContext);
+  const { userId, userData } = useContext(UserContext);
   const [friends, setFriends] = useState<User[]>([]);
   const { getOnlineUsers, onlineUsers } = useSocket();
 
   useEffect(() => {
-    if (!userId) return;
+    if (!userId || !userData) return;
 
     const fetchUserFriends = async () => {
       try {
@@ -44,6 +44,9 @@ const Conectados: React.FC = () => {
     getOnlineUsers();
   }, [userId, getOnlineUsers, onlineUsers]);
 
+  if (!userData) {
+    return;
+  }
   const friendsWithOnlineStatus = friends.map((friend) => ({
     ...friend,
     isOnline: onlineUsers.includes(friend.id),

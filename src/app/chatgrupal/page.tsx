@@ -25,6 +25,7 @@ interface User {
   email?: string;
   profile_image: string;
   user: IUserData;
+  role: string;
 }
 
 const ChatRoomView = () => {
@@ -95,9 +96,7 @@ const ChatRoomView = () => {
         }
       );
 
-      socketRef.current.on("connect", () => {
-        console.log("WebSocket conectado");
-      });
+      socketRef.current.on("connect", () => {});
 
       socketRef.current.on("receiveGroupMessage", (newMessage) => {
         if (setGroupMessages) {
@@ -168,13 +167,9 @@ const ChatRoomView = () => {
   //useEffect para traerme los mensajes del chat con groupId
   useEffect(() => {
     if (!groupId || !userData) {
-      console.log(
-        "Esperando a que groupId y userData tengan valores válidos..."
-      );
       return;
     }
     (async (groupId) => {
-      console.log("GROUP ID previo al fetch", groupId);
       try {
         const responseGroupChats = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/chat-groups/chats/${groupId}`
@@ -187,10 +182,8 @@ const ChatRoomView = () => {
             setGroupMessages(group.messages);
             setHasGroupChats(true);
           } else setHasGroupChats(false);
-          console.log("GroupChatData en /chatGrupal ", groupChatData);
         }
       } catch {
-        console.log("Hubo un error al traer la información del Chat Grupal");
       }
     })(groupId);
   }, [groupId, userData]);
@@ -362,31 +355,57 @@ const ChatRoomView = () => {
                   <div className="flex-1 overflow-y-auto mt-4 px-4 py-3 bg-white rounded-lg">
                     {groupChat ? (
                       groupMessages.length > 0 ? (
-                        groupMessages.map((uniqueMsg, index) => {
-                          const isSender =
-                            uniqueMsg.sender?.user_id === userData?.id;
+                        [...groupMessages]
+                          .sort((a, b) => {
+                            const dateA = new Date(a.send_date);
+                            const dateB = new Date(b.send_date);
+                            if (
+                              isNaN(dateA.getTime()) ||
+                              isNaN(dateB.getTime())
+                            )
+                              return 0;
+                            return dateA.getTime() - dateB.getTime();
+                          })
+                          .map((uniqueMsg, index) => {
+                            const isSender =
+                              uniqueMsg.sender?.user_id === userData?.id;
 
-                          return (
-                            <div
-                              className={isSender ? "text-right" : "text-left"}
-                              key={`${uniqueMsg.message_id}-${index}`}
-                            >
+                            return (
                               <div
-                                className={`p-2 ${
-                                  isSender ? "bg-blue-100" : "bg-gray-200"
-                                } rounded-lg my-2`}
+                                key={`${uniqueMsg.message_id}-${index}`}
+                                className={`flex mb-4 ${
+                                  isSender ? "justify-end" : "justify-start"
+                                }`}
                               >
-                                <p className="font-semibold">
-                                  {isSender
-                                    ? "Tú"
-                                    : uniqueMsg.sender.username ||
-                                      "Desconocido"}
-                                </p>
-                                <p>{uniqueMsg?.content}</p>
+                                <div
+                                  className={`max-w-xs p-3 rounded-lg shadow-md ${
+                                    isSender
+                                      ? "bg-blue-100 text-right"
+                                      : "bg-gray-200 text-left"
+                                  }`}
+                                >
+                                  <p className="text-sm font-bold mb-1">
+                                    {isSender
+                                      ? "Tú"
+                                      : uniqueMsg.sender.username ||
+                                        "Desconocido"}
+                                  </p>
+
+                                  <p className="text-base mb-1">
+                                    {uniqueMsg.content}
+                                  </p>
+
+                                  <p className="text-xs text-gray-500">
+                                    {timeAgo(
+                                      new Date(
+                                        uniqueMsg.send_date
+                                      ).toISOString()
+                                    )}
+                                  </p>
+                                </div>
                               </div>
-                            </div>
-                          );
-                        })
+                            );
+                          })
                       ) : (
                         <p className="text-gray-400 text-center">
                           Aún no hay mensajes...
@@ -417,12 +436,25 @@ const ChatRoomView = () => {
                   </div>
 
                   {/* Botón y Modal para eliminar grupo */}
-                  <button
-                    onClick={openModal}
-                    className="bg-red-500 text-white px-4 py-2 rounded-lg text-sm mt-4 hover:bg-red-600 transition"
-                  >
-                    Eliminar Grupo
-                  </button>
+                  {/* Solo muestra el botón si el usuario es admin */}
+                  {members.map((member) => {
+                    if (
+                      member.user.id == userData?.id &&
+                      member.role == "ADMIN"
+                    ) {
+                      return (
+                        <>
+                          <button
+                            onClick={openModal}
+                            className="bg-red-500 text-white px-4 py-2 rounded-lg text-sm mt-4 hover:bg-red-600 transition"
+                          >
+                            Eliminar Grupo
+                          </button>
+                        </>
+                      );
+                    }
+                  })}
+
                   {isModalOpen && (
                     <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center">
                       <div className="bg-white p-6 rounded-lg shadow-lg w-96">

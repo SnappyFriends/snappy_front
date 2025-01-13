@@ -91,10 +91,14 @@ const MensajesPrivados = () => {
 
                     if (!receiver) return null;
 
+                    const sortedMessages = [...chat.messages].sort(
+                      (a, b) =>
+                        new Date(b.send_date).getTime() -
+                        new Date(a.send_date).getTime()
+                    );
+
                     const lastMessage =
-                      chat.messages?.length > 0
-                        ? chat.messages[chat.messages.length - 1]
-                        : null;
+                      sortedMessages.length > 0 ? sortedMessages[0] : null;
 
                     return (
                       <section
@@ -103,21 +107,21 @@ const MensajesPrivados = () => {
                       >
                         <Link
                           href={`/chat/${receiver.username}`}
-                          className="flex items-center"
+                          className="flex items-center w-full"
                         >
-                          <div className="flex space-x-4 items-center">
+                          <div className="flex space-x-4 items-center w-full">
                             <div>
                               <Image
                                 src={
                                   receiver.profile_image || "/agregarfoto.png"
                                 }
-                                width={1000}
-                                height={1000}
+                                width={64}
+                                height={64}
                                 alt="fotodeperfil"
                                 className="rounded-full w-16 h-16 object-cover"
                               />
                             </div>
-                            <div>
+                            <div className="flex-grow">
                               <h2 className="font-bold text-sm text-gray-900">
                                 {receiver.username}
                               </h2>
@@ -127,11 +131,15 @@ const MensajesPrivados = () => {
                                   : "Sin mensajes aún"}
                               </p>
                             </div>
-                          </div>
-                        </Link>
-                        <Link href={`/chat/${receiver.username}`}>
-                          <div className="text-sm text-gray-500">
-                            {lastMessage ? timeAgo(lastMessage.send_date) : ""}
+                            <div className="text-sm text-gray-500">
+                              {lastMessage
+                                ? timeAgo(
+                                    new Date(
+                                      lastMessage.send_date
+                                    ).toISOString()
+                                  )
+                                : ""}
+                            </div>
                           </div>
                         </Link>
                       </section>
