@@ -168,15 +168,14 @@ export interface GroupChats {
   creation_date: string;
   description: string;
   group_id: string;
-  members: {
-    group_id: string;
+  name: string;
+  privacy: string;
+  groupMembers: {
     user_id: string;
     role: string;
     join_date: string;
   }[];
   messages: [IGroupMessage];
-  name: string;
-  privacy: string;
 }
 
 export interface GroupChatsBeta {
@@ -216,8 +215,8 @@ export interface IGroupMessage {
   message_id?: string;
   content: string;
   send_date: string;
-  sender: {
-    user_id: string;
+  sender_id: {
+    id: string;
     username: string;
     fullname: string;
     profile_image: string;

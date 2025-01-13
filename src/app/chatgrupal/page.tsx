@@ -183,8 +183,7 @@ const ChatRoomView = () => {
             setHasGroupChats(true);
           } else setHasGroupChats(false);
         }
-      } catch {
-      }
+      } catch {}
     })(groupId);
   }, [groupId, userData]);
 
@@ -209,7 +208,8 @@ const ChatRoomView = () => {
     }
   };
 
-  const handleSendMessage = () => {
+  const handleSendMessage = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
     if (!message.trim() || !userData || !groupChat || !socketRef.current)
       return;
 
@@ -230,6 +230,7 @@ const ChatRoomView = () => {
 
     try {
       socketRef.current.emit("groupMessage", serverMessage);
+
       setMessage("");
     } catch (error) {
       console.error("Error sending message:", error);
@@ -366,13 +367,13 @@ const ChatRoomView = () => {
                               return 0;
                             return dateA.getTime() - dateB.getTime();
                           })
-                          .map((uniqueMsg, index) => {
+                          .map((uniqueMsg) => {
                             const isSender =
-                              uniqueMsg.sender?.user_id === userData?.id;
+                              uniqueMsg.sender_id.id === userData?.id;
 
                             return (
                               <div
-                                key={`${uniqueMsg.message_id}-${index}`}
+                                key={`${uniqueMsg.message_id}`}
                                 className={`flex mb-4 ${
                                   isSender ? "justify-end" : "justify-start"
                                 }`}
@@ -387,7 +388,7 @@ const ChatRoomView = () => {
                                   <p className="text-sm font-bold mb-1">
                                     {isSender
                                       ? "Tú"
-                                      : uniqueMsg.sender.username ||
+                                      : uniqueMsg.sender_id.username ||
                                         "Desconocido"}
                                   </p>
 
