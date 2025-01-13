@@ -33,7 +33,14 @@ const ActivityView = () => {
 					throw new Error("Error fetching notifications");
 				}
 				const data: INotification[] = await response.json();
-				setNotifications(data);
+
+				const sortedNotifications = data.sort((a, b) => {
+					const dateA = new Date(a.creation_date);
+					const dateB = new Date(b.creation_date);
+					return dateB.getTime() - dateA.getTime()
+				});
+
+				setNotifications(sortedNotifications);
 			} catch (error) {
 				console.error("Error fetching notifications:", error);
 			} finally {
@@ -100,7 +107,7 @@ const ActivityView = () => {
 												</Link>
 											</div>
 											<div className="ml-3">
-												<h2 className="text-sm font-semibold"><Link href={`/perfil/${notification.user_sender.username}`}>{user_sender.username}</Link> {content}</h2>
+												<p className="text-sm"><span className="font-semibold"><Link href={`/perfil/${notification.user_sender.username}`}>{user_sender.username}</Link></span> {content}</p>
 												<p className="text-xs text-gray-500">
 													{timeAgo(creation_date)}
 												</p>
