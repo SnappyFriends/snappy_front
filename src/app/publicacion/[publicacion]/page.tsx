@@ -19,6 +19,13 @@ import {
 import VerifiedAccount from "@/components/VerifiedAccount";
 import Link from "next/link";
 
+interface Comment {
+	id: string;
+	text: string;
+	username: string;
+  }
+
+
 const Publicacion = ({
 	params,
 }: {
@@ -33,7 +40,9 @@ const Publicacion = ({
 	const router = useRouter();
 	const [reaction, setReaction] = useState(false);
 	const [showDropdown, setShowDropdown] = useState(false);
-	// const [showDeleteCommentModal, setShowDeleteCommentModal] = useState(false);
+	const [isUser, setIsUser] = useState(false);
+	// const [comments, setComments] = useState<Comment[]>([]);
+
 
 	useEffect(() => {
 		const fetchParams = async () => {
@@ -70,6 +79,7 @@ const Publicacion = ({
 
 	const handleCommentSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
+		
 		if (!comment.trim() || !userData) return;
 	
 		try {
@@ -137,29 +147,34 @@ const Publicacion = ({
 		setShowDeleteModal(false);
 	};
 
-	// const handleDeleteCommentPost = async (id) => {
-	// 	try {
-	// 		const response = await fetch(
-	// 			`${process.env.NEXT_PUBLIC_API_URL}/comment/${id}`,
-	// 			{
-	// 				method: "DELETE",
-	// 			}
-	// 		);
-	// 		if (response.ok) {
-	// 			showCustomToast("Snappy", "Comentario eliminado", "success");
-
-	// 			setTimeout(() => {
-	// 				router.push("/socialfeed");
-	// 			}, 1000);
-	// 		} else {
-	// 			alert("Hubo un error al eliminar el comentario");
-	// 		}
-	// 	} catch (error) {
-	// 		console.error("Hubo un error al eliminar el comentario:", error);
-	// 	}
-	// 	setShowDeleteCommentModal(false);
-	// };
-
+	useEffect(() => {
+		if (userData?.username === post?.user.username) {
+		  setIsUser(true);
+		} else {
+		  setIsUser(false);
+		}
+	  }, [userData, post]); 
+	  
+	  const handleDeleteComment = async (id: string) => {
+		try {
+		  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/comments/${id}`, {
+			method: 'DELETE',
+		  });
+	  
+		  if (!response.ok) {
+			throw new Error('Error al eliminar el comentario');
+		  }
+	  
+		//   setComments(prevComments => prevComments.filter(comment => comment.id !== id));
+	  
+		  console.log('Comentario eliminado con éxito');
+		
+		} catch (error) {
+		  console.error('Hubo un problema al eliminar el comentario:', error);
+		}
+	  };
+	  
+	  
 
 	const handleLikeToggle = async (postId: string, isLiked: boolean) => {
 		if (!userData || !post) return;
@@ -367,7 +382,8 @@ const Publicacion = ({
 												className="rounded-full object-cover"
 											/>
 										</div>
-										<div>
+										<div className="flex flex-row w-full justify-between">
+										<div className="flex flex-col">
 											<p className="font-semibold text-sm">
 												{comment.user.username}{" "}
 												{comment.user.user_type === "premium" ? (
@@ -380,6 +396,16 @@ const Publicacion = ({
 												{timeAgo(comment.comment_date)}{" "}
 											</p>
 											<p className="text-sm text-gray-700">{comment.content}</p>
+											
+										</div>
+										{isUser && (
+  <button
+  onClick={() => handleDeleteComment(comment.id)}
+  className="text-xs text-gray-500 mr-0"
+  >
+    x
+  </button>
+)}
 										</div>
 									</div>
 								))}
@@ -417,29 +443,6 @@ const Publicacion = ({
 				</div>
 			)}
 
-{/* {showDeleteCommentModal && (
-				<div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-					<div className="bg-white p-6 rounded-lg shadow-lg w-80">
-						<h3 className="text-lg font-semibold text-center mb-4">
-							¿Estás seguro de que quieres eliminar este comentario?
-						</h3>
-						<div className="flex justify-between">
-							<button
-								onClick={() => setShowDeleteCommentModal(false)}
-								className="bg-gray-300 text-gray-700 px-4 py-2 rounded"
-							>
-								Cancelar
-							</button>
-							<button
-								onClick={handleDeleteCommentPost}
-								className="bg-red-600 text-white px-4 py-2 rounded"
-							>
-								Eliminar
-							</button>
-						</div>
-					</div>
-				</div>
-			)} */}
 		</>
 	);
 };
