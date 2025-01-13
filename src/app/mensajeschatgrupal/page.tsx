@@ -50,8 +50,6 @@ const MensajesGrupales = () => {
   };
 
   const handleGroupClick = (groupId: string) => {
-    console.log("HACIENDO EL ROUTER.PUSH groupId", groupId);
-
     setGroupId(groupId);
     router.push(`/chatgrupal?group_id=${groupId}`);
   };

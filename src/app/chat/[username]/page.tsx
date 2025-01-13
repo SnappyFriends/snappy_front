@@ -107,7 +107,7 @@ const ChatWithUser = () => {
     };
 
     try {
-      const sendDate = timeAgo(new Date().toISOString());
+      const sendDate = new Date();
 
       const messagesData = {
         username: userData.username,
@@ -169,44 +169,41 @@ const ChatWithUser = () => {
               </div>
 
               {/* Chat Messages */}
-              <div className="flex-1 overflow-y-auto p-4 bg-gray-50">
-                {chat ? (
-                  messages.length > 0 ? (
-                    messages.map((uniqueMsg, index) => {
-                      const isSender = uniqueMsg.sender_id === userData?.id;
+              <div className="flex-1 overflow-y-auto p-4 bg-white rounded-lg">
+                {messages.length > 0 ? (
+                  messages.map((uniqueMsg, index) => {
+                    const isSender = uniqueMsg.sender_id === userData?.id;
 
-                      const divContainer = isSender ? (
+                    return (
+                      <div
+                        key={`${uniqueMsg.sender_id}-${index}`}
+                        className={`flex mb-4 ${
+                          isSender ? "justify-end" : "justify-start"
+                        }`}
+                      >
                         <div
-                          className="text-right"
-                          key={`${uniqueMsg.sender_id}-${index}`}
+                          className={`max-w-xs p-3 rounded-lg shadow-md ${
+                            isSender
+                              ? "bg-blue-100 text-right"
+                              : "bg-gray-200 text-left"
+                          }`}
                         >
-                          <div className="p-2 bg-blue-100 rounded-lg my-2">
-                            <p>{uniqueMsg.username}</p>
-                            <p>{uniqueMsg.content}</p>
-                          </div>
-                        </div>
-                      ) : (
-                        <div
-                          className="text-left"
-                          key={`${uniqueMsg.sender_id}-${index}`}
-                        >
-                          <div className="p-2 bg-blue-100 rounded-lg my-2">
-                            <p>{uniqueMsg.username}</p>
-                            <p>{uniqueMsg.content}</p>
-                          </div>
-                        </div>
-                      );
+                          <p className="text-sm font-bold mb-1">
+                            {isSender
+                              ? "Tú"
+                              : uniqueMsg.username || "Desconocido"}
+                          </p>
 
-                      return divContainer;
-                    })
-                  ) : (
-                    <p className="text-gray-400 text-center">
-                      Aún no hay mensajes...
-                    </p>
-                  )
+                          <p className="text-base mb-1">{uniqueMsg.content}</p>
+
+                          <p>{timeAgo(uniqueMsg.send_date)}</p>
+                        </div>
+                      </div>
+                    );
+                  })
                 ) : (
                   <p className="text-gray-400 text-center">
-                    Comienza a chatear...
+                    Aún no hay mensajes...
                   </p>
                 )}
               </div>

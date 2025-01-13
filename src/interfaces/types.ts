@@ -74,6 +74,7 @@ export interface IUserData {
   posts: { post_id: string; fileUrl: string }[];
   following: { id: string; username: string; profile_image: string }[];
   followers: { id: string; username: string; profile_image: string }[];
+  group_role?: "MEMBER" | "ADMIN";
 }
 
 export interface IUserSearch {
@@ -206,7 +207,7 @@ export interface IMessage {
   user_type: string;
   profile_image: string;
   content: string;
-  send_date: string;
+  send_date: string | Date;
   type: string;
   is_anonymous: boolean;
 }

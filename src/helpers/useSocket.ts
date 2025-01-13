@@ -59,9 +59,7 @@ export const useSocket = (
         }
       );
 
-      socketRef.current.on("connect", () => {
-        console.log("WebSocket conectado");
-      });
+      socketRef.current.on("connect", () => {});
 
       socketRef.current.on("onlineUsers", (onlineUsersList) => {
         setOnlineUsers(onlineUsersList.map((user: any) => user.id));
@@ -107,10 +105,8 @@ export const useSocket = (
   }, []);
 
   const sendMessage = useCallback((message: any) => {
-    console.log("Mensaje recibido en useSocket", message);
     if (socketRef.current) {
       socketRef.current.emit("message", message);
-      console.log("Mensaje emitido al backend");
     } else {
       console.error("Socket no está disponible");
     }
