@@ -181,6 +181,21 @@ export default function NavBar() {
 												Crear Snappy Moment
 											</Link>
 										</li>
+                    <li>
+											<Link
+												href="/mensajeschatgrupal"
+												className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+											>
+												<Image
+													src="/chat-grupal.png"
+													alt="CrearStory"
+													width={15}
+													height={15}
+													className="mr-2"
+												/>
+												Chat grupal
+											</Link>
+										</li>
 										<li>
 											<Link
 												href="/editarperfil"
