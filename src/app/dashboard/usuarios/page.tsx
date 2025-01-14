@@ -3,6 +3,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { User } from "@/helpers/users";
 import { UserContext } from "@/context/UserContext";
 import Image from "next/image";
+import UsersDashboard from "@/components/UsersDashboard";
 
 export default function Usuarios() {
   const { userData, token } = useContext(UserContext);
@@ -100,105 +101,108 @@ export default function Usuarios() {
   );
 
   return (
-    <div className="flex justify-center">
-      <div className="flex flex-col items-center w-full">
-        <h1 className="text-center text-3xl font-bold mb-5">Usuarios</h1>
+    <>
+      <div className="flex justify-center">
+        <div className="flex flex-col items-center w-full">
+          <h1 className="text-center text-3xl font-bold mb-5">Usuarios</h1>
 
-        <input
-          type="text"
-          placeholder="Nombre de usuario"
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          className="p-2 mb-5 rounded-md border w-auto text-center"
-        />
+          <input
+            type="text"
+            placeholder="Nombre de usuario"
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            className="p-2 mb-5 rounded-md border w-auto text-center"
+          />
 
-        <table className="w-full h-full text-sm mb-40">
-          <thead>
-            <tr>
-              <th className="p-3 border">Foto de Perfil</th>
-              <th className="p-3 border">Nombre de Usuario</th>
-              <th className="p-3 border hidden lg:table-cell">
-                Nombre Completo
-              </th>
-              <th className="p-3 border hidden md:table-cell">Email</th>
-              <th className="p-3 border hidden lg:table-cell">Género</th>
-              <th className="p-3 border hidden lg:table-cell">Tipo</th>
-              <th className="p-3 border">Acción</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredUsers?.map((user) => (
-              <tr key={user.id} className="border-b">
-                <td className="p-3">
-                  <Image
-                    src={user.profile_image || "/default-profile.png"}
-                    alt={user.username}
-                    width={50}
-                    height={50}
-                    className="rounded-full"
-                  />
-                </td>
-                <td className="p-3 text-center">{user.username}</td>
-                <td className="p-3 text-center hidden lg:table-cell">
-                  {user.fullname}
-                </td>
-                <td className="p-3 text-center hidden md:table-cell">
-                  {user.email}
-                </td>
-                <td className="p-3 text-center hidden lg:table-cell">
-                  {user.genre?.toLocaleLowerCase()}
-                </td>
-                <td className="p-3 text-center hidden lg:table-cell">
-                  {user.user_type}
-                </td>
-                <td className="p-3 text-center">
-                  <button
-                    onClick={() => handleBanToggle(user.id, user.status)}
-                    disabled={loading}
-                    className={`py-1 px-4 rounded-lg ${
-                      user.status === "banned"
-                        ? "bg-gray-400 text-white"
-                        : "bg-red-600 text-white"
-                    }`}
-                  >
-                    {user.status === "banned" ? "Desbanear" : "Bannear"}
-                  </button>
-                </td>
+          <table className="w-full h-full text-sm mb-40">
+            <thead>
+              <tr>
+                <th className="p-3 border">Foto de Perfil</th>
+                <th className="p-3 border">Nombre de Usuario</th>
+                <th className="p-3 border hidden lg:table-cell">
+                  Nombre Completo
+                </th>
+                <th className="p-3 border hidden md:table-cell">Email</th>
+                <th className="p-3 border hidden lg:table-cell">Género</th>
+                <th className="p-3 border hidden lg:table-cell">Tipo</th>
+                <th className="p-3 border">Acción</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filteredUsers?.map((user) => (
+                <tr key={user.id} className="border-b">
+                  <td className="p-3">
+                    <Image
+                      src={user.profile_image || "/default-profile.png"}
+                      alt={user.username}
+                      width={50}
+                      height={50}
+                      className="rounded-full"
+                    />
+                  </td>
+                  <td className="p-3 text-center">{user.username}</td>
+                  <td className="p-3 text-center hidden lg:table-cell">
+                    {user.fullname}
+                  </td>
+                  <td className="p-3 text-center hidden md:table-cell">
+                    {user.email}
+                  </td>
+                  <td className="p-3 text-center hidden lg:table-cell">
+                    {user.genre?.toLocaleLowerCase()}
+                  </td>
+                  <td className="p-3 text-center hidden lg:table-cell">
+                    {user.user_type}
+                  </td>
+                  <td className="p-3 text-center">
+                    <button
+                      onClick={() => handleBanToggle(user.id, user.status)}
+                      disabled={loading}
+                      className={`py-1 px-4 rounded-lg ${
+                        user.status === "banned"
+                          ? "bg-gray-400 text-white"
+                          : "bg-red-600 text-white"
+                      }`}
+                    >
+                      {user.status === "banned" ? "Desbanear" : "Bannear"}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
 
-        {showModal && (
-          <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50">
-            <div className="bg-white p-6 rounded-lg w-96">
-              <h2 className="text-center text-xl font-semibold mb-4">
-                ¿Estás seguro?
-              </h2>
-              <p className="text-center mb-6">
-                ¿Seguro que deseas{" "}
-                {selectedUser?.status === "banned" ? "desbanear" : "banear"} a
-                este usuario?
-              </p>
-              <div className="flex justify-center space-x-4">
-                <button
-                  onClick={cancelBanAction}
-                  className="py-2 px-4 bg-gray-500 text-white rounded-lg"
-                >
-                  Cancelar
-                </button>
-                <button
-                  onClick={confirmBanAction}
-                  disabled={loading}
-                  className="py-2 px-4 bg-red-600 text-white rounded-lg"
-                >
-                  Confirmar
-                </button>
+          {showModal && (
+            <div className="fixed inset-0 flex justify-center items-center bg-gray-800 bg-opacity-50">
+              <div className="bg-white p-6 rounded-lg w-96">
+                <h2 className="text-center text-xl font-semibold mb-4">
+                  ¿Estás seguro?
+                </h2>
+                <p className="text-center mb-6">
+                  ¿Seguro que deseas{" "}
+                  {selectedUser?.status === "banned" ? "desbanear" : "banear"} a
+                  este usuario?
+                </p>
+                <div className="flex justify-center space-x-4">
+                  <button
+                    onClick={cancelBanAction}
+                    className="py-2 px-4 bg-gray-500 text-white rounded-lg"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={confirmBanAction}
+                    disabled={loading}
+                    className="py-2 px-4 bg-red-600 text-white rounded-lg"
+                  >
+                    Confirmar
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
-    </div>
+      <UsersDashboard />
+    </>
   );
 }
