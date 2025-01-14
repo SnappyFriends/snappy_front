@@ -1,6 +1,5 @@
-"use client"
+"use client";
 
-// import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
@@ -10,8 +9,7 @@ import Footer from "@/components/Footer";
 import NavBar from "@/components/NavBar";
 import Sidebar from "@/components/Sidebar";
 import Conectados from "@/components/Conectados";
-import { usePathname } from 'next/navigation';
-
+import { usePathname } from "next/navigation";
 
 const interRegular = localFont({
   src: "./fonts/Inter28pt-Regular.woff",
@@ -19,21 +17,22 @@ const interRegular = localFont({
   weight: "400",
 });
 
-// export const metadata: Metadata = {
-//   title: "Snappy",
-//   description: "Encuentra amigos al instante",
-// };
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-  const pathname = usePathname(); 
- const shouldRenderLayout = !(
-  pathname?.includes("/dashboard") || pathname?.includes("/register") || pathname === "/"
-);
+  const pathname = usePathname();
+  const shouldRenderLayout = !(
+    pathname?.includes("/dashboard") ||
+    pathname?.includes("/dashboard/usuarios") ||
+    pathname?.includes("/dashboard/publicaciones") ||
+    pathname?.includes("/dashboard/reportes") ||
+    pathname?.includes("/dashboard/suscripciones") ||
+    pathname?.includes("/dashboard/intereses") ||
+    pathname?.includes("/register") ||
+    pathname === "/"
+  );
 
   return (
     <html lang="es">
@@ -43,27 +42,24 @@ export default function RootLayout({
         >
           <UserProvider>
             <div className="flex flex-col min-h-screen">
-            {shouldRenderLayout && <NavBar />} 
-            <Toaster />
-              <div className="flex flex-1">
-              <div className="flex flex-1">
+              {shouldRenderLayout && <NavBar />}
+              <Toaster />
+              <div className="flex flex-1 flex-wrap md:flex-nowrap">
                 {shouldRenderLayout && (
-                  <div className="w-64 p-4 mr-32">
+                  <aside className="hidden md:block w-64 p-4 md:mr-32">
                     <Sidebar />
-                  </div>
-    )}
-                <main className=" w-full flex justify-center">{children}</main>
-                
-                
+                  </aside>
+                )}
+                <main className="w-full flex justify-center px-4">
+                  {children}
+                </main>
                 {shouldRenderLayout && (
-                  <div className="w-96 mr-4">
+                  <aside className="hidden md:block w-96 p-4 md:mr-4">
                     <Conectados />
-                  </div>
+                  </aside>
                 )}
               </div>
-              </div>
-
-              <Footer /> 
+              <Footer />
             </div>
           </UserProvider>
         </GoogleOAuthProvider>

@@ -143,7 +143,7 @@ export default function InterestsDashboard() {
   };
 
   return (
-    <div className="pb-20 flex flex-col gap-6">
+    <div className="pb-20 flex flex-col gap-6 w-[73rem]">
       <h1 className="text-2xl text-center font-bold mb-6">
         Gestionar Intereses
       </h1>

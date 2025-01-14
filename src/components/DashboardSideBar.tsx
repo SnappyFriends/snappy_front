@@ -21,7 +21,7 @@ const DashboardSidebar = () => {
 
 	return (
 		<>
-			<div className="bg-black h-full w-80 fixed z-50 lg:block hidden">
+			<div className="bg-black h-full w-80 fixed z-50 lg:block hidden mr-36">
 				<div className="m-auto mt-4 sm:flex items-center justify-center sm:justify-start sm:col-span-1">
 					<Image src="/favicon.ico" alt="Snappy" width={90} height={90} />
 					<h1 className="font-extrabold text-2xl ml-2 text-white">

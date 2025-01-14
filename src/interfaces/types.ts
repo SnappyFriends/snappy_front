@@ -23,6 +23,7 @@ export interface ILoginResponse {
   message: string;
   user_type: string;
   user_status: string;
+  roles: string[];
 }
 
 export interface IUserContextType {

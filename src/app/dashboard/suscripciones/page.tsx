@@ -43,7 +43,7 @@ const PurchasesPage: React.FC = () => {
 
   return (
     <>
-      <div className="container mx-auto p-4">
+      <div className="container mx-auto p-4 w-[73rem]">
         <h1 className="text-2xl font-bold mb-4 text-center">
           Suscripciones de Usuarios
         </h1>
