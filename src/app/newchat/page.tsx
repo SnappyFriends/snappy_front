@@ -23,7 +23,7 @@ interface IUserAPIResponse {
 }
 
 const ChatView = () => {
-  const [distance,setDistance] = useState<string>("")
+  const [distance, setDistance] = useState<string>("");
   const [userList, setUserList] = useState<IUserAPIResponse[]>([]);
   const [randomUser, setRandomUser] = useState<IUserAPIResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -58,7 +58,6 @@ const ChatView = () => {
         const users: IUserAPIResponse[] = await snappUsers(userId);
 
         setUserList(users);
-        
       } catch (error) {
         console.error("Error al obtener usuarios:", error);
       } finally {
@@ -128,7 +127,7 @@ const ChatView = () => {
     }
   };
 
-  const handleSnappear =  async () => {
+  const handleSnappear = async () => {
     if (userList.length > 0) {
       const newRandomUser =
         userList[Math.floor(Math.random() * userList.length)];
@@ -136,15 +135,14 @@ const ChatView = () => {
       setMessages([]);
 
       const getDistance = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/users/${userData?.id}/distance/${newRandomUser.id}`,
-        )
-        const distanceData= await getDistance.text()
-        if (distanceData.includes("Not Found")) {
-          setDistance("Este usuario no compartió su ubicación")
-        } else {
-          setDistance(distanceData)
-        }
-        
+        `${process.env.NEXT_PUBLIC_API_URL}/users/${userData?.id}/distance/${newRandomUser.id}`
+      );
+      const distanceData = await getDistance.text();
+      if (distanceData.includes("Not Found")) {
+        setDistance("Sin ubicación");
+      } else {
+        setDistance(distanceData);
+      }
 
       if (sentRequests.has(newRandomUser.id)) {
         setIsRequestSent(true);
@@ -190,10 +188,9 @@ const ChatView = () => {
 
   return (
     <div className="w-full">
-    
-      <div className="flex items-center justify-center mt-10 mb-5">
+      <div className="flex items-center justify-center mt-5 mb-5">
         <div className="bg-white rounded-lg shadow-md w-full max-w-lg relative p-4">
-          <div className="flex items-center justify-between border-b">
+          <div className="flex items-center justify-between border-b pb-2">
             <div className="flex items-center">
               <div className="relative w-12 h-12">
                 <Image
@@ -208,7 +205,7 @@ const ChatView = () => {
                   <p className="text-gray-500">Cargando usuario...</p>
                 ) : randomUser ? (
                   <>
-                    <h1 className="text-lg font-semibold flex items-center">
+                    <h1 className="text-lg font-semibold flex items-center pl-2">
                       <Link
                         href={`/perfil/${randomUser.username}`}
                         className="text-black hover:underline"
@@ -217,7 +214,7 @@ const ChatView = () => {
                       </Link>
                     </h1>
 
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-gray-500 pl-2">
                       {randomUser.fullname} - {distance}
                     </p>
                   </>
@@ -226,14 +223,32 @@ const ChatView = () => {
                 )}
               </div>
             </div>
-            <button
-              onClick={handleSendRequest}
-              className={`${
-                isRequestSent ? "bg-gray-400" : "bg-blue-500 hover:bg-blue-600"
-              } text-white px-4 py-2 rounded-lg text-sm transition`}
-            >
-              {isRequestSent ? "Dejar de seguir" : "Seguir"}
-            </button>
+            <div className="flex flex-row gap-3">
+              <button
+                onClick={handleSendRequest}
+                className={`${
+                  isRequestSent
+                    ? "bg-gray-400"
+                    : "bg-blue-500 hover:bg-blue-600"
+                } text-white h-10 w-20  rounded-lg text-sm transition`}
+              >
+                {isRequestSent ? "Siguiendo" : "Seguir"}
+              </button>
+
+              <button
+                onClick={handleSnappear}
+                className="relative h-15 w-10 cursor-pointer "
+                aria-label="Buscar nuevo usuario"
+                title="Snappear"
+              >
+                <Image
+                  src="/snappear.png"
+                  alt="Snappear"
+                  layout="fill"
+                  className="object-contain"
+                />
+              </button>
+            </div>
           </div>
           <div className="flex-1 px-4 py-6 overflow-y-auto min-h-[60vh]">
             {randomUser ? (
@@ -328,22 +343,9 @@ const ChatView = () => {
           </div>
         </div>
       </div>
-      <div className="flex justify-center w-full">
-        <button
-          onClick={handleSnappear}
-          className="relative w-16 h-16 cursor-pointer"
-          aria-label="Buscar nuevo usuario"
-          title="Snappear"
-        >
-          <Image
-            src="/snappear.png"
-            alt="Snappear"
-            layout="fill"
-            className="object-contain"
-          />
-        </button>
-      </div>
-
+      {/* <div className="flex justify-center w-full">
+        
+      </div> */}
     </div>
   );
 };
