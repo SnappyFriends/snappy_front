@@ -4,7 +4,7 @@ import type { NextRequest } from "next/server";
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const isLoggedIn = req.cookies.get("auth_token");
-  const userType = req.cookies.get("user_type");
+  const roles = req.cookies.get("roles");
 
   if (
     !isLoggedIn &&
@@ -29,8 +29,8 @@ export function middleware(req: NextRequest) {
 
   if (
     pathname.startsWith("/dashboard") &&
-    userType &&
-    userType.value !== "admin"
+    (!roles ||
+      (!roles.value.includes("admin") && !roles.value.includes("superadmin")))
   ) {
     return NextResponse.redirect(new URL("/socialfeed", req.url));
   }
