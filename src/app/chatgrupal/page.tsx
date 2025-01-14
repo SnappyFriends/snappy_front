@@ -275,21 +275,17 @@ const ChatRoomView = ({ searchParams }: any) => {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="w-full">
       <div className="flex flex-col lg:flex-row">
-        <div className="hidden lg:flex flex-col w-64 bg-white p-6 space-y-10 fixed left-6 top-1/2 transform -translate-y-1/2">
-          <Sidebar />
-        </div>
-
         {hasGroupChats === undefined ? (
-          <div className="lg:w-1/2 md:w-full ml-0 lg:ml-80 mt-12 lg:mt-32 max-w-[1100px]">
+          <div className="lg:w-full md:w-full ml-0 lg:ml-80 mt-12 lg:mt-32 max-w-[1100px]">
             Loading...
           </div>
         ) : hasGroupChats ? (
           <div className="lg:w-1/2 md:w-full ml-0 lg:ml-80 mt-12 lg:mt-32 max-w-[1100px]">
-            <div className="flex items-center justify-center h-auto relative">
+            <div className="flex w-full items-center justify-center h-auto relative">
               <div className="flex w-full max-w-6xl rounded-lg bg-white shadow-md">
-                <div className="lg:w-1/4 sm:w-full md:w-full h-[calc(100vh-200px)] border-r px-4 py-6 bg-gray-100 overflow-y-auto flex flex-col justify-between">
+                <div className="lg:w-1/4 sm:w-full md:w-full h-[calc(100vh-200px)] border-r  py-6 bg-gray-100 overflow-y-auto flex flex-col justify-between">
                   <div>
                     <h3 className="text-xl font-semibold mb-4">
                       Miembros de la Sala
