@@ -12,7 +12,7 @@ import CreateChat from "../crearchatgrupal/page";
 import CreateChatGroupForm from "@/components/CrearChatGrupal";
 
 const MensajesGrupales = () => {
-  const [groupChats, setGroupChats] = useState<GroupChatsBeta[]>([]);
+  const [groupChats, setGroupChats] = useState<GroupChatsBeta[]>();
   const [isGoingToAdd, setIsGoingToAdd] = useState(false);
 
   const { userData, setGroupId } = useContext(UserContext);
@@ -50,13 +50,9 @@ const MensajesGrupales = () => {
   };
 
   const handleGroupClick = (groupId: string) => {
-    console.log("HACIENDO EL ROUTER.PUSH groupId", groupId);
-
     setGroupId(groupId);
     router.push(`/chatgrupal?group_id=${groupId}`);
   };
-
-  if (!groupChats) return "Cargando...";
 
   return (
     <>
@@ -114,57 +110,88 @@ const MensajesGrupales = () => {
                   <h2 className="text-center my-2 text-lg font-semibold text-gray-800">
                     Chats Grupales
                   </h2>
-                  {groupChats.length === 0 ? (
+
+                  {groupChats === undefined ? (
+                    <>
+                      <section className="h-20 flex justify-between items-center px-4 border-b border-[#EEEEEE] cursor-pointer hover:bg-gray-100 transition">
+                        Loading...
+                      </section>
+                      {/* HACER EL MISMO HASGROUP CHATS QUE EN EL OTRO ARCHIVO */}
+                      <div>No existen chats grupales.</div>
+                    </>
+                  ) : groupChats.length === 0 ? (
                     <CreateChat />
                   ) : (
-                    groupChats.map((groupChat) => {
-                      const lastMessage =
-                        groupChat.group.messages &&
-                        groupChat.group.messages.length > 0
-                          ? groupChat.group.messages[
-                              groupChat.group.messages.length - 1
-                            ]
-                          : null;
+                    groupChats
+                      .sort((a, b) => {
+                        const lastMessageA =
+                          a.group.messages && a.group.messages.length > 0
+                            ? a.group.messages[a.group.messages.length - 1]
+                            : null;
+                        const lastMessageB =
+                          b.group.messages && b.group.messages.length > 0
+                            ? b.group.messages[b.group.messages.length - 1]
+                            : null;
 
-                      return (
-                        <section
-                          key={groupChat.group?.group_id}
-                          className="h-20 flex justify-between items-center px-4 border-b border-[#EEEEEE] cursor-pointer hover:bg-gray-100 transition"
-                          onClick={() =>
-                            handleGroupClick(groupChat.group?.group_id)
-                          }
-                        >
-                          <div className="flex items-center space-x-4">
-                            <div>
-                              <Image
-                                src="/agregarfoto.png"
-                                width={1000}
-                                height={1000}
-                                alt="Imagen del chat grupal"
-                                className="rounded-full w-16 h-16 object-cover"
-                              />
+                        if (lastMessageA && lastMessageB) {
+                          return (
+                            new Date(lastMessageB.send_date).getTime() -
+                            new Date(lastMessageA.send_date).getTime()
+                          );
+                        }
+
+                        return 0;
+                      })
+                      .map((groupChat) => {
+                        const lastMessage =
+                          groupChat.group.messages &&
+                          groupChat.group.messages.length > 0
+                            ? groupChat.group.messages[
+                                groupChat.group.messages.length - 1
+                              ]
+                            : null;
+
+                        return (
+                          <section
+                            key={groupChat.group?.group_id}
+                            className="h-20 flex justify-between items-center px-4 border-b border-[#EEEEEE] cursor-pointer hover:bg-gray-100 transition"
+                            onClick={() =>
+                              handleGroupClick(groupChat.group?.group_id)
+                            }
+                          >
+                            <div className="flex items-center space-x-4">
+                              <div>
+                                <Image
+                                  src="/agregarfoto.png"
+                                  width={1000}
+                                  height={1000}
+                                  alt="Imagen del chat grupal"
+                                  className="rounded-full w-16 h-16 object-cover"
+                                />
+                              </div>
+                              <div>
+                                <h2 className="font-bold text-sm text-gray-900">
+                                  {groupChat.group.name}
+                                </h2>
+                                <p className="text-xs text-gray-500">
+                                  {lastMessage
+                                    ? `${lastMessage.content}`
+                                    : "Sin mensajes recientes"}
+                                </p>
+                              </div>
                             </div>
-                            <div>
-                              <h2 className="font-bold text-sm text-gray-900">
-                                {groupChat.group.name}
-                              </h2>
-                              <p className="text-xs text-gray-500">
-                                {lastMessage
-                                  ? `${lastMessage.content}`
-                                  : "Sin mensajes recientes"}
-                              </p>
+                            <div className="text-sm text-gray-500">
+                              {lastMessage
+                                ? `${timeAgo(
+                                    new Date(
+                                      lastMessage.send_date
+                                    ).toISOString()
+                                  )}`
+                                : "Sin mensajes recientes"}
                             </div>
-                          </div>
-                          <div className="text-sm text-gray-500">
-                            {lastMessage
-                              ? `${timeAgo(
-                                  new Date(lastMessage.send_date).toISOString()
-                                )}`
-                              : "Sin mensajes recientes"}
-                          </div>
-                        </section>
-                      );
-                    })
+                          </section>
+                        );
+                      })
                   )}
                 </div>
               </main>

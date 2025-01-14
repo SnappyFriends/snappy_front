@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 const CrearPublicacion = () => {
 	const [contenido, setContenido] = useState("");
 	const [file, setFile] = useState<File | null>(null);
+	const [preview, setPreview] = useState<string | null>(null); 
 	const [fileSizeError, setFileSizeError] = useState<string | null>(null);
 	const { userData } = useContext(UserContext);
 	const router = useRouter();
@@ -20,12 +21,21 @@ const CrearPublicacion = () => {
 				alert("Por favor selecciona un archivo de imagen.");
 				setFileSizeError(null);
 				setFile(null);
+				setPreview(null);
 				return;
 			}
 
 			setFileSizeError(null);
 			setFile(selectedFile);
 
+			// Genera la previsualización
+			const reader = new FileReader();
+			reader.onload = () => {
+				setPreview(reader.result as string);
+			};
+			reader.readAsDataURL(selectedFile);
+		} else {
+			setPreview(null); 
 		}
 	};
 
@@ -54,7 +64,9 @@ const CrearPublicacion = () => {
 
 			if (result.fileUrl) {
 				showCustomToast("Snappy", "Publicación subida con éxito", "success");
-
+				setFile(null);
+				setPreview(null); 
+				setContenido("");
 				setTimeout(() => { router.push("/socialfeed") }, 1000);
 			} else {
 				showCustomToast("Snappy", "Error al subir la publicación", "error");
@@ -84,7 +96,19 @@ const CrearPublicacion = () => {
 						id="fileImg"
 						onChange={handleFileChange}
 						className="p-2 border rounded"
+						accept="image/*" // Acepta solo imágenes
 					/>
+
+					
+					{preview && (
+						<div className="w-full flex justify-center mb-4">
+							<img
+								src={preview}
+								alt="Preview"
+								className="max-w-full h-auto border rounded"
+							/>
+						</div>
+					)}
 
 					{fileSizeError && (
 						<p className="text-red-500 text-center text-sm">{fileSizeError}</p>
