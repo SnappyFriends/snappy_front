@@ -2,9 +2,6 @@
 
 import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
-import Conectados from "@/components/Conectados";
-import Sidebar from "@/components/Sidebar";
-import NavBar from "@/components/NavBar";
 import { UserContext } from "@/context/UserContext";
 import { INotification } from "@/interfaces/types";
 import { timeAgo } from "@/helpers/timeAgo";
