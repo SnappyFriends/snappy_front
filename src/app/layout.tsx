@@ -32,7 +32,7 @@ export default function RootLayout({
 
   const pathname = usePathname(); 
  const shouldRenderLayout = !(
-  pathname?.includes("/dashboard") || pathname?.includes("/register") || pathname === "/"
+  pathname?.includes("/dashboard") ||pathname?.includes("/dashboard/usuarios") ||pathname?.includes("/dashboard/publicaciones") ||pathname?.includes("/dashboard/reportes") || pathname?.includes("/dashboard/suscripciones") ||pathname?.includes("/dashboard/intereses") || pathname?.includes("/register") || pathname === "/"
 );
 
   return (
