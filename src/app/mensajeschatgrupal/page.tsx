@@ -79,7 +79,7 @@ const MensajesGrupales = () => {
                   </span>
                 </div>
 
-                <form className="w-full flex">
+                {/* <form className="w-full flex">
                   <input
                     type="text"
                     className="border border-gray-500 border-r-transparent rounded-full rounded-e-none h-10 w-full px-4"
@@ -99,7 +99,7 @@ const MensajesGrupales = () => {
                       className="cursor-pointer"
                     />
                   </button>
-                </form>
+                </form> */}
               </nav>
 
               <main>
