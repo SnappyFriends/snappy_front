@@ -59,7 +59,9 @@ export const useSocket = (
         }
       );
 
-      socketRef.current.on("connect", () => {});
+      socketRef.current.on("connect", () => {
+        console.log("webSocket conectado.");
+      });
 
       socketRef.current.on("onlineUsers", (onlineUsersList) => {
         setOnlineUsers(onlineUsersList.map((user: any) => user.id));
