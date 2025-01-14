@@ -9,8 +9,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
 interface IUserAPIResponse {
   username: string;
   id: string;
@@ -146,43 +144,10 @@ const ChatView = () => {
 
       if (sentRequests.has(newRandomUser.id)) {
         setIsRequestSent(true);
+        console.log(isRequestSent);
       } else {
         setIsRequestSent(false);
       }
-    }
-  };
-
-  const handleSendRequest = async () => {
-    if (!randomUser || !userId) return;
-
-    try {
-      const endpoint = isRequestSent
-        ? `${API_URL}/follow/${userId}/${randomUser.id}`
-        : `${API_URL}/follow/${userId}/${randomUser.id}`;
-
-      const response = await fetch(endpoint, {
-        method: isRequestSent ? "DELETE" : "POST",
-        headers: { "Content-Type": "application/json" },
-      });
-
-      if (response.ok) {
-        setIsRequestSent(!isRequestSent);
-        setSentRequests((prev) => {
-          const updatedRequests = new Set(prev);
-          if (isRequestSent) {
-            updatedRequests.delete(randomUser.id);
-          } else {
-            updatedRequests.add(randomUser.id);
-          }
-          return updatedRequests;
-        });
-      } else {
-        const errorData = await response.json();
-        alert(`Error: ${errorData.message}`);
-      }
-    } catch (error) {
-      console.error("Error al conectarse al servidor:", error);
-      alert("No se pudo procesar la acción.");
     }
   };
 
@@ -225,19 +190,8 @@ const ChatView = () => {
             </div>
             <div className="flex flex-row gap-3">
               <button
-                onClick={handleSendRequest}
-                className={`${
-                  isRequestSent
-                    ? "bg-gray-400"
-                    : "bg-blue-500 hover:bg-blue-600"
-                } text-white h-10 w-20  rounded-lg text-sm transition`}
-              >
-                {isRequestSent ? "Siguiendo" : "Seguir"}
-              </button>
-
-              <button
                 onClick={handleSnappear}
-                className="relative h-15 w-10 cursor-pointer "
+                className="relative h-10 w-10 cursor-pointer "
                 aria-label="Buscar nuevo usuario"
                 title="Snappear"
               >
