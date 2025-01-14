@@ -29,7 +29,7 @@ export default function InterestsDashboard() {
     const fetchInterests = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/interests`,
+          `${process.env.NEXT_PUBLIC_API_URL}/interests/admin/interests`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
