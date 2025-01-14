@@ -275,14 +275,14 @@ const ChatRoomView = ({ searchParams }: any) => {
   };
 
   return (
-    <div className="w-full">
-      <div className="flex flex-col lg:flex-row">
+    <div className="w-full flex justify-center">
+      <div className="flex flex-col justify-center lg:flex-row w-full">
         {hasGroupChats === undefined ? (
           <div className="lg:w-full md:w-full ml-0 lg:ml-80 mt-12 lg:mt-32 max-w-[1100px]">
             Loading...
           </div>
         ) : hasGroupChats ? (
-          <div className="lg:w-1/2 md:w-full ml-0 lg:ml-80 mt-12 lg:mt-32 max-w-[1100px]">
+          <div className="lg:w-full md:w-full ml-0 lg:mt-12 max-w-[1100px]">
             <div className="flex w-full items-center justify-center h-auto relative">
               <div className="flex w-full max-w-6xl rounded-lg bg-white shadow-md">
                 <div className="lg:w-1/4 sm:w-full md:w-full h-[calc(100vh-200px)] border-r  py-6 bg-gray-100 overflow-y-auto flex flex-col justify-between">
@@ -402,7 +402,7 @@ const ChatRoomView = ({ searchParams }: any) => {
                   key={10000000}
                 >
                   {/* Información del grupo */}
-                  <div className="flex items-center justify-between border-b pb-4">
+                  <div className="flex items-center justify-between border-b pb-4 w-full">
                     <div className="flex items-center">
                       <div className="relative w-12 h-12">
                         <Image

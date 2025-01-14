@@ -54,14 +54,14 @@ const MensajesGrupales = () => {
   return (
     <>
 
-      <div className="flex min-h-screen relative">
+      <div className="flex relative w-full">
 
         {isGoingToAdd ? (
           <CreateChatGroupForm />
         ) : (
-          <div className="flex-1 flex justify-center mt-20">
-            <div className="w-full md:w-2/4 p-6">
-              <nav className="h-16 flex flex-col justify-center items-center space-y-4">
+          <div className="flex-1 flex justify-center mt-20 w-full">
+            <div className="w-full md:w-3/4">
+              <nav className="h-16 flex flex-col justify-center items-center w-full">
                 <div
                   onClick={pushToCreateForm}
                   className="flex items-center justify-center space-x-2 text-gray-800 hover:text-blue-500 transition"
