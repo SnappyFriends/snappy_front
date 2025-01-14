@@ -87,8 +87,6 @@ const ProfileView = ({
 				};
 			});
 
-			if(userTargetData) console.log("userTargetData 1: ", userTargetData.followers);
-
 			userData?.following.push({
 				id: userTargetData?.id || "",
 				username: "",
@@ -197,11 +195,10 @@ const ProfileView = ({
 	}, [username]);
 
 	useEffect(() => {
-		if (userTargetData) {
+		if (userTargetData && userData) {
 			if (userTargetData.followers && userTargetData.followers.length > 0) {
-				const isFollowing = userTargetData.followers.map((follower) => {
-					if (follower.follower.id == userTargetData.id) return true;
-					else return false;
+				const isFollowing = userTargetData.followers.some((follower) => {
+					return follower.follower.id = userData.id;
 				});
 
 				console.log("userTargetData 2: ", userTargetData.followers);
@@ -209,7 +206,7 @@ const ProfileView = ({
 				console.log("isFollowing?: ", isFollowing);
 			}
 		}
-	}, [userTargetData]);
+	}, [userTargetData, userData]);
 
 	if (!userTargetData) return "Cargando...";
 
