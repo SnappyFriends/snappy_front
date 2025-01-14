@@ -85,8 +85,8 @@ export default function PaymentGateway() {
   if (userData?.user_type === "premium") {
     return (
       <div>
-        <div className="min-h-screen flex justify-center items-center p-4">
-          <div className="w-full max-w-lg p-6 bg-white rounded-lg flex flex-col gap-4 shadow-xl border">
+        <div className="min-h-screen flex justify-center items-center">
+          <div className="w-full max-w-lg p-6 bg-white rounded-lg flex flex-col shadow-xl border">
             <h2 className="text-2xl font-bold text-center mb-6">
               Historial de compras
             </h2>
@@ -127,9 +127,8 @@ export default function PaymentGateway() {
   }
 
   return (
-    <div>
-      <div className="min-h-screen flex justify-center items-center p-4">
-        <div className="w-full max-w-lg p-6 bg-white rounded-lg flex flex-col gap-8 shadow-lg">
+      <div className="flex justify-center items-center w-full">
+        <div className="w-full bg-white rounded-lg flex flex-col shadow-lg">
           <h2 className="text-2xl font-bold text-center mb-6">
             Selecciona la duración de tu suscripción
           </h2>
@@ -138,7 +137,7 @@ export default function PaymentGateway() {
             <select
               value={subscriptionDuration}
               onChange={(e) => setSubscriptionDuration(e.target.value)}
-              className="w-full border rounded p-2 mb-4"
+              className="w-full border rounded mb-4"
             >
               <option value="1">1 mes</option>
               <option value="3">3 meses</option>
@@ -157,6 +156,5 @@ export default function PaymentGateway() {
           </form>
         </div>
       </div>
-    </div>
   );
 }
