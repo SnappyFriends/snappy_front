@@ -102,7 +102,7 @@ export default function Usuarios() {
 
   return (
     <>
-      <div className="flex justify-center">
+      <div className="flex justify-center w-[73rem]">
         <div className="flex flex-col items-center w-full">
           <h1 className="text-center text-3xl font-bold mb-5">Usuarios</h1>
 
@@ -111,7 +111,7 @@ export default function Usuarios() {
             placeholder="Nombre de usuario"
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            className="p-2 mb-5 rounded-md border w-auto text-center"
+            className="p-2 mb-5 rounded-md border w-full text-center"
           />
 
           <table className="w-full h-full text-sm mb-40">

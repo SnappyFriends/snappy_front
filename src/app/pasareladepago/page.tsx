@@ -84,8 +84,8 @@ export default function PaymentGateway() {
 
   if (userData?.user_type === "premium") {
     return (
-      <div>
-        <div className="min-h-screen flex justify-center items-center">
+      <div >
+        <div className="w-full flex justify-center items-center">
           <div className="w-full max-w-lg p-6 bg-white rounded-lg flex flex-col shadow-xl border">
             <h2 className="text-2xl font-bold text-center mb-6">
               Historial de compras
