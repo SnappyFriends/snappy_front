@@ -48,11 +48,11 @@ export default function RootLayout({
               <div className="flex flex-1">
               <div className="flex flex-1">
                 {shouldRenderLayout && (
-                  <div className="w-64 p-4">
+                  <div className="w-64 p-4 mr-32">
                     <Sidebar />
                   </div>
     )}
-                <main className="ml-32 w-full flex justify-center">{children}</main>
+                <main className=" w-full flex justify-center">{children}</main>
                 
                 
                 {shouldRenderLayout && (
