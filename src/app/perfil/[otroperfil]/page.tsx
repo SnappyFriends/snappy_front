@@ -42,7 +42,7 @@ const ProfileView = ({
 	);
 	const [username, setUsername] = useState<string | null>(null);
 	const { userData } = useContext(UserContext);
-	const [followingState, setFollowingState] = useState(false);
+	const [followingState, setFollowingState] = useState<boolean>(false);
 	const [showModal, setShowModal] = useState(false);
 	const [modalType, setModalType] = useState<"followers" | "following" | null>(
 		null
