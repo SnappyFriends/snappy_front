@@ -43,11 +43,44 @@ const ChatRoomView = ({ searchParams }: any) => {
   const [needsUpdate, setNeedsUpdate] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const [isRemoveUserModalOpen, setIsRemoveUserModalOpen] = useState(false);
+  const [userToRemove, setUserToRemove] = useState<User | null>(null);
+
   const token = Cookies.get("auth_token");
   const socketRef = useRef<Socket | null>(null);
 
   const { group_id }: any = React.use(searchParams);
-  console.log("groupChats", hasGroupChats);
+
+  const openRemoveUserModal = (member: User) => {
+    setIsRemoveUserModalOpen(true);
+    setUserToRemove(member);
+  };
+
+  const closeRemoveUserModal = () => {
+    setIsRemoveUserModalOpen(false);
+    setUserToRemove(null);
+  };
+
+  const handleRemoveUser = async () => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/group-members/${userToRemove?.user.id}/remove-from-admin/${group_id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (!response.ok) {
+        return;
+      }
+      closeRemoveUserModal();
+      window.location.href = `/chatgrupal?group_id=${group_id}`;
+    } catch (error) {
+      console.error("Error deleting chat group", error);
+    }
+  };
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -276,7 +309,6 @@ const ChatRoomView = ({ searchParams }: any) => {
                           key={`${member?.user?.id}`}
                           className="flex items-center space-x-2"
                         >
-                          {" "}
                           <Link
                             href={`/perfil/${member.user?.username}`}
                             className="flex items-center space-x-3 text-black hover:underline"
@@ -296,9 +328,18 @@ const ChatRoomView = ({ searchParams }: any) => {
                               {member.user?.username}
                             </div>
                           </Link>
+                          {member.role !== "ADMIN" && (
+                            <button
+                              onClick={() => openRemoveUserModal(member)}
+                              className="w-6 h-6 flex items-center justify-center text-xs text-red-500 hover:text-red-700 focus:outline-none border border-red-500 rounded-full"
+                            >
+                              x
+                            </button>
+                          )}
                         </div>
                       ))}
                     </div>
+
                     <button
                       onClick={filterFriends}
                       className="bg-green-500 text-white w-full px-4 py-2 rounded-lg text-sm mt-4 hover:bg-green-600 transition"
@@ -349,7 +390,7 @@ const ChatRoomView = ({ searchParams }: any) => {
                     {/* Solo muestra el botón si el usuario es admin */}
                     {members.map((member) => {
                       if (
-                        member.user.id == userData?.id &&
+                        member.user?.id == userData?.id &&
                         member.role == "ADMIN"
                       ) {
                         return (
@@ -498,6 +539,33 @@ const ChatRoomView = ({ searchParams }: any) => {
                           </button>
                           <button
                             onClick={handleDeleteGroup}
+                            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                          >
+                            Eliminar
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {isRemoveUserModalOpen && (
+                    <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center">
+                      <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                        <h2 className="text-lg font-semibold mb-4">
+                          Confirmación
+                        </h2>
+                        <p className="mb-4">
+                          {`¿Estás seguro de que quieres eliminar a ${userToRemove?.user?.username} del grupo?`}
+                        </p>
+                        <div className="flex justify-between">
+                          <button
+                            onClick={closeRemoveUserModal}
+                            className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+                          >
+                            Cancelar
+                          </button>
+                          <button
+                            onClick={handleRemoveUser}
                             className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
                           >
                             Eliminar
