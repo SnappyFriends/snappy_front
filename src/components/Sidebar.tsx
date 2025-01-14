@@ -71,7 +71,7 @@ const Sidebar = () => {
           <span>Notificaciones</span>
         </Link>
         <Link
-          href="/editarperfil"
+          href="/configuracion"
           className="flex items-center space-x-4 cursor-pointer hover:text-blue-500"
         >
           <Image src="/rueda.png" alt="Configuración" width={24} height={24} />
