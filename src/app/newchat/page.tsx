@@ -142,8 +142,12 @@ const ChatView = () => {
         `${process.env.NEXT_PUBLIC_API_URL}/users/${userData?.id}/distance/${newRandomUser.id}`,
         )
         const distanceData= await getDistance.text()
-        console.log(distanceData)
-        setDistance(distanceData)
+        if (distanceData.includes("Not Found")) {
+          setDistance("Este usuario no compartió su ubicación")
+        } else {
+          setDistance(distanceData)
+        }
+        
 
       if (sentRequests.has(newRandomUser.id)) {
         setIsRequestSent(true);
