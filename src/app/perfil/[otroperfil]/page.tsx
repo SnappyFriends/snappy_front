@@ -4,12 +4,9 @@ import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { getUsersByUsername } from "@/helpers/users";
-import Conectados from "@/components/Conectados";
-import Sidebar from "@/components/Sidebar";
 import NotFound from "@/app/not-found";
 import { IUsernameData } from "@/interfaces/types";
 import VerifiedAccount from "@/components/VerifiedAccount";
-import NavBar from "@/components/NavBar";
 import { UserContext } from "@/context/UserContext";
 import { showCustomToast } from "@/components/Notificacion";
 import PostDetails from "@/components/PostDetails";
@@ -233,8 +230,7 @@ const ProfileView = ({
 
   return (
     <>
-      <Sidebar />
-      <NavBar />
+  
       <main className="min-h-screen">
         <section className="flex flex-col justify-center items-center gap-3 md:gap-4 pt-3 md:pt-4 px-4">
           <div className="w-32 h-32 md:w-40 md:h-40 lg:w-60 lg:h-60 rounded-full overflow-hidden border-4 border-black shadow-md">
@@ -462,9 +458,7 @@ const ProfileView = ({
           </div>
         )}
       </main>
-      <div className="hidden md:flex flex-col w-80 space-y-6 absolute right-20 top-1/2 transform -translate-y-1/2">
-        <Conectados />
-      </div>
+
     </>
   );
 };

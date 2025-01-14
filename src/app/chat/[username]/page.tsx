@@ -5,9 +5,6 @@ import { useParams } from "next/navigation";
 import Image from "next/image";
 import { getUsersByUsername } from "@/helpers/users";
 import { UserContext } from "@/context/UserContext";
-import NavBar from "@/components/NavBar";
-import Sidebar from "@/components/Sidebar";
-import Conectados from "@/components/Conectados";
 import { Chats, IMessage, IUsernameData } from "@/interfaces/types";
 import { timeAgo } from "@/helpers/timeAgo";
 import { useSocket } from "@/helpers/useSocket";
@@ -136,13 +133,10 @@ const ChatWithUser = () => {
 
   return (
     <>
-      <NavBar />
-      <Sidebar />
       <div className="min-h-screen">
         <div className="flex flex-col lg:flex-row">
           <div className="lg:w-1/2 md:w-full mx-auto mt-12 lg:mt-32">
             <div className="flex flex-col w-full max-w-[900px] mx-auto bg-white rounded-lg shadow-md overflow-hidden">
-              {/* Chat Header */}
               <div className="flex items-center p-4 border-b bg-gray-100">
                 <div className="relative w-12 h-12">
                   <Link href={`/perfil/${user.username}`}>
@@ -212,7 +206,6 @@ const ChatWithUser = () => {
                 )}
               </div>
 
-              {/* Chat Input */}
               <div className="p-4 border-t bg-gray-100 flex items-center space-x-3">
                 <input
                   type="text"
@@ -232,9 +225,7 @@ const ChatWithUser = () => {
           </div>
         </div>
       </div>
-      <div className="hidden md:flex flex-col w-80 space-y-6 absolute right-20 top-1/2 transform -translate-y-1/2">
-        <Conectados />
-      </div>
+    
     </>
   );
 };

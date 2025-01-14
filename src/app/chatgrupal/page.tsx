@@ -1,16 +1,12 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import Conectados from "@/components/Conectados";
-import NavBar from "@/components/NavBar";
-import Sidebar from "@/components/Sidebar";
 import { UserContext } from "@/context/UserContext";
 import { timeAgo } from "@/helpers/timeAgo";
 import { GroupChats, IGroupMessage, IUserData } from "@/interfaces/types";
 import Image from "next/image";
 import React, { useContext, useEffect, useRef, useState } from "react";
 import CreateChat from "../crearchatgrupal/page";
-
 import Cookies from "js-cookie";
 import { io, Socket } from "socket.io-client";
 import Link from "next/link";
@@ -39,7 +35,6 @@ const ChatRoomView = ({ searchParams }: any) => {
   const [groupChat, setGroupChat] = useState<GroupChats | null>(null);
   const [message, setMessage] = useState("");
   const [groupMessages, setGroupMessages] = useState<IGroupMessage[]>([]);
-
   const [needsUpdate, setNeedsUpdate] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -281,8 +276,6 @@ const ChatRoomView = ({ searchParams }: any) => {
 
   return (
     <div className="min-h-screen">
-      <NavBar />
-
       <div className="flex flex-col lg:flex-row">
         <div className="hidden lg:flex flex-col w-64 bg-white p-6 space-y-10 fixed left-6 top-1/2 transform -translate-y-1/2">
           <Sidebar />
@@ -504,7 +497,6 @@ const ChatRoomView = ({ searchParams }: any) => {
                     )}
                   </div>
 
-                  {/* Input para mandar mensajito */}
                   <div className="px-4 py-3 border-t flex items-center space-x-3">
                     <input
                       value={message}
@@ -582,9 +574,6 @@ const ChatRoomView = ({ searchParams }: any) => {
           <CreateChat />
         )}
 
-        <div className="hidden lg:flex flex-col w-80 space-y-6 absolute right-20 top-1/2 transform -translate-y-1/2">
-          <Conectados />
-        </div>
       </div>
     </div>
   );

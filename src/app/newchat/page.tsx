@@ -1,8 +1,5 @@
 "use client";
 
-import Conectados from "@/components/Conectados";
-import NavBar from "@/components/NavBar";
-import Sidebar from "@/components/Sidebar";
 import { UserContext } from "@/context/UserContext";
 import { timeAgo } from "@/helpers/timeAgo";
 import { snappUsers } from "@/helpers/users";
@@ -193,9 +190,7 @@ const ChatView = () => {
 
   return (
     <div>
-      <NavBar />
-      <Sidebar />
-
+    
       <div className="flex items-center justify-center mt-10 mb-5 ">
         <div className="bg-white rounded-lg shadow-md w-1/2 max-w-lg relative">
           <div className="flex items-center justify-between px-4 py-3 border-b">
@@ -349,9 +344,6 @@ const ChatView = () => {
         </button>
       </div>
 
-      <div className="hidden md:flex flex-col w-80 space-y-6 absolute right-20 top-1/2 transform -translate-y-1/2">
-        <Conectados />
-      </div>
     </div>
   );
 };

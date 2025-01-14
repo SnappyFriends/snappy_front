@@ -56,12 +56,8 @@ const MensajesGrupales = () => {
 
   return (
     <>
-      <NavBar />
 
       <div className="flex min-h-screen relative">
-        <div className="hidden md:flex flex-col w-64 bg-white p-6 space-y-10 fixed left-6 top-1/2 transform -translate-y-1/2">
-          <Sidebar />
-        </div>
 
         {isGoingToAdd ? (
           <CreateChatGroupForm />
@@ -203,9 +199,6 @@ const MensajesGrupales = () => {
           </div>
         )}
 
-        <div className="hidden md:flex flex-col w-80 space-y-6 absolute right-20 top-1/2 transform -translate-y-1/2">
-          <Conectados />
-        </div>
       </div>
     </>
   );

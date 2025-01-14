@@ -1,9 +1,6 @@
 "use client";
 
 import React, { useContext, useState } from "react";
-import Sidebar from "@/components/Sidebar";
-import NavBar from "@/components/NavBar";
-import Conectados from "@/components/Conectados";
 import { UserContext } from "@/context/UserContext";
 import { showCustomToast } from "@/components/Notificacion";
 import { useRouter } from "next/navigation";
@@ -82,9 +79,6 @@ const CrearPublicacion = () => {
 
 	return (
 		<>
-			<NavBar />
-			<Sidebar />
-
 			<div className="max-w-md mx-auto mt-10 p-4 border rounded shadow-lg">
 				<h2 className="text-2xl font-bold mb-4">Crear Snappy Post</h2>
 				<form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -129,9 +123,7 @@ const CrearPublicacion = () => {
 				</form>
 			</div>
 
-			<div className="hidden md:flex flex-col w-80 space-y-6 absolute right-20 top-1/2 transform -translate-y-1/2">
-				<Conectados />
-			</div>
+		
 		</>
 	);
 };

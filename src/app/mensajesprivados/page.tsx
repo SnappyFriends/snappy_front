@@ -1,9 +1,6 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
-import NavBar from "@/components/NavBar";
-import Conectados from "@/components/Conectados";
-import Sidebar from "@/components/Sidebar";
 import { Chats } from "@/interfaces/types";
 import { UserContext } from "@/context/UserContext";
 import { timeAgo } from "@/helpers/timeAgo";
@@ -39,13 +36,7 @@ const MensajesPrivados = () => {
 
   return (
     <>
-      <NavBar />
-
       <div className="flex min-h-screen relative">
-        <div className="hidden md:flex flex-col w-64 bg-white p-6 space-y-10 fixed left-6 top-1/2 transform -translate-y-1/2">
-          <Sidebar />
-        </div>
-
         <div className="flex-1 flex justify-center mt-20">
           <div className="w-full md:w-2/4 p-6">
             <nav className="h-16 flex justify-center items-center">
@@ -167,9 +158,7 @@ const MensajesPrivados = () => {
           </div>
         </div>
 
-        <div className="hidden md:flex flex-col w-80 space-y-6 absolute right-20 top-[45%] transform -translate-y-1/2">
-          <Conectados />
-        </div>
+
       </div>
     </>
   );

@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useContext } from "react";
 import { UserContext } from "@/context/UserContext";
-import NavBar from "@/components/NavBar";
 import { showCustomToast } from "@/components/Notificacion";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -85,7 +84,6 @@ export default function PaymentGateway() {
   if (userData?.user_type === "premium") {
     return (
       <div>
-        <NavBar />
         <div className="min-h-screen flex justify-center items-center p-4">
           <div className="w-full max-w-lg p-6 bg-white rounded-lg flex flex-col gap-4 shadow-xl border">
             <h2 className="text-2xl font-bold text-center mb-6">
@@ -129,7 +127,6 @@ export default function PaymentGateway() {
 
   return (
     <div>
-      <NavBar />
       <div className="min-h-screen flex justify-center items-center p-4">
         <div className="w-full max-w-lg p-6 bg-white rounded-lg flex flex-col gap-8 shadow-lg">
           <h2 className="text-2xl font-bold text-center mb-6">

@@ -2,9 +2,6 @@
 
 import React, { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Conectados from "@/components/Conectados";
-import Sidebar from "@/components/Sidebar";
-import NavBar from "@/components/NavBar";
 import { Post } from "@/interfaces/types";
 import Image from "next/image";
 import { UserContext } from "@/context/UserContext";
@@ -18,6 +15,7 @@ import {
 } from "@fortawesome/free-regular-svg-icons";
 import VerifiedAccount from "@/components/VerifiedAccount";
 import Link from "next/link";
+
 
 const Publicacion = ({
 	params,
@@ -34,8 +32,6 @@ const Publicacion = ({
 	const [reaction, setReaction] = useState(false);
 	const [showDropdown, setShowDropdown] = useState(false);
 	const [isUser, setIsUser] = useState(false);
-	// const [comments, setComments] = useState<Comment[]>([]);
-
 
 	useEffect(() => {
 		const fetchParams = async () => {
@@ -141,31 +137,40 @@ const Publicacion = ({
 	};
 
 	useEffect(() => {
-		if (userData?.username === post?.user.username) {
+		if (
+		  userData?.username === post?.user.username 
+		) {
 		  setIsUser(true);
 		} else {
 		  setIsUser(false);
 		}
-	  }, [userData, post]); 
-	  
+	  }, [userData, post, comment]);
+
 	  const handleDeleteComment = async (id: string) => {
 		try {
-		  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/comments/${id}`, {
-			method: 'DELETE',
-		  });
-	  
-		  if (!response.ok) {
-			throw new Error('Error al eliminar el comentario');
-		  }
-	  
-		//   setComments(prevComments => prevComments.filter(comment => comment.id !== id));
-	  
-		  console.log('Comentario eliminado con éxito');
-		
+			const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/comments/${id}`, {
+				method: "DELETE",
+			});
+	
+			if (!response.ok) {
+				throw new Error("Error al eliminar el comentario");
+			}
+	
+			setPost((prevPost) =>
+				prevPost
+					? {
+							...prevPost,
+							comments: prevPost.comments.filter((comment) => comment.id !== id),
+					  }
+					: prevPost
+			);
+	
+			showCustomToast("Snappy", "Comentario eliminado con éxito", "success");
 		} catch (error) {
-		  console.error('Hubo un problema al eliminar el comentario:', error);
+			console.error("Hubo un problema al eliminar el comentario:", error);
 		}
-	  };
+	};
+	
 	  
 	  
 
@@ -244,13 +249,8 @@ const Publicacion = ({
 
 	return (
 		<>
-			<NavBar />
 			<div className="flex flex-row">
-				<div className="hidden md:flex flex-col w-64 bg-white p-6 space-y-10 fixed left-6 top-1/2 transform -translate-y-1/2">
-					<Sidebar />
-				</div>
-
-				<div className="flex-1 flex flex-col items-center max-w-6xl px-4 md:px-8 mt-10 mx-auto">
+			<div className="flex-1 flex flex-col items-center max-w-6xl px-4 md:px-8 mt-10 mx-auto">
 					<div className="w-full max-w-md space-y-4">
 						<div className="flex items-center justify-between">
 							<div className="flex items-center">
@@ -369,8 +369,8 @@ const Publicacion = ({
 									<div key={comment.id} className="flex items-start space-x-4">
 										<div className="relative w-8 h-8">
 											<Image
-												src={comment.user.profile_image}
-												alt={comment.user.username}
+												src={comment?.user?.profile_image}
+												alt={comment?.user?.username}
 												layout="fill"
 												className="rounded-full object-cover"
 											/>
@@ -378,8 +378,8 @@ const Publicacion = ({
 										<div className="flex flex-row w-full justify-between">
 										<div className="flex flex-col">
 											<p className="font-semibold text-sm">
-												{comment.user.username}{" "}
-												{comment.user.user_type === "premium" ? (
+												{comment?.user?.username}{" "}
+												{comment?.user?.user_type === "premium" ? (
 													<VerifiedAccount />
 												) : (
 													""
@@ -407,9 +407,6 @@ const Publicacion = ({
 					</div>
 				</div>
 
-				<div className="hidden md:flex flex-col w-80 space-y-6 absolute right-20 top-1/2 transform -translate-y-1/2">
-					<Conectados />
-				</div>
 			</div>
 
 			{showDeleteModal && (
