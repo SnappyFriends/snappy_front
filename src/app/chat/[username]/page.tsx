@@ -196,7 +196,11 @@ const ChatWithUser = () => {
 
                           <p className="text-base mb-1">{uniqueMsg.content}</p>
 
-                          <p>{timeAgo(uniqueMsg.send_date)}</p>
+                          <p className="text-xs text-gray-500">
+                            {timeAgo(
+                              new Date(uniqueMsg.send_date).toISOString()
+                            )}
+                          </p>
                         </div>
                       </div>
                     );

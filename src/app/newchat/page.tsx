@@ -106,7 +106,7 @@ const ChatView = () => {
     };
 
     try {
-      const sendDate = timeAgo(new Date().toISOString());
+      const sendDate = new Date();
 
       const messagesData = {
         username: userData.username,
@@ -236,22 +236,42 @@ const ChatView = () => {
 
                       const divContainer = isSender ? (
                         <div
-                          className="text-right"
+                          className="flex mb-4 justify-end"
                           key={`${uniqueMsg.sender_id}-${index}`}
                         >
-                          <div className="p-2 bg-blue-100 rounded-lg my-2">
-                            <p>{uniqueMsg.username}</p>
-                            <p>{uniqueMsg.content}</p>
+                          <div className="max-w-xs p-3 rounded-lg shadow-md bg-blue-100 text-right">
+                            <p className="text-sm font-bold mb-1">
+                              {isSender
+                                ? "Tú"
+                                : uniqueMsg.username || "Desconocido"}
+                            </p>
+                            <p className="text-base mb-1">
+                              {uniqueMsg.content}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {timeAgo(
+                                new Date(uniqueMsg.send_date).toISOString()
+                              )}
+                            </p>
                           </div>
                         </div>
                       ) : (
                         <div
-                          className="text-left"
+                          className="flex mb-4 justify-start"
                           key={`${uniqueMsg.sender_id}-${index}`}
                         >
-                          <div className="p-2 bg-blue-100 rounded-lg my-2">
-                            <p>{uniqueMsg.username}</p>
-                            <p>{uniqueMsg.content}</p>
+                          <div className="max-w-xs p-3 rounded-lg shadow-md bg-gray-200 text-left">
+                            <p className="text-sm font-bold mb-1">
+                              {uniqueMsg.username || "Desconocido"}
+                            </p>
+                            <p className="text-base mb-1">
+                              {uniqueMsg.content}
+                            </p>
+                            <p className="text-xs text-gray-500">
+                              {timeAgo(
+                                new Date(uniqueMsg.send_date).toISOString()
+                              )}
+                            </p>
                           </div>
                         </div>
                       );

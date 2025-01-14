@@ -82,69 +82,85 @@ const MensajesPrivados = () => {
                     No tienes mensajes aún
                   </p>
                 ) : (
-                  chats.map((chat) => {
-                    const currentUserId = userData?.id;
+                  chats
+                    .sort((a, b) => {
+                      const lastMessageA =
+                        a.messages.length > 0
+                          ? a.messages[a.messages.length - 1]
+                          : null;
+                      const lastMessageB =
+                        b.messages.length > 0
+                          ? b.messages[b.messages.length - 1]
+                          : null;
+                      if (!lastMessageA || !lastMessageB) return 0;
+                      return (
+                        new Date(lastMessageB.send_date).getTime() -
+                        new Date(lastMessageA.send_date).getTime()
+                      );
+                    })
+                    .map((chat) => {
+                      const currentUserId = userData?.id;
 
-                    const receiver = chat.participants.find(
-                      (participant) => participant.id !== currentUserId
-                    );
+                      const receiver = chat.participants.find(
+                        (participant) => participant.id !== currentUserId
+                      );
 
-                    if (!receiver) return null;
+                      if (!receiver) return null;
 
-                    const sortedMessages = [...chat.messages].sort(
-                      (a, b) =>
-                        new Date(b.send_date).getTime() -
-                        new Date(a.send_date).getTime()
-                    );
+                      const sortedMessages = [...chat.messages].sort(
+                        (a, b) =>
+                          new Date(b.send_date).getTime() -
+                          new Date(a.send_date).getTime()
+                      );
 
-                    const lastMessage =
-                      sortedMessages.length > 0 ? sortedMessages[0] : null;
+                      const lastMessage =
+                        sortedMessages.length > 0 ? sortedMessages[0] : null;
 
-                    return (
-                      <section
-                        key={chat.id}
-                        className="h-20 flex justify-between items-center px-4 border-b border-[#EEEEEE]"
-                      >
-                        <Link
-                          href={`/chat/${receiver.username}`}
-                          className="flex items-center w-full"
+                      return (
+                        <section
+                          key={chat.id}
+                          className="h-20 flex justify-between items-center px-4 border-b border-[#EEEEEE]"
                         >
-                          <div className="flex space-x-4 items-center w-full">
-                            <div>
-                              <Image
-                                src={
-                                  receiver.profile_image || "/agregarfoto.png"
-                                }
-                                width={64}
-                                height={64}
-                                alt="fotodeperfil"
-                                className="rounded-full w-16 h-16 object-cover"
-                              />
-                            </div>
-                            <div className="flex-grow">
-                              <h2 className="font-bold text-sm text-gray-900">
-                                {receiver.username}
-                              </h2>
-                              <p className="text-xs text-gray-500">
+                          <Link
+                            href={`/chat/${receiver.username}`}
+                            className="flex items-center w-full"
+                          >
+                            <div className="flex space-x-4 items-center w-full">
+                              <div>
+                                <Image
+                                  src={
+                                    receiver.profile_image || "/agregarfoto.png"
+                                  }
+                                  width={64}
+                                  height={64}
+                                  alt="fotodeperfil"
+                                  className="rounded-full w-16 h-16 object-cover"
+                                />
+                              </div>
+                              <div className="flex-grow">
+                                <h2 className="font-bold text-sm text-gray-900">
+                                  {receiver.username}
+                                </h2>
+                                <p className="text-xs text-gray-500">
+                                  {lastMessage
+                                    ? lastMessage.content
+                                    : "Sin mensajes aún"}
+                                </p>
+                              </div>
+                              <div className="text-sm text-gray-500">
                                 {lastMessage
-                                  ? lastMessage.content
-                                  : "Sin mensajes aún"}
-                              </p>
+                                  ? timeAgo(
+                                      new Date(
+                                        lastMessage.send_date
+                                      ).toISOString()
+                                    )
+                                  : ""}
+                              </div>
                             </div>
-                            <div className="text-sm text-gray-500">
-                              {lastMessage
-                                ? timeAgo(
-                                    new Date(
-                                      lastMessage.send_date
-                                    ).toISOString()
-                                  )
-                                : ""}
-                            </div>
-                          </div>
-                        </Link>
-                      </section>
-                    );
-                  })
+                          </Link>
+                        </section>
+                      );
+                    })
                 )}
               </div>
             </main>
