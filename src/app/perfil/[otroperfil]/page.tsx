@@ -196,15 +196,13 @@ const ProfileView = ({
 
 	useEffect(() => {
 		if (userTargetData && userData) {
-			if (userTargetData.followers && userTargetData.followers.length > 0) {
-				const isFollowing = userTargetData.followers.some((follower) => {
-					return follower.follower.id = userData.id;
-				});
+			const isFollowing = userTargetData.followers.some((follower) => {
+				return (follower.follower.id === userData.id);
+			});
 
-				console.log("userTargetData 2: ", userTargetData.followers);
-				if (isFollowing) setFollowingState(true);
-				console.log("isFollowing?: ", isFollowing);
-			}
+			console.log("userTargetData 2: ", userTargetData.followers);
+			if (isFollowing) setFollowingState(true);
+			console.log("isFollowing?: ", isFollowing);
 		}
 	}, [userTargetData, userData]);
 
