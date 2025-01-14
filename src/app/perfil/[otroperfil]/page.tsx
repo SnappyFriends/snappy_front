@@ -87,7 +87,7 @@ const ProfileView = ({
 				};
 			});
 
-			console.log("userTargetData 1: ", userTargetData.followers);
+			if(userTargetData) console.log("userTargetData 1: ", userTargetData.followers);
 
 			userData?.following.push({
 				id: userTargetData?.id || "",
