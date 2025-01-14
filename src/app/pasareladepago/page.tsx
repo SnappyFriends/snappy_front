@@ -84,8 +84,8 @@ export default function PaymentGateway() {
 
   if (userData?.user_type === "premium") {
     return (
-      <div >
-        <div className="w-full flex justify-center items-center">
+      <div className="mt-24">
+        <div className="w-full flex justify-center items-center p-8">
           <div className="w-full max-w-lg p-6 bg-white rounded-lg flex flex-col shadow-xl border">
             <h2 className="text-2xl font-bold text-center mb-6">
               Historial de compras
@@ -127,8 +127,8 @@ export default function PaymentGateway() {
   }
 
   return (
-      <div className="flex justify-center items-center w-2/3 p-4">
-        <div className="w-full bg-white rounded-lg flex flex-col shadow-lg">
+      <div className="flex justify-center items-center w-2/3 ">
+        <div className="w-full bg-white rounded-lg flex flex-col shadow-lg p-4">
           <h2 className="text-2xl font-bold text-center mb-6">
             Selecciona la duración de tu suscripción
           </h2>
