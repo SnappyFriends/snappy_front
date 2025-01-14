@@ -141,7 +141,7 @@ const ChatView = () => {
       const getDistance = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/users/${userData?.id}/distance/${newRandomUser.id}`,
         )
-        const distanceData= await getDistance.json()
+        const distanceData= await getDistance.text()
         console.log(distanceData)
         setDistance(distanceData)
 
