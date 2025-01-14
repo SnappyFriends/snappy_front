@@ -75,7 +75,7 @@ export interface IUserData {
   posts: { post_id: string; fileUrl: string }[];
   following: { id: string; username: string; profile_image: string }[];
   followers: { id: string; username: string; profile_image: string }[];
-  group_role?: "MEMBER" | "ADMIN";
+  group_role: "MEMBER" | "ADMIN";
 }
 
 export interface IUserSearch {
