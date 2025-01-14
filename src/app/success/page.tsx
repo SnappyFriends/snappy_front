@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -81,4 +81,10 @@ const SubscriptionSuccess = () => {
 	);
 };
 
-export default SubscriptionSuccess;
+export default function SubscriptionSuccessPage() {
+	return (
+		<Suspense fallback={<div>Cargando...</div>}>
+			<SubscriptionSuccess />
+		</Suspense>
+	);
+}
