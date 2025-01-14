@@ -293,12 +293,7 @@ const ProfileView = ({
             >
               Enviar mensaje
             </Link>
-            <Link
-              href="/inprogress"
-              className="px-4 py-2 text-white bg-black hover:bg-gray-800 rounded-md"
-            >
-              Pregunta anónima
-            </Link>
+         
             <button
               onClick={handleOpenReportModal}
               className="px-4 py-2 text-white bg-red-500 hover:bg-red-600 rounded-md"
