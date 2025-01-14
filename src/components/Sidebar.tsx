@@ -9,6 +9,7 @@ const Sidebar = () => {
           href="/miperfil"
           className="flex items-center space-x-4 cursor-pointer hover:text-blue-500"
         >
+          
           <Image src="/usuario.png" alt="Perfil" width={24} height={24} />
           <span>Perfil</span>
         </Link>
