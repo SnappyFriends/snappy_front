@@ -62,24 +62,10 @@ const ActivityView = () => {
   }
 
   return (
-    <div>
-      <NavBar />
-	return (
-		<div>
-
-      <div className="flex min-h-screen">
-        <div className="hidden md:flex flex-col w-64 bg-white p-6 space-y-10 fixed left-6 top-1/2 transform -translate-y-1/2">
-          <Sidebar />
-        </div>
-
-        <div className="flex-1 flex justify-center items-start px-4 md:ml-64 lg:mr-64 pt-20">
+      <div className="w-full ">
+        <div className="flex-1 flex justify-center items-start px-4 w-full pt-20">
           <div className="w-full max-w-2xl bg-white rounded-lg p-6">
             <h1 className="text-2xl font-bold text-center mb-4">Actividad</h1>
-			<div className="flex min-h-screen">
-				
-				<div className="flex-1 flex justify-center items-start px-4 md:ml-64 lg:mr-64 pt-20">
-					<div className="w-full max-w-2xl bg-white rounded-lg p-6">
-						<h1 className="text-2xl font-bold text-center mb-4">Actividad</h1>
 
             <div className="flex justify-center flex-wrap gap-4 mb-6">
               {categories.map((category) => (
@@ -137,12 +123,7 @@ const ActivityView = () => {
             </div>
           </div>
         </div>
-
-        <div className="hidden md:flex flex-col w-80 space-y-6 absolute right-20 mt-40 ">
-          <Conectados />
         </div>
-      </div>
-    </div>
   );
 };
 

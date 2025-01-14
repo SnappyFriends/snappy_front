@@ -189,11 +189,11 @@ const ChatView = () => {
   };
 
   return (
-    <div>
+    <div className="w-full">
     
-      <div className="flex items-center justify-center mt-10 mb-5 ">
-        <div className="bg-white rounded-lg shadow-md w-1/2 max-w-lg relative">
-          <div className="flex items-center justify-between px-4 py-3 border-b">
+      <div className="flex items-center justify-center mt-10 mb-5">
+        <div className="bg-white rounded-lg shadow-md w-full max-w-lg relative p-4">
+          <div className="flex items-center justify-between border-b">
             <div className="flex items-center">
               <div className="relative w-12 h-12">
                 <Image
@@ -203,7 +203,7 @@ const ChatView = () => {
                   className="rounded-full object-cover"
                 />
               </div>
-              <div className="ml-3">
+              <div className="">
                 {loading ? (
                   <p className="text-gray-500">Cargando usuario...</p>
                 ) : randomUser ? (

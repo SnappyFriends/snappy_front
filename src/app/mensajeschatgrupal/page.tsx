@@ -1,9 +1,6 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
-import NavBar from "@/components/NavBar";
-import Conectados from "@/components/Conectados";
-import Sidebar from "@/components/Sidebar";
 import { GroupChatsBeta } from "@/interfaces/types";
 import { UserContext } from "@/context/UserContext";
 import { timeAgo } from "@/helpers/timeAgo";
