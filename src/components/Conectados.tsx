@@ -82,7 +82,7 @@ const Conectados: React.FC = () => {
                   </div>
                   <div>
                     <span
-                      className={`w-3 h-3 rounded-full block ${
+                      className={`w-3 h-3 rounded-full block ml-2 ${
                         friend.isOnline ? "bg-green-500" : "bg-gray-400"
                       }`}
                     ></span>

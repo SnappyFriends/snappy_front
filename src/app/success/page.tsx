@@ -46,7 +46,7 @@ const SubscriptionSuccess = () => {
 	}, [sessionId]);
 
 	return (
-		<div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4 sm:p-6 md:p-8">
+		<div className="flex flex-col items-center justify-center min-h-screen p-4 sm:p-6 md:p-8">
 			<Image src="/favicon.ico" alt="snappy" width={150} height={150} />
 
 			<h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mt-8 text-center">
