@@ -26,6 +26,7 @@ interface IUserAPIResponse {
 }
 
 const ChatView = () => {
+  const [distance,setDistance] = useState<string>("")
   const [userList, setUserList] = useState<IUserAPIResponse[]>([]);
   const [randomUser, setRandomUser] = useState<IUserAPIResponse | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -129,13 +130,18 @@ const ChatView = () => {
     }
   };
 
-  const handleSnappear = () => {
+  const handleSnappear =  async () => {
     if (userList.length > 0) {
       const newRandomUser =
         userList[Math.floor(Math.random() * userList.length)];
       setRandomUser(newRandomUser);
       setMessages([]);
 
+      const getDistance = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/users/${userData?.id}/distance/${newRandomUser.id}`,
+        )
+        const distanceData= await getDistance.json()
+        setDistance(distanceData)
       if (sentRequests.has(newRandomUser.id)) {
         setIsRequestSent(true);
       } else {
@@ -208,8 +214,9 @@ const ChatView = () => {
                         @{randomUser.username}
                       </Link>
                     </h1>
+
                     <p className="text-sm text-gray-500">
-                      {randomUser.fullname}
+                      {randomUser.fullname} - {distance}
                     </p>
                   </>
                 ) : (
