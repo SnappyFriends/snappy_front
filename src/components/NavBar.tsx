@@ -42,6 +42,7 @@ export default function NavBar() {
 
 	const handleLogout = () => {
 		Cookies.remove("auth_token");
+		Cookies.remove("user_type");
 		localStorage.removeItem("userId");
 		localStorage.removeItem("users");
 		setToken(null);
