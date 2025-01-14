@@ -61,6 +61,7 @@ const ChatView = () => {
         const users: IUserAPIResponse[] = await snappUsers(userId);
 
         setUserList(users);
+        
       } catch (error) {
         console.error("Error al obtener usuarios:", error);
       } finally {
@@ -141,7 +142,9 @@ const ChatView = () => {
         `${process.env.NEXT_PUBLIC_API_URL}/users/${userData?.id}/distance/${newRandomUser.id}`,
         )
         const distanceData= await getDistance.json()
+        console.log(distanceData)
         setDistance(distanceData)
+
       if (sentRequests.has(newRandomUser.id)) {
         setIsRequestSent(true);
       } else {
