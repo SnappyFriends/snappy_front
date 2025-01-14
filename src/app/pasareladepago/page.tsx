@@ -127,7 +127,7 @@ export default function PaymentGateway() {
   }
 
   return (
-      <div className="flex justify-center items-center w-full">
+      <div className="flex justify-center items-center w-2/3 p-4">
         <div className="w-full bg-white rounded-lg flex flex-col shadow-lg">
           <h2 className="text-2xl font-bold text-center mb-6">
             Selecciona la duración de tu suscripción
