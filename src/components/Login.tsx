@@ -34,10 +34,16 @@ export default function LoginComponent() {
   const onSubmit = async (data: IFormDataLogin) => {
     try {
       const resultado = await loginUser(data);
-      const { token, userId } = resultado;
+      const { token, userId, user_type } = resultado;
 
       if (token) {
         Cookies.set("auth_token", token, {
+          expires: 1,
+          path: "/",
+          secure: true,
+          sameSite: "None",
+        });
+        Cookies.set("user_type", user_type, {
           expires: 1,
           path: "/",
           secure: true,
@@ -157,8 +163,14 @@ export default function LoginComponent() {
                           }
 
                           if (responseData.token) {
-                            const { token, userId } = responseData;
+                            const { token, userId, user_type } = responseData;
                             Cookies.set("auth_token", token, {
+                              expires: 1,
+                              path: "/",
+                              secure: true,
+                              sameSite: "None",
+                            });
+                            Cookies.set("user_type", user_type, {
                               expires: 1,
                               path: "/",
                               secure: true,

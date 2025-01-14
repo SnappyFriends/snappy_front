@@ -54,7 +54,7 @@ const MensajesGrupales = () => {
   return (
     <>
 
-      <div className="flex min-h-screen relative">
+      <div className="flex min-h-screen relative w-full">
 
         {isGoingToAdd ? (
           <CreateChatGroupForm />

@@ -4,6 +4,7 @@ import type { NextRequest } from "next/server";
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const isLoggedIn = req.cookies.get("auth_token");
+  const userType = req.cookies.get("user_type");
 
   if (
     !isLoggedIn &&
@@ -26,6 +27,14 @@ export function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/socialfeed", req.url));
   }
 
+  if (
+    pathname.startsWith("/dashboard") &&
+    userType &&
+    userType.value !== "admin"
+  ) {
+    return NextResponse.redirect(new URL("/socialfeed", req.url));
+  }
+
   return NextResponse.next();
 }
 
@@ -35,6 +44,7 @@ export const config = {
     "/register",
     "/terminos",
     "/socialfeed",
+    "/dashboard/:path*",
     "/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)",
   ],
 };

@@ -249,7 +249,7 @@ const Publicacion = ({
 
 	return (
 		<>
-			<div className="flex flex-row">
+			<div className="flex flex-row w-full">
 			<div className="flex-1 flex flex-col items-center max-w-6xl px-4 md:px-8 mt-10 mx-auto">
 					<div className="w-full max-w-md space-y-4">
 						<div className="flex items-center justify-between">
