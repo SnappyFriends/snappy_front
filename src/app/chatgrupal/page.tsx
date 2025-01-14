@@ -1,16 +1,12 @@
 "use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import Conectados from "@/components/Conectados";
-import NavBar from "@/components/NavBar";
-import Sidebar from "@/components/Sidebar";
 import { UserContext } from "@/context/UserContext";
 import { timeAgo } from "@/helpers/timeAgo";
 import { GroupChats, IGroupMessage, IUserData } from "@/interfaces/types";
 import Image from "next/image";
 import { useContext, useEffect, useRef, useState } from "react";
 import CreateChat from "../crearchatgrupal/page";
-
 import Cookies from "js-cookie";
 import { io, Socket } from "socket.io-client";
 import Link from "next/link";
@@ -33,15 +29,12 @@ const ChatRoomView = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isAdding, setIsAdding] = useState(false);
   const [hasGroupChats, setHasGroupChats] = useState<boolean>(false);
-
   const { userData, groupId, setGroupId } = useContext(UserContext);
   const [groupChat, setGroupChat] = useState<GroupChats | null>(null);
   const [message, setMessage] = useState("");
   const [groupMessages, setGroupMessages] = useState<IGroupMessage[]>([]);
-
   const [needsUpdate, setNeedsUpdate] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const token = Cookies.get("auth_token");
   const socketRef = useRef<Socket | null>(null);
 
@@ -245,13 +238,7 @@ const ChatRoomView = () => {
 
   return (
     <div className="min-h-screen">
-      <NavBar />
-
       <div className="flex flex-col lg:flex-row">
-        <div className="hidden lg:flex flex-col w-64 bg-white p-6 space-y-10 fixed left-6 top-1/2 transform -translate-y-1/2">
-          <Sidebar />
-        </div>
-
         {hasGroupChats ? (
           <div className="lg:w-1/2 md:w-full ml-0 lg:ml-80 mt-12 lg:mt-32 max-w-[1100px]">
             <div className="flex items-center justify-center h-auto relative">
@@ -261,7 +248,6 @@ const ChatRoomView = () => {
                     Miembros de la Sala
                   </h3>
 
-                  {/* Miembros de la sala */}
                   <div className="space-y-4">
                     {members.map((member, index) => (
                       <div
@@ -296,7 +282,6 @@ const ChatRoomView = () => {
                     Agregar Miembro
                   </button>
 
-                  {/* Agregar miembros al grupo */}
                   {isAdding && (
                     <div className="mt-4 max-h-60 overflow-y-auto bg-gray-50 p-4 rounded-lg">
                       <h4 className="text-lg font-semibold mb-3">
@@ -336,7 +321,6 @@ const ChatRoomView = () => {
                 </div>
 
                 <div className="lg:w-3/4 sm:w-full px-4 py-6 flex flex-col bg-gray-50 h-[calc(100vh-200px)] overflow-y-auto">
-                  {/* Información del grupo */}
                   <div className="flex items-center justify-between border-b pb-4">
                     <div className="flex items-center">
                       <div className="relative w-12 h-12">
@@ -358,7 +342,6 @@ const ChatRoomView = () => {
                     </div>
                   </div>
 
-                  {/* Historial de mensajes */}
                   <div className="flex-1 overflow-y-auto mt-4 px-4 py-3 bg-white rounded-lg">
                     {groupChat ? (
                       groupMessages.length > 0 ? (
@@ -399,7 +382,6 @@ const ChatRoomView = () => {
                     )}
                   </div>
 
-                  {/* Input para mandar mensajito */}
                   <div className="px-4 py-3 border-t flex items-center space-x-3">
                     <input
                       value={message}
@@ -416,7 +398,6 @@ const ChatRoomView = () => {
                     </button>
                   </div>
 
-                  {/* Botón y Modal para eliminar grupo */}
                   <button
                     onClick={openModal}
                     className="bg-red-500 text-white px-4 py-2 rounded-lg text-sm mt-4 hover:bg-red-600 transition"
@@ -457,9 +438,6 @@ const ChatRoomView = () => {
           <CreateChat />
         )}
 
-        <div className="hidden lg:flex flex-col w-80 space-y-6 absolute right-20 top-1/2 transform -translate-y-1/2">
-          <Conectados />
-        </div>
       </div>
     </div>
   );

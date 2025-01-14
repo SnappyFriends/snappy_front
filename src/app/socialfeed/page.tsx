@@ -1,10 +1,7 @@
 "use client";
 import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
-import Conectados from "@/components/Conectados";
-import Sidebar from "@/components/Sidebar";
 import Link from "next/link";
-import NavBar from "@/components/NavBar";
 import { Post } from "@/interfaces/types";
 import { UserContext } from "@/context/UserContext";
 import { timeAgo } from "@/helpers/timeAgo";
@@ -241,11 +238,6 @@ const SocialFeedView = () => {
 
   return (
     <>
-      <NavBar />
-      <div className="flex flex-row">
-        <div className="hidden md:flex flex-col w-64 bg-white p-6 space-y-10 fixed left-6 top-1/2 transform -translate-y-1/2">
-          <Sidebar />
-        </div>
 
         <div className="flex-1 flex flex-col items-center max-w-6xl px-4 md:px-8 mt-10 mx-auto">
           <div className="flex justify-center space-x-6 mb-6">
@@ -460,14 +452,16 @@ const SocialFeedView = () => {
                 </button>
               </div>
               <div className="mt-4 flex flex-col items-center text-center">
-                <h3 className="text-lg font-bold">
-                  {selectedStory.user.username}{" "}
-                  {selectedStory.user.user_type === "premium" ? (
-                    <VerifiedAccount />
-                  ) : (
-                    ""
-                  )}
-                </h3>
+              <Link href={`/perfil/${userData?.username}`}>
+  <h3 className="text-lg font-bold">
+    {selectedStory.user.username}{" "}
+    {selectedStory.user.user_type === "premium" ? (
+      <VerifiedAccount />
+    ) : (
+      ""
+    )}
+  </h3>
+</Link>
                 <p className="text-sm text-gray-500 mb-2">
                   {timeAgo(selectedStory.creation_date)}
                 </p>
@@ -476,11 +470,6 @@ const SocialFeedView = () => {
             </div>
           </div>
         )}
-
-        <div className="hidden md:flex flex-col w-80 space-y-6 absolute right-20 top-1/2 transform -translate-y-1/2">
-          <Conectados />
-        </div>
-      </div>
     </>
   );
 };

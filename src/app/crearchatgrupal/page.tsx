@@ -15,7 +15,6 @@ const CreateChat = () => {
         <div className="flex-1 flex items-center justify-center mt-32">
           <div className="bg-white p-6 rounded-lg shadow-md max-w-md text-center">
             <div className="mb-6">
-              {/* Icono que puedes agregar */}
               <Image
                 src="/mas-crear-chat-grupal.png"
                 alt="Crear Chat"

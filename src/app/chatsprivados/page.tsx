@@ -1,20 +1,11 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import Conectados from "@/components/Conectados";
-import Sidebar from "@/components/Sidebar";
-import NavBar from "@/components/NavBar";
 
 export default function MensajesPrivados() {
   return (
     <>
-      <NavBar />
       <div className="flex min-h-screen relative">
-        
-        <div className="hidden md:flex flex-col w-64 bg-white p-6 space-y-10 fixed left-6 top-1/2 transform -translate-y-1/2">
-          <Sidebar />
-        </div>
-
         <div className="flex-1 flex justify-center mt-20">
           <div className="w-full md:w-2/4 p-6">
             
@@ -75,9 +66,7 @@ export default function MensajesPrivados() {
           </div>
         </div>
 
-        <div className="hidden md:flex flex-col w-80 space-y-6 absolute right-20 top-40">
-          <Conectados />
-        </div>
+    
       </div>
     </>
   );

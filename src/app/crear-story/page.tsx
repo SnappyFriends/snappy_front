@@ -5,7 +5,6 @@ import Sidebar from "@/components/Sidebar";
 import React, { useState, useContext } from "react";
 import { UserContext } from "@/context/UserContext";
 import { useRouter } from "next/navigation";
-import Conectados from "@/components/Conectados";
 import { showCustomToast } from "@/components/Notificacion";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -65,8 +64,6 @@ const CrearStory = () => {
 
   return (
     <>
-      <NavBar />
-      <Sidebar />
 
       <div className="max-w-md mx-auto mt-10 p-4 border rounded shadow-lg">
         <h2 className="text-2xl font-bold mb-4">Crear Snappy Moment</h2>
@@ -102,9 +99,7 @@ const CrearStory = () => {
         {mensaje && (
           <p className="mt-4 text-center text-sm text-red-500">{mensaje}</p>
         )}
-        <div className="hidden md:flex flex-col w-80 space-y-6 absolute right-20 top-1/2 transform -translate-y-1/2">
-          <Conectados />
-        </div>
+      
       </div>
     </>
   );
