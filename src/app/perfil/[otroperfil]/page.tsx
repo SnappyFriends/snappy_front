@@ -200,9 +200,7 @@ const ProfileView = ({
 				return (follower.follower.id === userData.id);
 			});
 
-			console.log("userTargetData 2: ", userTargetData.followers);
 			if (isFollowing) setFollowingState(true);
-			console.log("isFollowing?: ", isFollowing);
 		}
 	}, [userTargetData, userData]);
 
