@@ -84,9 +84,7 @@ const CrearStory = () => {
         <h2 className="text-2xl font-bold mb-4">Crear Snappy Moment</h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <label className="p-2 border rounded flex flex-col items-start">
-            <span className="mb-2 text-sm">
-              Sube tu archivo (imagen o video):
-            </span>
+          
             <input
               type="file"
               accept="image/*,video/*" 

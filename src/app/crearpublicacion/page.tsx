@@ -82,6 +82,15 @@ const CrearPublicacion = () => {
 			<div className="max-w-md mx-auto mt-10 p-4 border rounded shadow-lg">
 				<h2 className="text-2xl font-bold mb-4">Crear Snappy Post</h2>
 				<form onSubmit={handleSubmit} className="flex flex-col gap-4">
+				<input
+						type="file"
+						name="fileImg"
+						id="fileImg"
+						onChange={handleFileChange}
+						className="p-2 border rounded"
+						accept="image/*" 
+					/>
+
 					<textarea
 						className="p-2 border rounded"
 						placeholder="Escribe tu publicación aquí..."
@@ -90,15 +99,7 @@ const CrearPublicacion = () => {
 						required
 					></textarea>
 
-					<input
-						type="file"
-						name="fileImg"
-						id="fileImg"
-						onChange={handleFileChange}
-						className="p-2 border rounded"
-						accept="image/*" // Acepta solo imágenes
-					/>
-
+				
 					
 					{preview && (
 						<div className="w-full flex justify-center mb-4">
@@ -118,7 +119,7 @@ const CrearPublicacion = () => {
 						type="submit"
 						className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition"
 					>
-						Publicar
+						Subir Post
 					</button>
 				</form>
 			</div>
