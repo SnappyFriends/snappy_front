@@ -36,9 +36,9 @@ const MensajesPrivados = () => {
 
   return (
     <>
-      <div className="flex min-h-screen relative">
-        <div className="flex-1 flex justify-center mt-20">
-          <div className="w-full md:w-2/4 p-6">
+      <div className="flex w-full relative">
+        <div className="flex-1 flex justify-center mt-20 w-full">
+          <div className="w-full md:w-2/4 ">
             <nav className="h-16 flex justify-center items-center">
               <form className="w-full flex">
                 <input
