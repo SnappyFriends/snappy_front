@@ -285,7 +285,7 @@ const ChatRoomView = ({ searchParams }: any) => {
           <div className="lg:w-full md:w-full ml-0 lg:mt-12 max-w-[1100px]">
             <div className="flex w-full items-center justify-center h-auto relative">
               <div className="flex w-full max-w-6xl rounded-lg bg-white shadow-md">
-                <div className="lg:w-1/4 sm:w-full md:w-full h-[calc(100vh-200px)] border-r  py-6 bg-gray-100 overflow-y-auto flex flex-col justify-between">
+                <div className="lg:w-1/4 sm:w-full md:w-full h-[calc(100vh-200px)] border-r  py-6 px-6 bg-gray-100 overflow-y-auto flex flex-col justify-between">
                   <div>
                     <h3 className="text-xl font-semibold mb-4">
                       Miembros de la Sala
@@ -386,7 +386,7 @@ const ChatRoomView = ({ searchParams }: any) => {
                           <div key={123123123}>
                             <button
                               onClick={openModal}
-                              className="bg-red-500 text-white px-4 py-2 rounded-lg text-sm mt-4 hover:bg-red-600 transition w-full"
+                              className="bg-red-500 text-white px-2 py-2 rounded-lg text-sm mt-4 hover:bg-red-600 transition w-full"
                             >
                               Eliminar Grupo
                             </button>
