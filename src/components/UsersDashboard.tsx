@@ -103,21 +103,23 @@ export default function UsersDashboard() {
       </form>
 
       {metricsData && (
-        <div className="w-full max-w-2xl mb-16">
-          <h2 className="text-xl font-bold mb-4">Distribución de usuarios</h2>
-          <Pie
-            data={userTypeDistributionData}
-            options={{
-              responsive: true,
-              plugins: {
-                legend: { position: "top" },
-                title: {
-                  display: true,
-                  text: `Total de Usuarios: ${metricsData.totalUsers}`,
+        <div className="w-full md:w-1/2 p-4 mb-10">
+          <div className="rounded-xl shadow-lg p-6">
+            <h2 className="text-xl font-bold mb-4">Distribución de usuarios</h2>
+            <Pie
+              data={userTypeDistributionData}
+              options={{
+                responsive: true,
+                plugins: {
+                  legend: { position: "top" },
+                  title: {
+                    display: true,
+                    text: `Total de Usuarios: ${metricsData.totalUsers}`,
+                  },
                 },
-              },
-            }}
-          />
+              }}
+            />
+          </div>
         </div>
       )}
     </div>
