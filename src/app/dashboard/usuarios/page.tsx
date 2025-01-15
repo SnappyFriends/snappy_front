@@ -103,7 +103,7 @@ export default function Usuarios() {
 
   return (
     <>
-      <div className="flex justify-center w-[73rem]">
+      <div className="flex justify-center w-full">
         <div className="flex flex-col items-center w-full">
           <h1 className="text-center text-3xl font-bold mb-5">Usuarios</h1>
 

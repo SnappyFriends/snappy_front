@@ -178,7 +178,7 @@ const SearchBar: React.FC = () => {
 
 
 <button
-  className="w-full md:w-auto h-7 p-1 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition duration-300"
+  className=" md:w-auto h-8 px-1  bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition duration-300"
   onClick={handleSearchClick}
 >
   Buscar

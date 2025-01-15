@@ -60,13 +60,13 @@ const MensajesGrupales = () => {
         {isGoingToAdd ? (
           <CreateChatGroupForm />
         ) : (
-          <div className="flex-1 flex justify-center mt-20 w-full">
+          <div className="flex-1 flex justify-center mt-40 w-full">
             <div className="w-full md:w-3/4">
               {hasGroupChats && (
                 <nav className="h-16 flex flex-col justify-center items-center w-full">
                   <div
                     onClick={pushToCreateForm}
-                    className="flex items-center justify-center space-x-2 text-gray-800 hover:text-blue-500 transition"
+                    className="flex items-center justify-center space-x-2 text-gray-800 hover:text-blue-500 transition cursor-pointer p-8"
                     title="Ir al enlace"
                   >
                     <Image
@@ -89,7 +89,7 @@ const MensajesGrupales = () => {
                     Chats Grupales
                   </h2>
 
-                  {hasGroupChats === undefined ? (
+                  {!hasGroupChats ? (
                     <section className="h-20 flex justify-between items-center px-4 border-b border-[#EEEEEE] cursor-pointer hover:bg-gray-100 transition">
                       Loading...
                     </section>

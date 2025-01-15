@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function MiPerfil() {
   return (
-    <main className="bg-gray-500 flex flex-col items-center p-4 min-h-screen">
+    <main className="bg-gray-500 flex flex-col items-center p-4 min-h-screen ">
       {/* Contenedor principal del perfil */}
       <div className="bg-white w-[400px] rounded-lg shadow-md p-4">
         {/* Contenedor de la foto y datos básicos */}

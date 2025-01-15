@@ -239,13 +239,13 @@ const SocialFeedView = () => {
   return (
     <>
 
-        <div className="flex-1 flex flex-col items-center max-w-6xl px-4 md:px-8 mx-auto">
+        <div className="flex-1 flex flex-col items-center max-w-6xl px-4 md:px-8 mx-auto pt-40">
           <div className="flex justify-center space-x-6 mb-6">
             <div className="relative w-16 h-16 md:w-20 md:h-20">
               <button title="Ver mis historias">
                 <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden">
                   <Image
-                    src={userData?.profile_image || "/user.png"}
+                    src={userData?.profile_image || "/no_img.png"}
                     alt="Foto de perfil"
                     width={200}
                     height={200}
