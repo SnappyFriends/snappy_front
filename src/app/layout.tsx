@@ -5,7 +5,6 @@ import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { UserProvider } from "../context/UserContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import Footer from "@/components/Footer"; 
 import NavBar from "@/components/NavBar";
 import Sidebar from "@/components/Sidebar";
 import Conectados from "@/components/Conectados";
