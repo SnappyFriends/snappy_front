@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 import { getUsersSearchbar } from "@/helpers/users";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 interface SearchUser {
@@ -26,7 +25,6 @@ const SearchBar: React.FC = () => {
   const [interests, setInterests] = useState<Interest[]>([]);
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
   const [searched, setSearched] = useState<boolean>(false);
-  const router = useRouter();  // Usa el hook para detectar cambios en la URL
 
   useEffect(() => {
     const fetchInterests = async () => {
