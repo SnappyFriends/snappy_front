@@ -25,6 +25,7 @@ export default function RootLayout({
   const shouldRenderLayout = !(
     pathname?.includes("/dashboard") ||
     pathname?.includes("/register") ||
+    pathname?.includes("/completarregistro") ||
     pathname === "/"
   );
 
