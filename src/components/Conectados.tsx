@@ -58,7 +58,7 @@ const Conectados: React.FC = () => {
   });
 
   return (
-    <div className=" flex justify-center space-y-4 rounded-lg w-full mt-40">
+    <div className=" flex justify-center space-y-4 rounded-lg mt-40 fixed">
       {sortedFriends.length === 0 ? (
         <p className="text-gray-500 text-sm">
           No hay amigos disponibles en este momento.
