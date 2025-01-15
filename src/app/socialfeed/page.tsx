@@ -245,7 +245,7 @@ const SocialFeedView = () => {
               <button title="Ver mis historias">
                 <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden">
                   <Image
-                    src={userData?.profile_image || "/user.png"}
+                    src={userData?.profile_image || "/no_img.png"}
                     alt="Foto de perfil"
                     width={200}
                     height={200}
