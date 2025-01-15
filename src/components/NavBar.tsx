@@ -57,8 +57,8 @@ export default function NavBar() {
 	};
 
 	return (
-		<header className="shadow-md">
-			<nav className="px-4 sm:px-10 py-4 grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
+		<header className="">
+			<nav className="px-4 sm:px-10 py-2 grid grid-cols-1 sm:grid-cols-3 gap-4 items-center w-full fixed z-50 shadow-sm bg-white">
 				<div
 					id="logoynombre"
 					className="hidden sm:flex items-center justify-center sm:justify-start sm:col-span-1"
@@ -67,7 +67,7 @@ export default function NavBar() {
 						<Image
 							src="/favicon.ico"
 							width={60}
-							height={60}
+									height={60}
 							alt="snappy logo"
 						/>
 						<h1 className="font-bold text-2xl ml-2">SNAPPY FRIENDS</h1>
@@ -83,15 +83,16 @@ export default function NavBar() {
 					<ul className="flex space-x-4 sm:space-x-5 items-center">
 						<li>
 							<Link href="/socialfeed">
-								<Image src="/home.png" width={40} height={40} alt="home" />
+								<Image src="/home.png" width={35}
+									height={35} alt="home" />
 							</Link>
 						</li>
 						<li>
 							<Link href="/mensajesprivados">
 								<Image
 									src="/mensajes.png"
-									width={40}
-									height={40}
+									width={35}
+									height={35}
 									alt="chats privados"
 								/>
 							</Link>
@@ -100,8 +101,8 @@ export default function NavBar() {
 							<Link href="/newchat">
 								<Image
 									src="/snappear.png"
-									width={50}
-									height={40}
+									width={35}
+									height={35}
 									alt="snappear"
 								/>
 							</Link>
@@ -110,8 +111,8 @@ export default function NavBar() {
 							<Link href="/notificaciones" className="relative">
 								<Image
 									src="/bell.png"
-									width={40}
-									height={40}
+									width={35}
+									height={35}
 									alt="notificaciones"
 								/>
 								{!!unreadNotifications && (
@@ -128,9 +129,9 @@ export default function NavBar() {
 								aria-label="Toggle dropdown"
 							>
 								<Image
-									src="/user.png"
-									width={40}
-									height={40}
+									src={`${userData?.profile_image}`}
+									width={60}
+									height={60}
 									alt="foto de perfil"
 								/>
 							</button>
