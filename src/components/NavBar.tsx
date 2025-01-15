@@ -128,13 +128,15 @@ export default function NavBar() {
 								className="focus:outline-none"
 								aria-label="Toggle dropdown"
 							>
+								  <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden">
 								<Image
                     src={userData?.profile_image || "/no_img.png"}
 					width={60}
 									height={60}
 									alt="foto de perfil"
-									className="rounded-full"
-								/>
+									className="object-cover w-full h-full"
+									/>
+</div>
 							</button>
 							{isDropdownOpen && (
 								<div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
