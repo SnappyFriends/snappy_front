@@ -24,11 +24,6 @@ export default function RootLayout({
   const pathname = usePathname();
   const shouldRenderLayout = !(
     pathname?.includes("/dashboard") ||
-    pathname?.includes("/dashboard/usuarios") ||
-    pathname?.includes("/dashboard/publicaciones") ||
-    pathname?.includes("/dashboard/reportes") ||
-    pathname?.includes("/dashboard/suscripciones") ||
-    pathname?.includes("/dashboard/intereses") ||
     pathname?.includes("/register") ||
     pathname === "/"
   );
@@ -53,6 +48,7 @@ export default function RootLayout({
                     <Sidebar />
                   </aside>
                 )}
+                <main className="w-full flex justify-center">{children}</main>
                 <main className="w-full flex justify-center">{children}</main>
                 {shouldRenderLayout && (
                   <aside className="hidden md:block w-96 p-4 md:mr-4">
