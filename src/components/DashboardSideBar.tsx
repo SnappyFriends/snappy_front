@@ -10,7 +10,8 @@ const DashboardSidebar = () => {
 		"Publicaciones",
 		"Reportes",
 		"Suscripciones",
-		"Intereses"
+		"Intereses",
+		
 	];
 
 	const [isOpen, setIsOpen] = useState(false);
@@ -54,6 +55,9 @@ const DashboardSidebar = () => {
 							</li>
 						</Link>
 					</ul>
+					<p className="text-sm  text-white absolute bottom-0 pb-5 text-center w-full">
+          © {new Date().getFullYear()} Snappy Friends. <br />Todos los derechos reservados.
+        </p>	
 				</div>
 			</div>
 
@@ -96,10 +100,15 @@ const DashboardSidebar = () => {
 									Social Feed
 								</li>
 							</Link>
+							
 						</ul>
+						
 					</div>
 				)}
+					
+					
 			</div>
+			
 		</>
 	);
 };
