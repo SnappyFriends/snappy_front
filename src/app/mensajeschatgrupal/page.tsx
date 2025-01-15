@@ -11,6 +11,7 @@ import CreateChatGroupForm from "@/components/CrearChatGrupal";
 const MensajesGrupales = () => {
   const [groupChats, setGroupChats] = useState<GroupChatsBeta[]>();
   const [isGoingToAdd, setIsGoingToAdd] = useState(false);
+  const [hasGroupChats, setHasGroupChats] = useState(false);
 
   const { userData, setGroupId } = useContext(UserContext);
   const router = useRouter();
@@ -27,8 +28,10 @@ const MensajesGrupales = () => {
         const data = await response.json();
 
         if (Array.isArray(data) && data.length > 0) {
+          setHasGroupChats(true);
           setGroupChats(data);
         } else {
+          setHasGroupChats(false);
           console.error("No se encontraron chats grupales para este usuario");
         }
       } catch (error) {
@@ -53,54 +56,32 @@ const MensajesGrupales = () => {
 
   return (
     <>
-
       <div className="flex relative w-full">
-
         {isGoingToAdd ? (
           <CreateChatGroupForm />
         ) : (
           <div className="flex-1 flex justify-center mt-20 w-full">
             <div className="w-full md:w-3/4">
-              <nav className="h-16 flex flex-col justify-center items-center w-full">
-                <div
-                  onClick={pushToCreateForm}
-                  className="flex items-center justify-center space-x-2 text-gray-800 hover:text-blue-500 transition"
-                  title="Ir al enlace"
-                >
-                  <Image
-                    src="/mas.jpg"
-                    width={24}
-                    height={24}
-                    alt="Icono personalizado"
-                    className="cursor-pointer"
-                  />
-                  <span className="text-sm font-medium">
-                    Crear nuevo chat grupal
-                  </span>
-                </div>
-
-                {/* <form className="w-full flex">
-                  <input
-                    type="text"
-                    className="border border-gray-500 border-r-transparent rounded-full rounded-e-none h-10 w-full px-4"
-                    placeholder="Buscar chat grupal"
-                  />
-                  <button
-                    type="submit"
-                    className="border border-gray-500 h-10 w-11 border-l-transparent rounded-full rounded-s-none"
-                    aria-label="Buscar chat grupal"
-                    title="Buscar chat grupal"
+              {hasGroupChats && (
+                <nav className="h-16 flex flex-col justify-center items-center w-full">
+                  <div
+                    onClick={pushToCreateForm}
+                    className="flex items-center justify-center space-x-2 text-gray-800 hover:text-blue-500 transition"
+                    title="Ir al enlace"
                   >
                     <Image
-                      src="/lupa.png"
-                      width={20}
-                      height={20}
-                      alt="Buscar"
+                      src="/mas.jpg"
+                      width={24}
+                      height={24}
+                      alt="Icono personalizado"
                       className="cursor-pointer"
                     />
-                  </button>
-                </form> */}
-              </nav>
+                    <span className="text-sm font-medium">
+                      Crear nuevo chat grupal
+                    </span>
+                  </div>
+                </nav>
+              )}
 
               <main>
                 <div>
@@ -108,17 +89,11 @@ const MensajesGrupales = () => {
                     Chats Grupales
                   </h2>
 
-                  {groupChats === undefined ? (
-                    <>
-                      <section className="h-20 flex justify-between items-center px-4 border-b border-[#EEEEEE] cursor-pointer hover:bg-gray-100 transition">
-                        Loading...
-                      </section>
-                      {/* HACER EL MISMO HASGROUP CHATS QUE EN EL OTRO ARCHIVO */}
-                      <div>No existen chats grupales.</div>
-                    </>
-                  ) : groupChats.length === 0 ? (
-                    <CreateChat />
-                  ) : (
+                  {hasGroupChats === undefined ? (
+                    <section className="h-20 flex justify-between items-center px-4 border-b border-[#EEEEEE] cursor-pointer hover:bg-gray-100 transition">
+                      Loading...
+                    </section>
+                  ) : hasGroupChats && Array.isArray(groupChats) ? (
                     groupChats
                       .sort((a, b) => {
                         const lastMessageA =
@@ -189,16 +164,41 @@ const MensajesGrupales = () => {
                           </section>
                         );
                       })
+                  ) : (
+                    <CreateChat />
                   )}
                 </div>
               </main>
             </div>
           </div>
         )}
-
       </div>
     </>
   );
 };
 
 export default MensajesGrupales;
+
+{
+  /* <form className="w-full flex">
+                  <input
+                    type="text"
+                    className="border border-gray-500 border-r-transparent rounded-full rounded-e-none h-10 w-full px-4"
+                    placeholder="Buscar chat grupal"
+                  />
+                  <button
+                    type="submit"
+                    className="border border-gray-500 h-10 w-11 border-l-transparent rounded-full rounded-s-none"
+                    aria-label="Buscar chat grupal"
+                    title="Buscar chat grupal"
+                  >
+                    <Image
+                      src="/lupa.png"
+                      width={20}
+                      height={20}
+                      alt="Buscar"
+                      className="cursor-pointer"
+                    />
+                  </button>
+                </form> */
+}

@@ -204,9 +204,6 @@ const ChatRoomView = ({ searchParams }: any) => {
     }
 
     (async (group_id) => {
-      console.log("hasGroupChats", hasGroupChats);
-      console.log("group_id", group_id);
-
       try {
         const responseGroupChats = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/chat-groups/chats/${group_id}`
