@@ -412,11 +412,15 @@ const ChatRoomView = ({ searchParams }: any) => {
                     {/* Solo muestra el botón si el usuario es admin */}
                     {members.map((member) => {
                       if (
-                        member.user?.id == userData?.id &&
-                        member.role == "ADMIN"
+                        member.user?.id === userData?.id &&
+                        member.role === "ADMIN"
                       ) {
+                        const otherMembers = members.filter(
+                          (member) => member.user?.id !== userData?.id
+                        );
+
                         return (
-                          <div key={123123123}>
+                          <div key="admin-buttons">
                             <button
                               onClick={openModal}
                               className="bg-red-500 text-white px-2 py-2 rounded-lg text-sm mt-4 hover:bg-red-600 transition w-full"
@@ -425,7 +429,12 @@ const ChatRoomView = ({ searchParams }: any) => {
                             </button>
                             <button
                               onClick={() => openRemoveUserModal(member)}
-                              className="bg-red-500 text-white px-2 py-2 rounded-lg text-sm mt-4 hover:bg-red-600 transition w-full"
+                              disabled={otherMembers.length === 0}
+                              className={`px-2 py-2 rounded-lg text-sm mt-4 transition w-full ${
+                                otherMembers.length > 0
+                                  ? "bg-red-500 text-white hover:bg-red-600"
+                                  : "bg-gray-400 text-gray-600 cursor-not-allowed"
+                              }`}
                             >
                               Eliminar Miembros
                             </button>
