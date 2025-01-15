@@ -36,7 +36,7 @@ const MensajesPrivados = () => {
 
   return (
     <>
-      <div className="flex w-full relative">
+      <div className="flex w-full relative pt-40">
         <div className="flex-1 flex justify-center mt-20 w-full">
           <div className="w-full md:w-2/4 ">
             {/* <nav className="h-16 flex justify-center items-center">

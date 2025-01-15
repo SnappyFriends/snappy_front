@@ -83,7 +83,7 @@ const ActivityView = () => {
 	}
 
 	return (
-		<div className="w-full ">
+		<div className="w-full pt-40">
 			<div className="flex-1 flex justify-center items-start px-4 w-full pt-20">
 				<div className="w-full max-w-2xl bg-white rounded-lg p-6">
 					<h1 className="text-2xl font-bold text-center mb-4">Actividad</h1>

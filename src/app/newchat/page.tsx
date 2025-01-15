@@ -152,7 +152,7 @@ const ChatView = () => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full mt-40">
       <div className="flex items-center justify-center mt-5 mb-5">
         <div className="bg-white rounded-lg shadow-md w-full max-w-lg relative p-4">
           <div className="flex items-center justify-between border-b pb-2">

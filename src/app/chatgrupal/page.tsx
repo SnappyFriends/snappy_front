@@ -309,7 +309,7 @@ const ChatRoomView = ({ searchParams }: any) => {
   };
 
   return (
-    <div className="w-full flex justify-center">
+    <div className="w-full flex justify-center pt-40">
       <div className="flex flex-col justify-center lg:flex-row w-full">
         {hasGroupChats === undefined ? (
           <div className="lg:w-full md:w-full ml-0 lg:ml-80 mt-12 lg:mt-32 max-w-[1100px]">
