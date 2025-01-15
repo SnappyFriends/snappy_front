@@ -129,7 +129,7 @@ const SearchBar: React.FC = () => {
 
 
   return (
-    <div className="relative container mx-auto px-4 md:px-6 pt-8 h-20">
+    <div className="relative container mx-auto px-4 md:px-6 pt-8 lg:h-20 md:h-10">
       <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
         <div className="relative w-full md:w-1/3">
           <button
@@ -196,16 +196,16 @@ const SearchBar: React.FC = () => {
         {loading && <p className="text-center">Cargando...</p>}
         {error && <p className="text-red-500 text-center">{error}</p>}
         {!loading && searched && filteredUsers.length === 0 && (
-          <p className="text-gray-500 text-center">No hay resultados.</p>
+          <p className="text-gray-500 text-center"></p>
         )}
         {filteredUsers.length > 0 && (
-          <div className="absolute w-full ml-36 bg-white shadow-md border border-gray-300 rounded-lg max-h-60 overflow-y-auto ">
+          <div className="absolute w-full lg:ml-36 md:m-auto bg-white shadow-md border border-gray-300 rounded-lg max-h-60 overflow-y-auto z-30">
             {filteredUsers.map((user) => (
                  <Link
                  key={user.id}
                  href={`/perfil/${user.username}`}
                  className="flex items-center gap-3 p-2 hover:bg-gray-100 transition duration-300"
-                 onClick={() => setFilteredUsers([])}  // Cierra los resultados al hacer clic en un resultado
+                 onClick={() => setFilteredUsers([])} 
                >
                  <Image
                    src={user.profile_image}
