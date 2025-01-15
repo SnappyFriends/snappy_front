@@ -167,9 +167,10 @@ export default function PerfilComponent() {
 	const fetchUserStories = async () => {
 		try {
 			const response = await fetch(
-				`${process.env.NEXT_PUBLIC_API_URL}/stories`
+				`${process.env.NEXT_PUBLIC_API_URL}/stories/user/${userData?.id}`
 			);
 			const data: Story[] = await response.json();
+			console.log(data);
 
 			const currentTime = new Date().getTime();
 			const twentyFourHoursAgo = currentTime - 24 * 60 * 60 * 1000;
@@ -177,7 +178,6 @@ export default function PerfilComponent() {
 			const userStories = data
 				.filter(
 					(story) =>
-						story.user.id === userData?.id &&
 						new Date(story.creation_date).getTime() >= twentyFourHoursAgo
 				)
 				.sort((a, b) => {
@@ -187,6 +187,7 @@ export default function PerfilComponent() {
 					);
 				});
 
+				console.log("Historias: ", userStories);
 			setStories(userStories);
 		} catch (error) {
 			console.error("Error fetching stories:", error);
@@ -204,7 +205,7 @@ export default function PerfilComponent() {
 	};
 
 	const openFirstStory = (): void => {
-		console.log("Stories: ", stories);
+		
 		if (stories.length > 0) {
 			openModal(stories[0]);
 		}
