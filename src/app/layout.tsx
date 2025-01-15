@@ -53,7 +53,7 @@ export default function RootLayout({
                     <Sidebar />
                   </aside>
                 )}
-                <main className="w-full flex justify-center px-4 md:pt-24 ">
+                <main className="w-full flex justify-center">
                   {children}
                 </main>
                 {shouldRenderLayout && (
