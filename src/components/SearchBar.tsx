@@ -77,10 +77,30 @@ const SearchBar: React.FC = () => {
         : [...prev, interest]
     );
   };
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const dropdown = document.querySelector(".dropdown");
+      const searchResults = document.querySelector(".search-results");
+      if (
+        dropdown &&
+        !dropdown.contains(event.target as Node) &&
+        searchResults &&
+        !searchResults.contains(event.target as Node)
+      ) {
+        setShowDropdown(false);
+      }
+    };
+
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   const handleSearchClick = async () => {
-    setSearched(true);
-    setLoading(true);
+    setSearched(false);
+    setShowDropdown(false);
+    setSearchQuery("");
 
     try {
       const queryParams = new URLSearchParams();
@@ -107,24 +127,17 @@ const SearchBar: React.FC = () => {
     }
   };
 
-  return (
-    <div className="relative container mx-auto px-4 md:px-6 py-4">
-      <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
-        <input
-          type="text"
-          placeholder="Buscar usuarios..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full md:w-3/5 p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 transition duration-300"
-        />
 
+  return (
+    <div className="relative container mx-auto px-4 md:px-6 pt-8 lg:h-20 md:h-10">
+      <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
         <div className="relative w-full md:w-1/3">
           <button
             type="button"
             onClick={() => setShowDropdown(!showDropdown)}
-            className="w-full p-3 border border-gray-300 rounded-lg shadow-sm bg-white flex justify-between items-center"
+            className="w-full h-8 p-1 border border-gray-300 rounded-lg shadow-sm bg-white flex justify-between items-center"
           >
-            <span className="text-gray-500">
+            <span className="text-gray-500 text-sm">
               {selectedInterests.length > 0
                 ? `${selectedInterests.length} Intereses`
                 : "Intereses"}
@@ -132,9 +145,10 @@ const SearchBar: React.FC = () => {
             <span className="text-gray-400">▼</span>
           </button>
 
+          
           {showDropdown && (
-  <div className="absolute top-full left-0 w-full md:w-[120%] max-h-60 mt-2 bg-white border border-gray-300 rounded-lg shadow-lg z-10 overflow-y-auto">
-    <ul className="space-y-2 p-2">
+  <div className="absolute top-full left-0 w-full md:w-[104%] max-h-60 mt-6 bg-white border border-gray-300 rounded-lg shadow-lg z-10 overflow-y-auto">
+    <ul className="space-y-2 p-2 w-15">
       {interests.map((interest) => (
         <li key={interest.interest_id}>
           <label className="flex items-center gap-2 cursor-pointer">
@@ -144,7 +158,7 @@ const SearchBar: React.FC = () => {
               onChange={() => toggleInterest(interest.name)}
               className="form-checkbox h-4 w-4 text-blue-500"
             />
-            <span className="text-gray-700">{interest.name}</span>
+            <span className="text-gray-700 text-sm">{interest.name}</span>
           </label>
         </li>
       ))}
@@ -153,13 +167,23 @@ const SearchBar: React.FC = () => {
 )}
 
         </div>
+        <input
+  type="text"
+  placeholder="Buscar usuarios..."
+  value={searchQuery}
+  onChange={(e) => setSearchQuery(e.target.value)}
+  className="w-full md:w-auto py-1 h-8 px-4 border border-gray-300 rounded-lg shadow-md focus:ring-2 focus:ring-blue-500 transition duration-300 text-sm"
+/>
 
-        <button
-          className="w-full md:w-auto p-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition duration-300"
-          onClick={handleSearchClick}
-        >
-          Buscar
-        </button>
+
+
+<button
+  className="w-full md:w-auto h-7 p-1 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition duration-300"
+  onClick={handleSearchClick}
+>
+  Buscar
+</button>
+
       </div>
 
       <div className="relative mt-6 w-full md:w-3/5">
@@ -168,30 +192,36 @@ const SearchBar: React.FC = () => {
         {!loading && searched && filteredUsers.length === 0 && (
           <p className="text-gray-500 text-center">No hay resultados.</p>
         )}
+ <div className="relative mt-4">
+        {loading && <p className="text-center">Cargando...</p>}
+        {error && <p className="text-red-500 text-center">{error}</p>}
+        {!loading && searched && filteredUsers.length === 0 && (
+          <p className="text-gray-500 text-center"></p>
+        )}
+        {filteredUsers.length > 0 && (
+          <div className="absolute w-full lg:ml-36 md:m-auto bg-white shadow-md border border-gray-300 rounded-lg max-h-60 overflow-y-auto z-30">
+            {filteredUsers.map((user) => (
+                 <Link
+                 key={user.id}
+                 href={`/perfil/${user.username}`}
+                 className="flex items-center gap-3 p-2 hover:bg-gray-100 transition duration-300"
+                 onClick={() => setFilteredUsers([])} 
+               >
+                 <Image
+                   src={user.profile_image}
+                   alt={user.username}
+                   width={40}
+                   height={40}
+                   className="rounded-full"
+                 />
+                 <span className="text-gray-800 text-sm">{user.username}</span>
+               </Link>
+            ))}
+          </div>
+        )}
 
-        <div className="absolute z-10 top-0 w-full max-h-60 overflow-y-auto mt-2 bg-white shadow-lg md:w-3/5">
-          {filteredUsers.map((user) => (
-            <div
-              key={user.id}
-              className="flex items-center space-x-3 p-2 border-b border-gray-200 hover:bg-gray-50 transition duration-300"
-            >
-              <Link href={`../perfil/${user.username}`} className="flex items-center">
-                <div className="relative w-8 h-8">
-                  <Image
-                    src={user.profile_image}
-                    alt={`Profile picture of ${user.username}`}
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-full"
-                  />
-                </div>
-                <span className="text-sm font-semibold text-gray-800 ml-3">
-                  {user.username}
-                </span>
-              </Link>
-            </div>
-          ))}
-        </div>
+</div>
+
       </div>
     </div>
   );

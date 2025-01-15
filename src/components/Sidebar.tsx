@@ -3,7 +3,7 @@ import Image from "next/image";
 
 const Sidebar = () => {
   return (
-    <div className="hidden md:flex flex-col w-64 bg-white pl-2 space-y-10 absolute left-6 top-1/2 transform -translate-y-1/2 mt-20">
+    <div className="hidden md:flex flex-col w-64 bg-white pl-2 space-y-10 fixed left-6 top-1/2 transform -translate-y-1/2 mt-20 ">
       <div className="space-y-6">
         <Link
           href="/miperfil"
@@ -71,7 +71,7 @@ const Sidebar = () => {
           <span>Notificaciones</span>
         </Link>
         <Link
-          href="/editarperfil"
+          href="/configuracion"
           className="flex items-center space-x-4 cursor-pointer hover:text-blue-500"
         >
           <Image src="/rueda.png" alt="Configuración" width={24} height={24} />
@@ -96,7 +96,12 @@ const Sidebar = () => {
           <Image src="/snappear.png" alt="Snappear" width={24} height={24} />
           <span>SNAPPEAR</span>
         </Link>
+        <p className="text-sm text-gray-600 pt-20">
+          © {new Date().getFullYear()} Snappy Friends. <br />
+          Todos los derechos reservados.
+        </p>
       </div>
+     
     </div>
   );
 };

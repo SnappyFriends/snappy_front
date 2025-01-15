@@ -317,14 +317,6 @@ const ChatRoomView = ({ searchParams }: any) => {
                               {member.user?.username}
                             </div>
                           </Link>
-                          {member.role !== "ADMIN" && (
-                            <button
-                              onClick={() => openRemoveUserModal(member)}
-                              className="w-6 h-6 flex items-center justify-center text-xs text-red-500 hover:text-red-700 focus:outline-none border border-red-500 rounded-full"
-                            >
-                              x
-                            </button>
-                          )}
                         </div>
                       ))}
                     </div>
@@ -389,6 +381,12 @@ const ChatRoomView = ({ searchParams }: any) => {
                               className="bg-red-500 text-white px-2 py-2 rounded-lg text-sm mt-4 hover:bg-red-600 transition w-full"
                             >
                               Eliminar Grupo
+                            </button>
+                            <button
+                              onClick={() => openRemoveUserModal(member)}
+                              className="bg-red-500 text-white px-2 py-2 rounded-lg text-sm mt-4 hover:bg-red-600 transition w-full"
+                            >
+                              Eliminar Miembros
                             </button>
                           </div>
                         );
@@ -540,25 +538,40 @@ const ChatRoomView = ({ searchParams }: any) => {
                     <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center">
                       <div className="bg-white p-6 rounded-lg shadow-lg w-96">
                         <h2 className="text-lg font-semibold mb-4">
-                          Confirmación
+                          Selecciona un usuario para eliminar
                         </h2>
-                        <p className="mb-4">
-                          {`¿Estás seguro de que quieres eliminar a ${userToRemove?.user?.username} del grupo?`}
-                        </p>
-                        <div className="flex justify-between">
-                          <button
-                            onClick={closeRemoveUserModal}
-                            className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
-                          >
-                            Cancelar
-                          </button>
-                          <button
-                            onClick={handleRemoveUser}
-                            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
-                          >
-                            Eliminar
-                          </button>
-                        </div>
+                        {members
+                          .filter((member) => member.role === "MEMBER")
+                          .map((member) => (
+                            <li key={member.user.id}>
+                              <div>
+                                <button
+                                  onClick={() => setUserToRemove(member)}
+                                  className="text-left w-full text-sm py-2 px-4 rounded-lg hover:bg-gray-200"
+                                >
+                                  {member.user.username} - {member.role}
+                                </button>
+
+                                {userToRemove &&
+                                  userToRemove.user.id === member.user.id && (
+                                    <div className="flex justify-between mt-4">
+                                      <button
+                                        onClick={closeRemoveUserModal}
+                                        className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+                                      >
+                                        Cancelar
+                                      </button>
+                                      <button
+                                        onClick={handleRemoveUser}
+                                        className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                                      >
+                                        Eliminar
+                                      </button>
+                                    </div>
+                                  )}
+                              </div>
+                            </li>
+                          ))}
                       </div>
                     </div>
                   )}
@@ -569,7 +582,6 @@ const ChatRoomView = ({ searchParams }: any) => {
         ) : (
           <CreateChat />
         )}
-
       </div>
     </div>
   );

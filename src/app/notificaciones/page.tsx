@@ -108,7 +108,7 @@ const ActivityView = () => {
 							return (
 								<div
 									key={notification_id}
-									className="flex items-center justify-between pl-44 mt-12"
+									className="flex items-center justify-between lg:pl-44 sm:pl-5 mt-12"
 								>
 									<div className="flex items-center">
 										<div className="relative w-10 h-10">

@@ -88,7 +88,7 @@ export default function PaymentGateway() {
         <div className="w-full flex justify-center items-center p-8">
           <div className="w-full max-w-lg p-6 bg-white rounded-lg flex flex-col shadow-xl border">
             <h2 className="text-2xl font-bold text-center mb-6">
-              Historial de compras
+              Detalles de suscripción
             </h2>
             {subscriptionDetails ? (
               <>

@@ -5,7 +5,6 @@ import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { UserProvider } from "../context/UserContext";
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import Footer from "@/components/Footer"; 
 import NavBar from "@/components/NavBar";
 import Sidebar from "@/components/Sidebar";
 import Conectados from "@/components/Conectados";
@@ -42,7 +41,11 @@ export default function RootLayout({
         >
           <UserProvider>
             <div className="flex flex-col min-h-screen">
-              {shouldRenderLayout && <NavBar />}
+              {shouldRenderLayout && (
+                <div>
+                  <NavBar />
+                </div>
+              )}
               <Toaster />
               <div className="flex flex-1 flex-wrap md:flex-nowrap">
                 {shouldRenderLayout && (
@@ -50,7 +53,7 @@ export default function RootLayout({
                     <Sidebar />
                   </aside>
                 )}
-                <main className="w-full flex justify-center px-4">
+                <main className="w-full flex justify-center px-4 md:pt-24 ">
                   {children}
                 </main>
                 {shouldRenderLayout && (
@@ -59,7 +62,7 @@ export default function RootLayout({
                   </aside>
                 )}
               </div>
-              <Footer />
+              {/* <Footer /> */}
             </div>
           </UserProvider>
         </GoogleOAuthProvider>
