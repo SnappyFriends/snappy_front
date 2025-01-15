@@ -71,7 +71,7 @@ const PurchasesPage: React.FC = () => {
             <tbody>
               {purchases.map((purchase) => (
                 <tr key={purchase.purchase_id} className="border-t">
-                  <td className="px-4 py-2 border border-gray-200 text-center">
+                  <td className="pl-2 py-2 border border-gray-200 text-start">
                     <Link href={`../perfil/${purchase.user.username}`}>
                       <Image
                         src={purchase.user.profile_image}
