@@ -244,8 +244,13 @@ const ChatRoomView = ({ searchParams }: any) => {
     }
   };
 
-  const handleSendMessage = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
+  const handleSendMessage = (event: React.MouseEvent<HTMLButtonElement> | React.KeyboardEvent<HTMLInputElement>) => {
+
+    if((event as React.KeyboardEvent<HTMLInputElement>).key === "Enter" || (event as React.MouseEvent<HTMLButtonElement>)) {
+
+      event.preventDefault();
+    }
+
     if (!message.trim() || !userData || !groupChat || !socketRef.current)
       return;
 
@@ -498,10 +503,18 @@ const ChatRoomView = ({ searchParams }: any) => {
                       placeholder="Escribe un mensaje..."
                       onChange={(e) => setMessage(e.target.value)}
                       className="flex-1 border border-gray-300 rounded-full px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+                      onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                        if(e.key === "Enter") {
+                          handleSendMessage(e)
+                    
+                        }
+                      }}
                     />
                     <button
                       className="bg-blue-500 text-white px-4 py-2 rounded-full text-sm hover:bg-blue-600 transition"
-                      onClick={handleSendMessage}
+                      onClick={(e) => {
+                        handleSendMessage(e)
+                      }}
                     >
                       Enviar
                     </button>
