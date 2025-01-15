@@ -127,6 +127,13 @@ const ChatWithUser = () => {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, receiverId: string) => {
+    if (e.key === "Enter") {
+      e.preventDefault(); 
+      handleSendMessage(receiverId); 
+    }
+  };
+
   if (!user) {
     return <p className="text-center">Cargando usuario...</p>;
   }
@@ -213,6 +220,7 @@ const ChatWithUser = () => {
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Escribe un mensaje..."
                   className="flex-1 px-4 py-2 border rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  onKeyDown={(e) => handleKeyDown(e, user.id)}
                 />
                 <button
                   onClick={() => handleSendMessage(user.id)}

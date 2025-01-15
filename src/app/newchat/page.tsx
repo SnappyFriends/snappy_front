@@ -7,7 +7,7 @@ import { useSocket } from "@/helpers/useSocket";
 import { Chats, IMessage } from "@/interfaces/types";
 import Image from "next/image";
 import Link from "next/link";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 interface IUserAPIResponse {
   username: string;
@@ -279,6 +279,16 @@ const ChatView = () => {
               placeholder="Escribe un mensaje..."
               className="flex-1 border border-gray-300 rounded-full px-4 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
               onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                if(e.key === "Enter") {
+                  e.preventDefault();
+                  if (randomUser?.id) {
+                    handleSendMessage(randomUser.id)
+                  } else {
+                    console.error("Random user ID is not available")
+                  }
+                }
+              }}
             />
             <div className="flex items-center ml-3 space-x-3">
               <button
