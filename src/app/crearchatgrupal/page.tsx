@@ -12,7 +12,7 @@ const CreateChat = () => {
       {showForm ? (
         <CreateChatGroupForm />
       ) : (
-        <div className="flex-1 flex items-center justify-center mt-32">
+        <div className="flex-1 flex items-center justify-center mt-10">
           <div className="bg-white p-6 rounded-lg shadow-md max-w-md text-center">
             <div className="mb-6">
               <Image
