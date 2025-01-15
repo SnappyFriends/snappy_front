@@ -60,7 +60,7 @@ const MensajesGrupales = () => {
         {isGoingToAdd ? (
           <CreateChatGroupForm />
         ) : (
-          <div className="flex-1 flex justify-center mt-0 w-full">
+          <div className="flex-1 flex justify-center mt-40 w-full">
             <div className="w-full md:w-3/4">
               {hasGroupChats && (
                 <nav className="h-16 flex flex-col justify-center items-center w-full">

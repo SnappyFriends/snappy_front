@@ -129,8 +129,8 @@ export default function NavBar() {
 								aria-label="Toggle dropdown"
 							>
 								<Image
-									src={`/${userData?.profile_image}` || "/agregarfoto.png"}
-									width={60}
+                    src={userData?.profile_image || "/no_img.png"}
+					width={60}
 									height={60}
 									alt="foto de perfil"
 									className="rounded-full"

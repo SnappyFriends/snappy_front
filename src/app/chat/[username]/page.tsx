@@ -140,7 +140,7 @@ const ChatWithUser = () => {
 
   return (
     <>
-      <div className="w-full">
+      <div className="w-full pt-40">
         <div className="flex flex-col lg:flex-row">
           <div className="md:w-full mx-auto mt-12 lg:mt-32">
             <div className="flex flex-col w-full max-w-[900px] mx-auto bg-white rounded-lg shadow-md overflow-hidden">

@@ -85,7 +85,7 @@ const CrearPublicacion = () => {
 	return (
 		<>
   <div
-    className="max-w-md mx-auto mt-10 p-4 border rounded shadow-lg h-auto max-h-[500px] overflow-y-auto"
+    className="max-w-md mx-auto mt-40 p-4 border rounded shadow-lg h-auto max-h-[500px] overflow-y-auto "
     style={{ minHeight: "300px" }} // Estilo opcional para una altura mínima
   >
     <h2 className="text-2xl font-bold mb-4 text-center">Crear Snappy Post</h2>
