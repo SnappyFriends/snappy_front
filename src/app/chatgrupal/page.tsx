@@ -40,6 +40,7 @@ const ChatRoomView = ({ searchParams }: any) => {
 
   const [isRemoveUserModalOpen, setIsRemoveUserModalOpen] = useState(false);
   const [userToRemove, setUserToRemove] = useState<User | null>(null);
+  const [isLeavingGroupModalOpen, setIsLeavingGroupModalOpen] = useState(false);
 
   const token = Cookies.get("auth_token");
   const socketRef = useRef<Socket | null>(null);
@@ -274,6 +275,37 @@ const ChatRoomView = ({ searchParams }: any) => {
     }
   };
 
+  const openLeaveGroupModal = () => {
+    setIsLeavingGroupModalOpen(true);
+  };
+  const closeLeaveGroupModal = () => {
+    setIsLeavingGroupModalOpen(false);
+  };
+
+  const handleLeaveGroup = async (user_id: string) => {
+    if (!user_id || !userData) {
+      return;
+    }
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/group-members/${group_id}/leave-group/${user_id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (!response.ok) {
+        return;
+      }
+      closeLeaveGroupModal();
+      window.location.href = "/mensajeschatgrupal";
+    } catch (error) {
+      console.error("Error leaving the group", error);
+    }
+  };
+
   return (
     <div className="w-full flex justify-center">
       <div className="flex flex-col justify-center lg:flex-row w-full">
@@ -296,7 +328,7 @@ const ChatRoomView = ({ searchParams }: any) => {
                       {members.map((member) => (
                         <div
                           key={`${member?.user?.id}`}
-                          className="flex items-center space-x-2"
+                          className="flex items-center justify-between space-x-2"
                         >
                           <Link
                             href={`/perfil/${member.user?.username}`}
@@ -317,6 +349,15 @@ const ChatRoomView = ({ searchParams }: any) => {
                               {member.user?.username}
                             </div>
                           </Link>
+                          {member.role !== "ADMIN" &&
+                            member.user?.id == userData?.id && (
+                              <button
+                                onClick={() => openLeaveGroupModal()}
+                                className="px-2 py-1 text-xs text-white bg-red-500 rounded hover:bg-red-600"
+                              >
+                                Salir
+                              </button>
+                            )}
                         </div>
                       ))}
                     </div>
@@ -572,6 +613,31 @@ const ChatRoomView = ({ searchParams }: any) => {
                               </div>
                             </li>
                           ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {isLeavingGroupModalOpen && userData !== null && (
+                    <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center">
+                      <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+                        <h2 className="text-lg font-semibold mb-4">
+                          Estás seguro que quieres salir del grupo ?
+                        </h2>
+
+                        <div className="flex justify-between mt-4">
+                          <button
+                            onClick={closeLeaveGroupModal}
+                            className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+                          >
+                            Cancelar
+                          </button>
+                          <button
+                            onClick={() => handleLeaveGroup(userData.id)}
+                            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                          >
+                            Salir
+                          </button>
+                        </div>
                       </div>
                     </div>
                   )}
