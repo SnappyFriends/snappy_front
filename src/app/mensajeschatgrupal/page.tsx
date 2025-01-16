@@ -89,7 +89,7 @@ const MensajesGrupales = () => {
                     Chats Grupales
                   </h2>
 
-                  {!hasGroupChats ? (
+                  {hasGroupChats && !groupChats ? (
                     <section className="h-20 flex justify-between items-center px-4 border-b border-[#EEEEEE] cursor-pointer hover:bg-gray-100 transition">
                       Loading...
                     </section>
