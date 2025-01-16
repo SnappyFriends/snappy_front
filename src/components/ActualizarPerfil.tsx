@@ -119,7 +119,7 @@ export default function ActualizarPerfil() {
 
   
   return (
-    <main className="pt-4 min-h-screen flex flex-col items-center mb-4">
+    <main className="pt-4 min-h-screen flex flex-col items-center mb-4 mt-40">
       <h2 className="font-bold text-2xl text-center mb-4">Editar perfil</h2>
 
       <FotoDePerfil />
