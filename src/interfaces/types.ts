@@ -253,17 +253,6 @@ export interface IUsernameData {
     id: string;
     follower: { id: string; username: string; profile_image: string };
   }[];
-
-  // stories: any[];
-  // privacy: any[];
-  // responses: any[];
-  // reportedReports: any[];
-  // reportingReports: any[];
-  // polls: any[];
-  // posts: any[];
-  // reactions: any[];
-  // comments: any[];
-  // groupMembers: any[];
 }
 
 export interface IUserChat {
