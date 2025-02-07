@@ -10,7 +10,6 @@ import { showCustomToast } from "./Notificacion";
 import { useRouter } from "next/navigation";
 import FotoDePerfil from "./FotoDePerfil";
 import Intereses from "./Intereses";
-import { getLocation } from "@/helpers/location";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -18,7 +17,6 @@ export default function ActualizarPerfil() {
   const { userData, setUserData } = useContext(UserContext);
   const [loading, setLoading] = useState(true);
   const [showOtherGender, setShowOtherGender] = useState(false);
-  const [location, setLocation] = useState<{ latitude: number; longitude: number }|unknown>();
 
   const router = useRouter();
   const {
@@ -44,17 +42,7 @@ export default function ActualizarPerfil() {
         }
       };
 
-      const fetchLocation = async () => {
-        try {
-          const coords = await getLocation();
-          setLocation(coords);
-          console.log("Ubicación capturada: ", coords);
-        } catch (error) {
-          console.error("Error al obtener la ubicación:", error);
-        }
-      };
       fetchUserData();
-      fetchLocation();
     }
   }, [userData?.id, setValue]);
 
@@ -67,8 +55,6 @@ export default function ActualizarPerfil() {
       console.error("No se encontró el ID del usuario.");
       return;
     }
-    data.location = location;
-    console.log(data)
     
     const updatedData = {
       ...data, 
@@ -94,7 +80,6 @@ export default function ActualizarPerfil() {
         description: data.description,
         birthdate: data.birthdate,
         genre: data.genre,
-        location: data.location,
       });
 
       showCustomToast("Snappy", "Datos guardados correctamente", "success");
@@ -129,16 +114,6 @@ export default function ActualizarPerfil() {
         onSubmit={handleSubmit(onSubmit)}
       >
         <div>
-          {/* <input
-            type="hidden"
-            {...register("location.latitude")}
-            value={location?.latitude || ""}
-          />
-          <input
-            type="hidden"
-            {...register("location.longitude")}
-            value={location?.longitude || ""}
-          /> */}
           <label className="block text-sm font-medium mb-1">
             Nombre de usuario
           </label>

@@ -20,7 +20,7 @@ export default function LoadingBar() {
     }, 50);
 
     const timer = setTimeout(() => {
-      router.push("/newchat");
+      router.push("/obtenerubicacion");
     }, 2000);
 
     return () => {
