@@ -57,19 +57,19 @@ export const validacionInputs = {
   password: {
     required: "La contraseña es obligatoria",
     pattern: {
-      value: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/,
+      value: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*.-]).{8,}$/,
       message:
-        "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial",
+        "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial (!@#$%^&*.-)",
     },
   },
   passwordOptional: {
     pattern: {
-      value: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/,
+      value: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*.-]).{8,}$/,
       message:
-        "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial",
+        "La contraseña debe tener al menos 8 caracteres, una mayúscula, una minúscula, un número y un carácter especial (!@#$%^&*.-)",
     },
     validate: (value: string | undefined) => {
-      if (value && !/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/.test(value)) {
+      if (value && !/^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*.-]).{8,}$/.test(value)) {
         return "La contraseña debe cumplir con los requisitos de seguridad";
       }
       return true;

@@ -172,7 +172,7 @@ const SearchBar: React.FC = () => {
   placeholder="Buscar usuarios..."
   value={searchQuery}
   onChange={(e) => setSearchQuery(e.target.value)}
-  className="w-full md:w-auto py-1 h-8 px-4 border border-gray-300 rounded-lg shadow-md focus:ring-2 focus:ring-blue-500 transition duration-300 text-sm"
+  className="w-full md:w-auto py-1 h-8 px-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 transition duration-300 text-sm"
 />
 
 
@@ -192,35 +192,35 @@ const SearchBar: React.FC = () => {
         {!loading && searched && filteredUsers.length === 0 && (
           <p className="text-gray-500 text-center">No hay resultados.</p>
         )}
- <div className="relative mt-4">
-        {loading && <p className="text-center">Cargando...</p>}
-        {error && <p className="text-red-500 text-center">{error}</p>}
-        {!loading && searched && filteredUsers.length === 0 && (
-          <p className="text-gray-500 text-center"></p>
-        )}
-        {filteredUsers.length > 0 && (
-          <div className="absolute w-full lg:ml-36 md:m-auto bg-white shadow-md border border-gray-300 rounded-lg max-h-60 overflow-y-auto z-30">
-            {filteredUsers.map((user) => (
-                 <Link
-                 key={user.id}
-                 href={`/perfil/${user.username}`}
-                 className="flex items-center gap-3 p-2 hover:bg-gray-100 transition duration-300"
-                 onClick={() => setFilteredUsers([])} 
-               >
-                 <Image
-                   src={user.profile_image}
-                   alt={user.username}
-                   width={40}
-                   height={40}
-                   className="rounded-full"
-                 />
-                 <span className="text-gray-800 text-sm">{user.username}</span>
-               </Link>
-            ))}
-          </div>
-        )}
-
+<div className="relative mt-4">
+  {loading && <p className="text-center">Cargando...</p>}
+  {error && <p className="text-red-500 text-center">{error}</p>}
+  {!loading && searched && filteredUsers.length === 0 && (
+    <p className="text-gray-500 text-center">No hay resultados.</p>
+  )}
+  {filteredUsers.length > 0 && (
+    <div className="absolute w-full lg:ml-36 md:m-auto bg-white shadow-md border border-gray-300 rounded-lg max-h-60 overflow-y-auto z-30">
+      {filteredUsers.map((user) => (
+        <Link
+          key={user.id}
+          href={`/perfil/${user.username}`}
+          className="flex items-center gap-3 p-2 hover:bg-gray-100 transition duration-300"
+          onClick={() => setFilteredUsers([])}
+        >
+          <Image
+            src={user.profile_image}
+            alt={user.username}
+            width={40}
+            height={40}
+            className="rounded-full"
+          />
+          <span className="text-gray-800 text-sm">{user.username}</span>
+        </Link>
+      ))}
+    </div>
+  )}
 </div>
+
 
       </div>
     </div>
