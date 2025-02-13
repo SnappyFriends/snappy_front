@@ -1,15 +1,19 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { getLocation, updateLocationInDatabase } from "@/helpers/location";
 import { useRouter } from "next/navigation";
+import { UserContext } from "@/context/UserContext";
 
-const LocationPrompt = (userId: string) => {
+const LocationPrompt = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [isLocationEnabled, setIsLocationEnabled] = useState<boolean>(false);
   const router = useRouter();
+  const { userId } = useContext(UserContext);
 
   useEffect(() => {
+    if(!userId) return;
+
     const checkLocation = async () => {
       setLoading(true);
       try {
