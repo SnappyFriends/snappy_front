@@ -3,11 +3,7 @@ import { useEffect, useState } from "react";
 import { getLocation, updateLocationInDatabase } from "@/helpers/location";
 import { useRouter } from "next/navigation";
 
-interface LocationPromptProps {
-  userId: string;
-}
-
-const LocationPrompt: React.FC<LocationPromptProps> = ({ userId }) => {
+const LocationPrompt = ({ userId } : { userId: string }) => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [isLocationEnabled, setIsLocationEnabled] = useState<boolean>(false);
