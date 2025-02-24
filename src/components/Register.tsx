@@ -47,7 +47,7 @@ export default function RegisterComponent() {
   };
 
   return (
-    <div className="flex flex-col sm:flex-row justify-center items-center gap-10 min-h-screen px-4 sm:px-6 lg:px-8">
+    <div className="flex flex-col sm:flex-row justify-center items-center gap-10 min-h-screen px-4 sm:px-6 lg:px-8 -mt-24">
       <div className="hidden sm:block">
         <Image src="/banner.png" width={400} height={400} alt="banner" />
       </div>

@@ -27,6 +27,7 @@ const Conectados: React.FC = () => {
 		pathname?.includes("/dashboard") ||
 		pathname?.includes("/register") ||
 		pathname?.includes("/completarregistro") ||
+		pathname?.includes("/terminos") ||
 		pathname === "/"
 	);
 
@@ -69,45 +70,43 @@ const Conectados: React.FC = () => {
 	return (
 		<>
 			{shouldRenderLayout && (
-				<aside className="hidden md:block w-96 p-4 md:mr-4">
-					<div className=" flex justify-center space-y-4 rounded-lg mt-40 fixed">
-						{sortedFriends.length === 0 ? (
-							<p className="text-gray-500 text-sm">
-								No hay amigos disponibles en este momento.
-							</p>
-						) : (
-							<div className="overflow-y-auto max-h-96 sm:max-h-[70vh] h-[300px] sm:h-auto">
-								{sortedFriends.map((friend) => (
-									<Link key={friend.id} href={`/chat/${friend.username}`}>
-										<div>
-											<div className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-100 transition cursor-pointer">
-												<div className="flex items-center space-x-4">
-													<div className="relative w-12 h-12">
-														<Image
-															src={friend.profile_image}
-															alt={friend.username}
-															layout="fill"
-															className="rounded-full object-cover"
-														/>
-													</div>
-													<h3 className="text-sm font-semibold">
-														{friend.username}
-													</h3>
+				<aside className="hidden fixed lg:block w-64 h-screen overflow-y-auto p-4 right-2 top-24 md:mr-4">
+					{sortedFriends.length === 0 ? (
+						<p className="text-gray-500 text-sm">
+							No hay amigos disponibles en este momento.
+						</p>
+					) : (
+						<div className="overflow-y-auto max-h-96 sm:max-h-[70vh] h-[300px] sm:h-auto">
+							{sortedFriends.map((friend) => (
+								<Link key={friend.id} href={`/chat/${friend.username}`}>
+									<div>
+										<div className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-100 transition cursor-pointer">
+											<div className="flex items-center space-x-4">
+												<div className="relative w-12 h-12">
+													<Image
+														src={friend.profile_image}
+														alt={friend.username}
+														layout="fill"
+														className="rounded-full object-cover"
+													/>
 												</div>
-												<div>
-													<span
-														className={`w-3 h-3 rounded-full block ml-2 ${
-															friend.isOnline ? "bg-green-500" : "bg-gray-400"
-														}`}
-													></span>
-												</div>
+												<h3 className="text-sm font-semibold">
+													{friend.username}
+												</h3>
+											</div>
+											<div>
+												<span
+													className={`w-3 h-3 rounded-full block ml-2 ${
+														friend.isOnline ? "bg-green-500" : "bg-gray-400"
+													}`}
+												></span>
 											</div>
 										</div>
-									</Link>
-								))}
-							</div>
-						)}
-					</div>
+									</div>
+								</Link>
+							))}
+						</div>
+					)}
 				</aside>
 			)}
 		</>

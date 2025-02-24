@@ -16,7 +16,7 @@ const interRegular = localFont({
 
 export const metadata: Metadata = {
 	title: "SnappyFriends",
-	description: "Descripción bla bla bla",
+	description: "Descubrí y conectá con personas afines de todo el mundo. Sin necesidad de solicitudes previas ni barreras.",
 };
 
 export default function RootLayout({
@@ -26,21 +26,18 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="es">
-			<body className={`${interRegular.variable} antialiased`}>
+			<body
+				className={`${interRegular.variable} antialiased flex flex-col min-h-screen`}
+			>
 				<GoogleOAuthProvider
 					clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || ""}
 				>
 					<UserProvider>
-						<div className="flex flex-col min-h-screen">
-							<NavBar />
-							<Toaster />
-							<div className="flex flex-1 flex-wrap md:flex-nowrap">
-								<Sidebar />
-								<main className="w-full flex justify-center">{children}</main>
-
-								<Conectados />
-							</div>
-						</div>
+						<Toaster />
+						<NavBar />
+						<Sidebar />
+						<Conectados />
+						<main className="flex-1 flex justify-center mt-24 px-2 sm:mx-4">{children}</main>
 					</UserProvider>
 				</GoogleOAuthProvider>
 			</body>
