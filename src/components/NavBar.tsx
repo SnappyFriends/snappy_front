@@ -68,7 +68,7 @@ export default function NavBar() {
 	return (
 		<>
 			{shouldRenderLayout && (
-				<header className="fixed w-full p-2 flex justify-between items-center bg-white z-10">
+				<header className="fixed w-full p-2 flex justify-between items-center bg-white z-10 max-sm:justify-center">
 					<div
 						id="logoynombre"
 						className="hidden sm:flex items-center justify-center sm:justify-start sm:col-span-1"
@@ -146,11 +146,11 @@ export default function NavBar() {
 										className="focus:outline-none"
 										aria-label="Toggle dropdown"
 									>
-										<div className="w-10 h-10 lg:w-16 lg:h-16 md:w-11 md:h-11 rounded-full overflow-hidden">
+										<div className="w-10 h-10 mt-2 md:w-11 md:h-11 rounded-full overflow-hidden">
 											<Image
 												src={userData?.profile_image || "/no_img.png"}
-												width={50}
-												height={50}
+												width={48}
+												height={48}
 												alt="foto de perfil"
 												className="object-cover w-full h-full"
 											/>
