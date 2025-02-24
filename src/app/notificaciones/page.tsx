@@ -100,7 +100,7 @@ const ActivityView = () => {
 						))}
 					</div>
 
-					<div className="space-y-4 max-h-64 overflow-y-auto">
+					<div className="space-y-4 max-h-[50vh] overflow-y-auto">
 						{filteredNotifications.map((notification) => {
 							const { notification_id, content, creation_date, user_sender } =
 								notification;
