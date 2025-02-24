@@ -100,7 +100,7 @@ const ActivityView = () => {
 						))}
 					</div>
 
-					<div className="space-y-4 max-h-36 overflow-y-auto">
+					<div className="space-y-4 max-h-64 overflow-y-auto">
 						{filteredNotifications.map((notification) => {
 							const { notification_id, content, creation_date, user_sender } =
 								notification;
@@ -108,7 +108,7 @@ const ActivityView = () => {
 							return (
 								<div
 									key={notification_id}
-									className="flex items-center justify-between lg:pl-44 sm:pl-5 mt-12"
+									className="flex items-center justify-between lg:pl-44 sm:pl-5"
 								>
 									<div className="flex items-center">
 										<div className="relative w-10 h-10">
