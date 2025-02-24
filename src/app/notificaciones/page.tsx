@@ -88,7 +88,7 @@ const ActivityView = () => {
 				<div className="w-full max-w-2xl bg-white rounded-lg p-6">
 					<h1 className="text-2xl font-bold text-center mb-4">Actividad</h1>
 
-					<div className="flex justify-center flex-wrap gap-4 mb-6">
+					<div className="flex justify-center flex-wrap gap-4 mb-4">
 						{Object.values(NotificationType).map((category) => (
 							<button
 								key={category}
@@ -100,7 +100,7 @@ const ActivityView = () => {
 						))}
 					</div>
 
-					<div className="space-y-6">
+					<div className="space-y-4 max-h-36 overflow-y-auto">
 						{filteredNotifications.map((notification) => {
 							const { notification_id, content, creation_date, user_sender } =
 								notification;
