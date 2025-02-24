@@ -117,7 +117,7 @@ export default function ConfiguracionComponent() {
   }
 
   return (
-    <div className="flex justify-center items-center w-full mb-16">
+    <div className="flex justify-center w-full">
       <main className="w-full max-w-md">
         <h2 className="font-bold text-2xl text-center mb-6">Configuración</h2>
 

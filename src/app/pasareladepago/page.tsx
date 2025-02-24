@@ -84,8 +84,7 @@ export default function PaymentGateway() {
 
   if (userData?.user_type === "premium") {
     return (
-      <div className="mt-40">
-        <div className="w-full flex justify-center items-center p-8">
+        <div className="w-full flex justify-center p-8">
           <div className="w-full max-w-lg p-6 bg-white rounded-lg flex flex-col shadow-xl border">
             <h2 className="text-2xl font-bold text-center mb-6">
               Detalles de suscripción
@@ -122,12 +121,11 @@ export default function PaymentGateway() {
             </button>
           </div>
         </div>
-      </div>
     );
   }
 
   return (
-      <div className="flex justify-center items-center w-2/3 ">
+      <div className="flex justify-center items-center w-2/3">
         <div className="w-full bg-white rounded-lg flex flex-col shadow-lg p-4">
           <h2 className="text-2xl font-bold text-center mb-6">
             Selecciona la duración de tu suscripción
